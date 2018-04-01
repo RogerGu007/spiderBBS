@@ -94,7 +94,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     }
 
     public Request getLoginRequest() {
-        if (hasValidLoginInfo())
+        if (!hasValidLoginInfo())
             return null;
 
         Request request = new Request(getLoginURL());
@@ -200,7 +200,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
                         continue;
 
                     requestLinks.addAll(detailNode.links().all());
-                    logger.info("title: {%s}", detailNode.toString());
+                    logger.info("title: {}", detailNode.toString());
                 }
             }
         }
