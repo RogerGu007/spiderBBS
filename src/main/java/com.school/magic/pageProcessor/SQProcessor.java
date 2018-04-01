@@ -4,6 +4,7 @@ import com.school.entity.News;
 import com.school.entity.NewsDetail;
 import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.storePipeline.ConsolePipeline;
+import com.school.magic.storePipeline.NewsToDBPipeline;
 import com.school.utils.GsonUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
@@ -39,6 +40,7 @@ public class SQProcessor implements PageProcessor {
         if (requestURLs != null && requestURLs.size() > 0) {
             //form 页面，只需要找到具体的item就可以了
             page.addTargetRequests(requestURLs);
+            page.setSkip(true);
             return;
         }
 
@@ -75,9 +77,11 @@ public class SQProcessor implements PageProcessor {
 
         Request loginRequest = sqSiteHandler.getLoginRequest();
         if (loginRequest != null)
-            spider.addRequest(loginRequest).addUrl(sqSiteHandler.getNewsURL()).addPipeline(new ConsolePipeline());
+            spider.addRequest(loginRequest).addUrl(sqSiteHandler.getNewsURL());
         else
-            spider.addUrl(sqSiteHandler.getNewsURL()).addPipeline(new ConsolePipeline());
+            spider.addUrl(sqSiteHandler.getNewsURL());
+
+        spider.addPipeline(new NewsToDBPipeline());
 
         return spider;
     }

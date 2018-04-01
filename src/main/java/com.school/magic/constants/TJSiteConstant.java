@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TJSiteConstant {
 
-    public static final Integer TJ_BBS_CODE = 1;
+//    public static final Integer TJ_BBS_CODE = 1;
 
     public static final String LOGIN_URL = "https://bbs.tongji.net/member.php?mod=logging&action=login&" +
             "loginsubmit=yes&loginhash=LvSg0&inajax=1";
@@ -20,6 +20,7 @@ public class TJSiteConstant {
     public static final String FORMITEMLINK = "//a[@class=\"s xst\"]";
     public static final String FORMITEMMODIFYTIME= "//em/a[@href]/text()";
     public static final String FORMITEMNEXTPAGE = "//span[@id=\"fd_page_bottom\"]";
+    public static final String FORMITEMTITEL = "//tr/th/a[3]/text()";
 
     public static final String DETAILSUBJECT = "//*[@id=\"thread_subject\"]/text()";
     public static final String DETAILPOSTDATE= "//em[@id]/text()";

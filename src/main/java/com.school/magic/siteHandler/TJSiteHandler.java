@@ -66,6 +66,11 @@ public class TJSiteHandler extends SQSiteHandler{
     }
 
     @Override
+    protected String getFormItemTitleXPath() {
+        return FORMITEMTITEL;
+    }
+
+    @Override
     protected String getPageDetailPostDateXPath() {
         return DETAILPOSTDATE;
     }

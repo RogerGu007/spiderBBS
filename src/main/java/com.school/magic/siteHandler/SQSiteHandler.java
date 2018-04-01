@@ -20,6 +20,8 @@ import us.codecraft.webmagic.utils.HttpConstant;
 
 import java.util.*;
 
+import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
+
 public abstract class SQSiteHandler implements BaseSiteHandler {
 
     //列表数据
@@ -28,6 +30,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     protected abstract String getFormItemDetailXPath();
     protected abstract String getFormItemModifyTimeXPath();
     protected abstract String getFormNextPagesXPath();
+    protected abstract String getFormItemTitleXPath();
 
     //详细数据
     protected abstract String getPageDetailPostDateXPath();
@@ -44,7 +47,12 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
 
     SQSiteHandler() {}
 
-    SQSiteHandler(String userNameKey, String userName, String pwdKey, String password, String sqlURL, NewsEnum newsType) {
+    SQSiteHandler(String userNameKey,
+                  String userName,
+                  String pwdKey,
+                  String password,
+                  String sqlURL,
+                  NewsEnum newsType) {
         setUserNamePair(userNameKey, userName);
         setPasswordPair(pwdKey, password);
         setLoginURL(sqlURL);
@@ -140,7 +148,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return subList;
         }
 
-        for (int ii = from; ii <= to; ii++) {
+        for (int ii = from; ii <= to && ii < dataList.size(); ii++) {
             if (dataList.get(ii) == null)
                 break;
             subList.add(dataList.get(ii));
@@ -149,7 +157,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     }
 
     protected Boolean isDroppedItem(String itemDate) {
-        Date convertDate = DateUtils.getDateFromString(itemDate);
+        Date convertDate = DateUtils.getDateFromString(itemDate, DEFAULT_DATE_FORMAT);
         return isDroppedItem(convertDate);
     }
 
@@ -175,7 +183,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
 
         Selectable body = pageHtml.xpath(dateXPath).regex(DateUtils.DATE_REGX);
         if (body != null)
-            return DateUtils.getDateFromString(body.toString());
+            return DateUtils.getDateFromString(body.toString(), DEFAULT_DATE_FORMAT);
         return new Date();
     }
 
@@ -200,7 +208,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
                         continue;
 
                     requestLinks.addAll(detailNode.links().all());
-                    logger.info("title: {}", detailNode.toString());
+                    logger.info(String.format("title: {%s}", item.xpath(getFormItemTitleXPath()).toString()));
                 }
             }
         }
@@ -235,7 +243,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     }
 
     /**
-     * //返回item等信息
+     * 返回item的信息
      * @return
      */
     @Override

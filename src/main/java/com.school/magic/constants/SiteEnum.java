@@ -1,7 +1,9 @@
 package com.school.magic.constants;
 
 public enum SiteEnum {
-    TJ_BBS(TJSiteConstant.TJ_BBS_CODE);
+    TJ_BBS(1),
+    NJU_BBS(2);
+
 
     private Integer siteCode;
 
