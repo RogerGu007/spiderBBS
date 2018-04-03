@@ -50,7 +50,7 @@ public class NewsToDBPipeline implements Pipeline {
             News subjectNews = GsonUtils.fromGsonString(subjectGson, News.class);
             NewsDetail detailNews = GsonUtils.fromGsonString(detailGson, NewsDetail.class);
             try {
-//                newsService.storeDataToDB(subjectNews, detailNews);
+                newsService.storeDataToDB(subjectNews, detailNews);
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
@@ -60,7 +60,7 @@ public class NewsToDBPipeline implements Pipeline {
                     new Gson().fromJson(subjectGson, new TypeToken<List<News>>() {
                     }.getType());
             try {
-//                newsService.storeDataToDB(subjectNewsList);
+                newsService.storeDataToDB(subjectNewsList);
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
