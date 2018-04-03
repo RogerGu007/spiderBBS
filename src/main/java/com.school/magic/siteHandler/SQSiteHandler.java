@@ -300,6 +300,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         subjectNews.setLocationCode(getSiteLocationCode());
         subjectNews.setLinkUrl(page != null ? genSiteUrl(page.getUrl().toString())
                 : genSiteUrl(item.xpath(getLinkUrl()).toString()));
+
         return subjectNews;
     }
 
