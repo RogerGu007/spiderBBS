@@ -36,8 +36,8 @@ public class GithubRepoPageProcessor implements PageProcessor {
 
     public static void main(String[] args) {
 //        Spider.create(new GithubRepoPageProcessor()).addUrl("https://github.com/code4craft").thread(1).run();
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS);
-        Spider spider = SpiderGenerator.createSpider(SiteEnum.NJU_BBS);
+        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS);
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.NJU_BBS);
         spider.run();
     }
 }

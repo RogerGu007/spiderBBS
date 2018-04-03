@@ -2,12 +2,13 @@ package com.school.magic.siteHandler;
 
 import com.school.entity.News;
 import com.school.magic.constants.Constant;
+import com.school.magic.constants.ExtractSequenceType;
+import com.school.spiderConstants.LocationEnum;
 import com.school.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
 
@@ -17,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.school.magic.constants.NJUSiteConstant.*;
-import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
 import static com.school.utils.DateUtils.ENGLISH_DATE_FORMAT;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
@@ -28,6 +28,16 @@ public class NJUSiteHandler extends SQSiteHandler{
     private Site site = Site.me().setDomain(NJUBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
 
     @Override
+    public int getSiteLocationCode() {
+        return LocationEnum.NANJING.getZipCode();
+    }
+
+    @Override
+    public String getLinkUrl() {
+        return FORMITEMLINKURL;
+    }
+
+    @Override
     public boolean isLoginPage() {
         if (getmPage() == null)
             return false;
@@ -36,6 +46,13 @@ public class NJUSiteHandler extends SQSiteHandler{
             return true;
 
         return false;
+    }
+
+    @Override
+    public void setExtractSequence() {
+        //默认的排序
+        setExtractNewsSequence(ExtractSequenceType.INNER_INDEX);
+        setExtractNewsDetailSequence(ExtractSequenceType.AFTER_NEWS);
     }
 
     @Override
@@ -70,17 +87,17 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     @Override
     protected String getPageDetailPostDateXPath() {
-        return null;
+        return DETAILPOSTDATE;
     }
 
     @Override
     protected String getPageDetailSubjectXPath() {
-        return null;
+        return DETAILSUBJECT;
     }
 
     @Override
     protected String getPageDetailContentXPath() {
-        return null;
+        return DETAILCONTENTSANDCOMMENTS;
     }
 
     @Override
@@ -125,6 +142,7 @@ public class NJUSiteHandler extends SQSiteHandler{
         return requestLinks;
     }
 
+    //过滤掉hot类型的广告
     private boolean hasChildPage(Selectable item) {
         if (item == null || item.nodes().size() == 0)
             return false;
@@ -136,7 +154,7 @@ public class NJUSiteHandler extends SQSiteHandler{
         return false;
     }
 
-    private String genSiteUrl(String url) {
+    public String genSiteUrl(String url) {
         return "http://" + NJUBBSDOMAIN + "/" + url;
     }
 
@@ -153,5 +171,33 @@ public class NJUSiteHandler extends SQSiteHandler{
     protected Boolean isDroppedItem(String itemDate) {
         Date convertDate = DateUtils.getDateFromString(itemDate, ENGLISH_DATE_FORMAT);
         return isDroppedItem(convertDate);
+    }
+
+    /**
+     * 返回item的信息
+     * @return
+     */
+    public News extractNews(Page page, Selectable item) {
+        //如果没有详情或item需要过滤，无须再往下走了
+        if(!hasChildPage(item))
+            return null;
+
+        Date postDate = null;
+        Selectable date = item.xpath(getPageDetailPostDateXPath()).regex(DateUtils.DATE_REGX2);
+        if (date != null && date.toString() != null)
+            postDate = DateUtils.getDateFromString(date.toString() +
+                    " " + Calendar.getInstance().get(Calendar.YEAR), ENGLISH_DATE_FORMAT);
+        else
+            return null;
+
+        Selectable subjectItem = item.xpath(getPageDetailSubjectXPath());
+        if (subjectItem == null || subjectItem.nodes().size() == 0)
+            return null;
+
+        News subjectNews = News.generateNews(subjectItem.toString(), getmNewsType(), postDate);
+        setSubEnumType(subjectNews);
+        subjectNews.setLinkUrl(page != null ? genSiteUrl(page.getHtml().xpath(getLinkUrl()).toString())
+                : genSiteUrl(item.xpath(getLinkUrl()).toString()));
+        return subjectNews;
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.school.dao.INewsDetailDAO">
+    <sql id="ColumnList">
+      newsId,
+      sourceArticleUrl,
+      detailContent
+    </sql>
+
+    <sql id="FullColumn">
+        id,
+        <include refid="ColumnList"/>
+    </sql>
+
+    <select id="selectAllNews" resultType="com.school.entity.NewsDetail">
+        select <include refid="FullColumn"/> from news
+    </select>
+
+    <insert id="insert" parameterType="com.school.entity.NewsDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into NewsDetail <include refid="ColumnList"/> VALUES
+        (#{newsID}, #{sourceArticleUrl}, #{detailContent})
+    </insert>
+
+</mapper>

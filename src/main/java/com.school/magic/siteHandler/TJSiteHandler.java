@@ -2,6 +2,7 @@ package com.school.magic.siteHandler;
 
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.TJSiteConstant;
+import com.school.spiderConstants.LocationEnum;
 import com.sun.org.apache.regexp.internal.RE;
 import us.codecraft.webmagic.Site;
 
@@ -14,13 +15,22 @@ public class TJSiteHandler extends SQSiteHandler{
 
     private Site site = Site.me().setDomain(TJBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
 
-
     private List<String> mChildNodes = new ArrayList<>();
 
     public TJSiteHandler() {
         mChildNodes.add("static/image/common/pin_1.gif");
         mChildNodes.add("static/image/common/folder_new.gif");
         mChildNodes.add("static/image/common/folder_common.gif");
+    }
+
+    @Override
+    public int getSiteLocationCode() {
+        return LocationEnum.SHANGHAI.getZipCode();
+    }
+
+    @Override
+    public String getLinkUrl() {
+        return FORMITEMLINKURL;
     }
 
     @Override

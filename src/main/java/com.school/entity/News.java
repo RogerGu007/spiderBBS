@@ -6,88 +6,97 @@ import com.school.spiderConstants.NewsJobSubEnum;
 import java.util.Date;
 
 public class News extends BaseDTO {
-    private String mSubject;
+    private String subject;
 
-    private int mNewsType;
-    private int mNewsJobSubType;
-    private Boolean mIsHot;
-    private String mOurArticleUrl;
+    private int newsType;
+    private int newsJobSubType;
+    private Boolean isHot;
+    private int locationCode;
 
-    private Integer mCommentCount;
-    private Integer mGallaryImageCount;
-    private Date mPostDate;
+    private Integer commentCount;
+    private Integer gallaryImageCount;
+    private Date postDate;
+    private String linkUrl;
 
     public static News generateNews(String title,
                 NewsEnum newsType,
                 Date postDate) {
         News news = new News();
-        news.mSubject = title;
-        news.mNewsType = newsType.getSiteCode();
-        news.mPostDate = postDate;
+        news.subject = title;
+        news.newsType = newsType.getSiteCode();
+        news.postDate = postDate;
         return news;
     }
 
     public String getmSubject() {
-        return mSubject;
+        return subject;
     }
 
-    public void setmSubject(String mSubject) {
-        this.mSubject = mSubject;
+    public void setSubject(String mSubject) {
+        this.subject = mSubject;
     }
 
-    public int getmNewsType() {
-        return mNewsType;
+    public int getNewsType() {
+        return newsType;
     }
 
-    public void setmNewsType(int mNewsType) {
-        this.mNewsType = mNewsType;
+    public void setNewsType(int newsType) {
+        this.newsType = newsType;
     }
 
-    public int getmNewsJobSubType() {
-        return mNewsJobSubType;
+    public int getNewsJobSubType() {
+        return newsJobSubType;
     }
 
-    public void setmNewsJobSubType(int mNewsJobSubType) {
-        this.mNewsJobSubType = mNewsJobSubType;
+    public void setNewsJobSubType(int newsJobSubType) {
+        this.newsJobSubType = newsJobSubType;
     }
 
-    public Boolean getmIsHot() {
-        return mIsHot;
+    public Boolean getIsHot() {
+        return isHot;
     }
 
-    public void setmIsHot(Boolean mIsHot) {
-        this.mIsHot = mIsHot;
+    public void setIsHot(Boolean isHot) {
+        this.isHot = isHot;
     }
 
-    public String getmOurArticleUrl() {
-        return mOurArticleUrl;
+    public int getLocationCode() {
+        return locationCode;
     }
 
-    public void setmOurArticleUrl(String mOurArticleUrl) {
-        this.mOurArticleUrl = mOurArticleUrl;
+    public void setLocationCode(int locationCode) {
+        this.locationCode = locationCode;
     }
 
-    public Integer getmCommentCount() {
-        return mCommentCount;
+    public Integer getCommentCount() {
+        return commentCount;
     }
 
-    public void setmCommentCount(Integer mCommentCount) {
-        this.mCommentCount = mCommentCount;
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
     }
 
-    public Integer getmGallaryImageCount() {
-        return mGallaryImageCount;
+    public Integer getGallaryImageCount() {
+        return gallaryImageCount;
     }
 
-    public void setmGallaryImageCount(Integer mGallaryImageCount) {
-        this.mGallaryImageCount = mGallaryImageCount;
+    public void setGallaryImageCount(Integer gallaryImageCount) {
+        this.gallaryImageCount = gallaryImageCount;
     }
 
-    public Date getmPostDate() {
-        return mPostDate;
+    public Date getPostDate() {
+        return postDate;
     }
 
-    public void setmPostDate(Date mPostDate) {
-        this.mPostDate = mPostDate;
+    public void setPostDate(Date postDate) {
+        this.postDate = postDate;
+    }
+
+    public String getLinkUrl() {
+        return linkUrl;
+    }
+
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
     }
 }

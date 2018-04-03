@@ -10,6 +10,7 @@ import java.util.Locale;
 public class DateUtils {
 
     public static String DATE_REGX = "\\d+-\\d+-\\d+\\s+\\d+:\\d+"; //yyyy-MM-dd hh:mm
+    public static String DATE_REGX2 = "\\D+\\s+\\d+\\s+\\d+:\\d+"; //dd hh:mm
     public static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd hh:mm";
     public static String ENGLISH_DATE_FORMAT = "MMM d HH:mm yyyy";
 

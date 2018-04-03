@@ -3,9 +3,11 @@ package com.school.magic.siteHandler;
 import com.school.entity.News;
 import com.school.entity.NewsDetail;
 import com.school.magic.constants.Constant;
+import com.school.magic.constants.ExtractSequenceType;
 import com.school.spiderConstants.NewsEnum;
 import com.school.spiderConstants.NewsJobSubEnum;
 import com.school.utils.DateUtils;
+import com.school.utils.GsonUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import us.codecraft.webmagic.utils.HttpConstant;
 
 import java.util.*;
 
+import static com.school.magic.constants.Constant.RESULT_SUBJECT_FIELD;
 import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
 
 public abstract class SQSiteHandler implements BaseSiteHandler {
@@ -44,8 +47,12 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     private NewsEnum mNewsType;
     private String mNewsURL;
     private Page mPage;
+    private ExtractSequenceType extractNewsSequence = ExtractSequenceType.AFTER_INDEX;
+    private ExtractSequenceType extractNewsDetailSequence = ExtractSequenceType.AFTER_NEWS;
 
-    SQSiteHandler() {}
+    SQSiteHandler() {
+        setExtractSequence();
+    }
 
     SQSiteHandler(String userNameKey,
                   String userName,
@@ -57,6 +64,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         setPasswordPair(pwdKey, password);
         setLoginURL(sqlURL);
         setNewsType(newsType);
+        setExtractSequence();
     }
 
     protected static Date getAcceptDate() {
@@ -87,6 +95,26 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
 
     public String getLoginURL() {
         return this.URL;
+    }
+
+    public void setExtractSequence() {
+        //默认不设置，使用默认值
+    }
+
+    public ExtractSequenceType getExtractNewsSequence() {
+        return extractNewsSequence;
+    }
+
+    public void setExtractNewsSequence(ExtractSequenceType extractNewsSequence) {
+        this.extractNewsSequence = extractNewsSequence;
+    }
+
+    public ExtractSequenceType getExtractNewsDetailSequence() {
+        return extractNewsDetailSequence;
+    }
+
+    public void setExtractNewsDetailSequence(ExtractSequenceType extractNewsDetailSequence) {
+        this.extractNewsDetailSequence = extractNewsDetailSequence;
     }
 
     public boolean hasValidLoginInfo() {
@@ -141,6 +169,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     public void setmPage(Page mPage) {
         this.mPage = mPage;
     }
+
 
     protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
         List<String> subList = new ArrayList<>();
@@ -238,7 +267,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
                 jobSubType = NewsJobSubEnum.SUB_INTERN;
             else if (news.getmSubject().contains(Constant.PARTTIME))
                 jobSubType = NewsJobSubEnum.SUB_PARTTIME;
-            news.setmNewsJobSubType(jobSubType.getSiteCode());
+            news.setNewsJobSubType(jobSubType.getSiteCode());
         }
     }
 
@@ -247,23 +276,44 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
      * @return
      */
     @Override
-    public News extractNews() {
-        Date postDate = getPostDate(getmPage().getHtml(), getPageDetailPostDateXPath());
-        if (postDate == null)
+    public News extractNews(Page page, Selectable item) {
+        if (page == null && item == null)
             return null;
 
-        Selectable subjectItem = getmPage().getHtml().xpath(getPageDetailSubjectXPath());
+        Selectable date = (page != null) ? page.getHtml().xpath(getPageDetailPostDateXPath()) :
+                item.xpath(getPageDetailPostDateXPath()).regex(DateUtils.DATE_REGX);
+
+        Date postDate = null;
+        if (date != null)
+            postDate = DateUtils.getDateFromString(date.toString(), DEFAULT_DATE_FORMAT);
+        else
+            return null;
+
+        Selectable subjectItem = (page != null) ? page.getHtml().xpath(getPageDetailSubjectXPath())
+                    : item.xpath(getPageDetailSubjectXPath());
+
         if (subjectItem == null || subjectItem.nodes().size() == 0)
             return null;
 
         News subjectNews = News.generateNews(subjectItem.toString(), getmNewsType(), postDate);
         setSubEnumType(subjectNews);
+        subjectNews.setLocationCode(getSiteLocationCode());
+        subjectNews.setLinkUrl(page != null ? genSiteUrl(page.getUrl().toString())
+                : genSiteUrl(item.xpath(getLinkUrl()).toString()));
         return subjectNews;
     }
 
     @Override
-    public NewsDetail extractNewsDetails() {
-        Selectable contentsAndComments = getmPage().getHtml().xpath(getPageDetailContentXPath());
+    public NewsDetail extractNewsDetails(Page page, Selectable item) {
+        if (page == null && item == null)
+            return null;
+
+        Selectable contentsAndComments;
+        if (page != null)
+            contentsAndComments = page.getHtml().xpath(getPageDetailContentXPath());
+        else
+            contentsAndComments = item.xpath(getPageDetailContentXPath());
+
         if (contentsAndComments == null || contentsAndComments.nodes().size() == 0)
             return null;
         //获取内容，忽略comments，后续完善 todo
@@ -271,6 +321,49 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (detailContent == null)
             return null;
 
-        return NewsDetail.generateNewsDetail(detailContent.toString(), getmPage().getUrl().toString());
+        String link = null;
+        if (page != null) {
+            link = page.getUrl().toString();
+        } else {
+            if (item.links() != null && item.links().all().size() > 0)
+                link = item.links().all().get(0);
+        }
+        return NewsDetail.generateNewsDetail(detailContent.toString(), link);
+    }
+
+    public void extractNodeNews(Page page) {
+        Selectable body = page.getHtml().xpath(getFormNodeXPath());
+        List<News> newsList = new ArrayList<>();
+        for (int ii = 0; ii < body.nodes().size(); ii++) {
+            Selectable item = body.nodes().get(ii);
+            News news = extractNews(null, item);
+            if (news != null)
+                newsList.add(news);
+        }
+
+        if (newsList.size() > 0) {
+            page.setSkip(false);
+            page.putField(RESULT_SUBJECT_FIELD, GsonUtils.toGsonString(newsList));
+        }
+    }
+
+    public void extractNodeDetails(Page page) {
+        Selectable body = page.getHtml().xpath(getFormNodeXPath());
+        List<NewsDetail> newsDetailList = new ArrayList<>();
+        for (int ii = 0; ii < body.nodes().size(); ii++) {
+            Selectable item = body.nodes().get(ii);
+            NewsDetail newsDetail = extractNewsDetails(null, item);
+            if (newsDetail != null)
+                newsDetailList.add(newsDetail);
+        }
+
+        if (newsDetailList.size() > 0) {
+            page.setSkip(false);
+            page.putField(RESULT_SUBJECT_FIELD, GsonUtils.toGsonString(newsDetailList));
+        }
+    }
+
+    public String genSiteUrl(String url) {
+        return url;
     }
 }

@@ -3,19 +3,15 @@
 
 <mapper namespace="com.school.dao.INewsDAO">
     <sql id="ColumnList">
-      id,
-      title mSubject,
-      news_type mNewsType,
-      news_job_sub_type mNewsJobSubType,
-      is_hot mIsHot,
-      our_article_url mOurArticleUrl,
-      comment_count mCommentCount,
-      gallary_image_count mGallaryImageCount,
-      post_date mPostDate,
-      update_at updateAt,
-      update_by updateBy,
-      create_at createAt,
-      create_by createBy
+      subject,
+      newsType,
+      newsSubEnum,
+      isHot,
+      postDate,
+      locationCode,
+      linkUrl,
+      createAt,
+      createBy
     </sql>
 
     <sql id="FullColumn">
@@ -27,11 +23,13 @@
         select <include refid="FullColumn"/> from news
     </select>
 
-    <insert id="addRecord" parameterType="com.school.entity.News">
-        insert into news
-        (title, news_type, news_job_sub_type, is_hot, our_article_url, comment_count, gallary_image_count)
-        values
-        (#{mSubject}, #{mNewsType}, #{mNewsJobSubType}, 0, #{mOurArticleUrl}, 0, 0)
+    <insert id="insert" parameterType="com.school.entity.News" useGeneratedKeys="true" keyProperty="id">
+        insert into news <include refid="ColumnList"/> VALUES
+        (#{subject}, #{newsType}, #{newsSubEnum}, #{isHot}, #{postDate}, #{locationCode}, #{linkUrl}, now(), #{createBy})
     </insert>
 
+    <select id="findByUrl" parameterMap="map" resultMap="com.school.entity.News">
+        select <include refid="ColumnList"/> from news
+        where linkUrl = ${linkUrl}
+    </select>
 </mapper>

@@ -19,9 +19,16 @@ public class NJUSiteConstant {
     public static final String FORMITEMTITEL = "//tr/td[6]/a/text()";
     //用于判断是否有详情页
     public static final String FORMITEMCHILD = "//tr/td[1]/text()";
+    //列表页的详情页href
+    public static final String FORMITEMLINKURL = "//tr/td[6]/a/@href";
 
     //详情页是一个整体的字符串，标题没有单独的标签，服用父页面的数据
-//    public static final String DETAILSUBJECT = "//*[@id=\"thread_subject\"]/text()";
-//    public static final String DETAILPOSTDATE= "//em[@id]/text()";
-    public static final String DETAILCONTENTSANDCOMMENTS = "//*[@id=\"NET_1\"]/pre/text()[3]";
+    public static final String DETAILSUBJECT = "//tr/td[6]/a/text()";
+    public static final String DETAILPOSTDATE= "//td/nobr/text()";
+    public static final String DETAILCONTENTSANDCOMMENTS = "//*[@id=\"NET_1\"]/textarea/text()";
+
+    //news的抽取顺序
+    public static final ExtractSequenceType EXTRACT_NEWS_SEQUENCE = ExtractSequenceType.INNER_INDEX;
+    //newsDetail的抽取顺序
+    public static final ExtractSequenceType EXTRACT_NEWSDETAIL_SEQUENCE = ExtractSequenceType.AFTER_NEWS;
 }

@@ -9,5 +9,7 @@ public interface INewsDAO {
 
     List<News> selectAllNews();
 
-    public int addRecord(News record);
+    int insert(News record);
+
+    News findByUrl(String url);
 }
