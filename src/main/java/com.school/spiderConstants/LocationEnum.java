@@ -1,6 +1,7 @@
 package com.school.spiderConstants;
 
 public enum LocationEnum {
+    ALL(0),
     SHANGHAI(021),
     NANJING(025);
 
