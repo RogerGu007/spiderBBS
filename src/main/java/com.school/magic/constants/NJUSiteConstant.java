@@ -3,6 +3,7 @@ package com.school.magic.constants;
 public class NJUSiteConstant {
 
     public static final String LOGIN_URL = "";
+    
     public static final String JOB_URL  = "http://bbs.nju.edu.cn/bbstdoc?board=JobExpress";
     public static final String INDEX_JOB_URL_TAG = "board=JobExpress";
 
