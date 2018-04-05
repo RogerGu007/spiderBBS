@@ -16,7 +16,7 @@ public enum NewsSubTypeEnum {
         return this.newsSubType;
     }
 
-    public static NewsSubTypeEnum valueToNewsSubTyp(int subType) {
+    public static NewsSubTypeEnum valueToNewsSubType(int subType) {
         for (NewsSubTypeEnum newsEnum : NewsSubTypeEnum.values()) {
             if (newsEnum.newsSubType == subType) {
                 return newsEnum;
