@@ -11,7 +11,7 @@ public enum NewsSubTypeEnum {
         this.newsJobType = type;
     }
 
-    public Integer getSiteCode() {
+    public Integer getNewsSubTypeCode() {
         return this.newsJobType;
     }
 }
