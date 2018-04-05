@@ -19,16 +19,16 @@
         <include refid="ColumnList"/>
     </sql>
 
-    <select id="selectAllNews" resultType="com.school.entity.News">
+    <select id="selectAllNews" resultType="com.school.entity.NewsDTO">
         select <include refid="FullColumn"/> from news
     </select>
 
-    <insert id="insert" parameterType="com.school.entity.News" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.school.entity.NewsDTO" useGeneratedKeys="true" keyProperty="id">
         insert into news <include refid="ColumnList"/> VALUES
         (#{subject}, #{newsType}, #{newsSubEnum}, #{isHot}, #{postDate}, #{locationCode}, #{linkUrl}, now(), #{createBy})
     </insert>
 
-    <select id="findByUrl" parameterMap="map" resultMap="com.school.entity.News">
+    <select id="findByUrl" parameterMap="map" resultMap="com.school.entity.NewsDTO">
         select <include refid="ColumnList"/> from news
         where linkUrl = ${linkUrl}
     </select>

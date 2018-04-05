@@ -1,12 +1,12 @@
-package com.school.spiderConstants;
+package com.school.spiderEnums;
 
-public enum NewsEnum {
+public enum NewsTypeEnum {
     NEWS_JOB(2),
     NEWS_FRIENDS(3);
 
     private Integer newsType;
 
-    private NewsEnum(int type) {
+    private NewsTypeEnum(int type) {
         this.newsType = type;
     }
 
@@ -15,8 +15,8 @@ public enum NewsEnum {
     }
 
     /*方法Value2CityTest是为了typeHandler后加的*/
-    public static NewsEnum valueToNews(int newsType) {
-        for (NewsEnum newsEnum : NewsEnum.values()) {
+    public static NewsTypeEnum valueToNews(int newsType) {
+        for (NewsTypeEnum newsEnum : NewsTypeEnum.values()) {
             if (newsEnum.newsType == newsType) {
                 return newsEnum;
             }

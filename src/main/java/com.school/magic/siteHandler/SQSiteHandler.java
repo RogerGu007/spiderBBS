@@ -1,11 +1,13 @@
 package com.school.magic.siteHandler;
 
-import com.school.entity.News;
-import com.school.entity.NewsDetail;
+import com.school.entity.NewsDTO;
+import com.school.entity.NewsDTO;
+import com.school.entity.NewsDetailDTO;
+import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractSequenceType;
-import com.school.spiderConstants.NewsEnum;
-import com.school.spiderConstants.NewsJobSubEnum;
+import com.school.spiderEnums.NewsSubTypeEnum;
+import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.GsonUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -44,7 +46,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     private BasicNameValuePair mUserNamePair = null;
     private BasicNameValuePair mPasswordPair = null;
     private String URL;
-    private NewsEnum mNewsType;
+    private NewsTypeEnum mNewsType;
     private String mNewsURL;
     private Page mPage;
     private ExtractSequenceType extractNewsSequence = ExtractSequenceType.AFTER_INDEX;
@@ -59,7 +61,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
                   String pwdKey,
                   String password,
                   String sqlURL,
-                  NewsEnum newsType) {
+                  NewsTypeEnum newsType) {
         setUserNamePair(userNameKey, userName);
         setPasswordPair(pwdKey, password);
         setLoginURL(sqlURL);
@@ -150,11 +152,11 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return mNewsURL;
     }
 
-    public void setNewsType(NewsEnum newsType) {
+    public void setNewsType(NewsTypeEnum newsType) {
         this.mNewsType = newsType;
     }
 
-    public NewsEnum getmNewsType() {
+    public NewsTypeEnum getmNewsType() {
         return mNewsType;
     }
 
@@ -260,13 +262,13 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return item.xpath(getFormItemXPath());
     }
 
-    protected void setSubEnumType(News news) {
-        if (mNewsType == NewsEnum.NEWS_JOB) {
-            NewsJobSubEnum jobSubType = NewsJobSubEnum.SUB_FULLTIME;
+    protected void setSubEnumType(NewsDTO news) {
+        if (mNewsType == NewsTypeEnum.NEWS_JOB) {
+            NewsSubTypeEnum jobSubType = NewsSubTypeEnum.SUB_FULLTIME;
             if (news.getmSubject().contains(Constant.INTERN))
-                jobSubType = NewsJobSubEnum.SUB_INTERN;
+                jobSubType = NewsSubTypeEnum.SUB_INTERN;
             else if (news.getmSubject().contains(Constant.PARTTIME))
-                jobSubType = NewsJobSubEnum.SUB_PARTTIME;
+                jobSubType = NewsSubTypeEnum.SUB_PARTTIME;
             news.setNewsJobSubType(jobSubType.getSiteCode());
         }
     }
@@ -276,7 +278,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
      * @return
      */
     @Override
-    public News extractNews(Page page, Selectable item) {
+    public NewsDTO extractNews(Page page, Selectable item) {
         if (page == null && item == null)
             return null;
 
@@ -295,7 +297,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (subjectItem == null || subjectItem.nodes().size() == 0)
             return null;
 
-        News subjectNews = News.generateNews(subjectItem.toString(), getmNewsType(), postDate);
+        NewsDTO subjectNews = NewsDTO.generateNews(subjectItem.toString(), getmNewsType(), postDate);
         setSubEnumType(subjectNews);
         subjectNews.setLocationCode(getSiteLocationCode());
         subjectNews.setLinkUrl(page != null ? genSiteUrl(page.getUrl().toString())
@@ -305,7 +307,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     }
 
     @Override
-    public NewsDetail extractNewsDetails(Page page, Selectable item) {
+    public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
         if (page == null && item == null)
             return null;
 
@@ -329,15 +331,15 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             if (item.links() != null && item.links().all().size() > 0)
                 link = item.links().all().get(0);
         }
-        return NewsDetail.generateNewsDetail(detailContent.toString(), link);
+        return NewsDetailDTO.generateNewsDetail(detailContent.toString(), link);
     }
 
     public void extractNodeNews(Page page) {
         Selectable body = page.getHtml().xpath(getFormNodeXPath());
-        List<News> newsList = new ArrayList<>();
+        List<NewsDTO> newsList = new ArrayList<>();
         for (int ii = 0; ii < body.nodes().size(); ii++) {
             Selectable item = body.nodes().get(ii);
-            News news = extractNews(null, item);
+            NewsDTO news = extractNews(null, item);
             if (news != null)
                 newsList.add(news);
         }
@@ -350,10 +352,10 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
 
     public void extractNodeDetails(Page page) {
         Selectable body = page.getHtml().xpath(getFormNodeXPath());
-        List<NewsDetail> newsDetailList = new ArrayList<>();
+        List<NewsDetailDTO> newsDetailList = new ArrayList<>();
         for (int ii = 0; ii < body.nodes().size(); ii++) {
             Selectable item = body.nodes().get(ii);
-            NewsDetail newsDetail = extractNewsDetails(null, item);
+            NewsDetailDTO newsDetail = extractNewsDetails(null, item);
             if (newsDetail != null)
                 newsDetailList.add(newsDetail);
         }

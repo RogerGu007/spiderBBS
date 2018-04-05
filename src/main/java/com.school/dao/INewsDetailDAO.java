@@ -1,11 +1,11 @@
 package com.school.dao;
 
-import com.school.entity.NewsDetail;
+import com.school.entity.NewsDetailDTO;
 
 /**
  * Author: roger
  */
 public interface INewsDetailDAO {
 
-    int insert(NewsDetail newsDetail);
+    int insert(NewsDetailDTO newsDetail);
 }

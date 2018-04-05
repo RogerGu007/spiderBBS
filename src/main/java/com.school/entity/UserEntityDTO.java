@@ -1,6 +1,6 @@
 package com.school.entity;
 
-public class UserEntity {
+public class UserEntityDTO {
     private String verifiedContent;
     private String avatarUrl;
     private Long userId;

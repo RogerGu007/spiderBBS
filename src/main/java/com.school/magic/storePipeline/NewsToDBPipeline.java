@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.school.Service.NewsService;
 import com.school.dao.INewsDAO;
-import com.school.entity.News;
-import com.school.entity.NewsDetail;
+import com.school.entity.NewsDTO;
+import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.TJSiteConstant;
 import com.school.utils.GsonUtils;
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -47,8 +47,8 @@ public class NewsToDBPipeline implements Pipeline {
         logger.info(String.format("DetailNewsGson: {%s}", detailGson));
         if (resultItems.get(IS_SUBJECT_LIST) == null) {
             //都从详情页获取数据
-            News subjectNews = GsonUtils.fromGsonString(subjectGson, News.class);
-            NewsDetail detailNews = GsonUtils.fromGsonString(detailGson, NewsDetail.class);
+            NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
+            NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
             try {
                 newsService.storeDataToDB(subjectNews, detailNews);
             } catch (Exception e) {
@@ -56,8 +56,8 @@ public class NewsToDBPipeline implements Pipeline {
             }
         } else {
             //news从列表页获取
-            List<News> subjectNewsList =
-                    new Gson().fromJson(subjectGson, new TypeToken<List<News>>() {
+            List<NewsDTO> subjectNewsList =
+                    new Gson().fromJson(subjectGson, new TypeToken<List<NewsDTO>>() {
                     }.getType());
             try {
                 newsService.storeDataToDB(subjectNewsList);

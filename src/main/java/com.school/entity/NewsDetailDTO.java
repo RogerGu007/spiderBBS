@@ -1,6 +1,6 @@
 package com.school.entity;
 
-public class NewsDetail {
+public class NewsDetailDTO {
 
     private String detailContent;
     private String sourceArticleUrl;
@@ -30,8 +30,8 @@ public class NewsDetail {
         this.newsID = newsID;
     }
 
-    public static NewsDetail generateNewsDetail(String detailContent, String sourceArticleUrl) {
-        NewsDetail newsDetail = new NewsDetail();
+    public static NewsDetailDTO generateNewsDetail(String detailContent, String sourceArticleUrl) {
+        NewsDetailDTO newsDetail = new NewsDetailDTO();
         newsDetail.detailContent = detailContent;
         newsDetail.sourceArticleUrl = sourceArticleUrl;
         return newsDetail;

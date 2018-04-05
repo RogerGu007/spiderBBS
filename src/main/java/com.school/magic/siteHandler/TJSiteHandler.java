@@ -2,7 +2,7 @@ package com.school.magic.siteHandler;
 
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.TJSiteConstant;
-import com.school.spiderConstants.LocationEnum;
+import com.school.spiderEnums.LocationEnum;
 import com.sun.org.apache.regexp.internal.RE;
 import us.codecraft.webmagic.Site;
 

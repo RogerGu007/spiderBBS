@@ -1,4 +1,4 @@
-package com.school.spiderConstants;
+package com.school.spiderEnums;
 
 public enum LocationEnum {
     ALL(0),

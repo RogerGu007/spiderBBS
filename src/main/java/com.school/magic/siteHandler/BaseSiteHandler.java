@@ -1,8 +1,8 @@
 package com.school.magic.siteHandler;
 
-import com.school.entity.News;
-import com.school.entity.NewsDetail;
-import com.school.spiderConstants.LocationEnum;
+import com.school.entity.NewsDTO;
+import com.school.entity.NewsDetailDTO;
+import com.school.spiderEnums.LocationEnum;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.selector.Selectable;
 
@@ -12,9 +12,9 @@ public interface BaseSiteHandler {
 
     public List<String> getRequests();
 
-    public News extractNews(Page page, Selectable item);
+    public NewsDTO extractNews(Page page, Selectable item);
 
-    public NewsDetail extractNewsDetails(Page page, Selectable item);
+    public NewsDetailDTO extractNewsDetails(Page page, Selectable item);
 
     public boolean isLoginPage();
 

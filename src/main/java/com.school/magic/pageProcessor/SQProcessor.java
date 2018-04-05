@@ -1,7 +1,7 @@
 package com.school.magic.pageProcessor;
 
-import com.school.entity.News;
-import com.school.entity.NewsDetail;
+import com.school.entity.NewsDTO;
+import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.ExtractSequenceType;
 import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.storePipeline.ConsolePipeline;
@@ -110,7 +110,7 @@ public class SQProcessor implements PageProcessor {
      * @param page
      */
     private boolean extractSubjectFile(Page page) {
-        News news = mSqSiteHandler.extractNews(page, null);
+        NewsDTO news = mSqSiteHandler.extractNews(page, null);
         if (news == null) {
             page.setSkip(true);
             return false;
@@ -125,7 +125,7 @@ public class SQProcessor implements PageProcessor {
      * @param page
      */
     private boolean extractDetailField(Page page) {
-        NewsDetail details = mSqSiteHandler.extractNewsDetails(page, null);
+        NewsDetailDTO details = mSqSiteHandler.extractNewsDetails(page, null);
         if (details == null) {
             page.setSkip(true);
             return false;

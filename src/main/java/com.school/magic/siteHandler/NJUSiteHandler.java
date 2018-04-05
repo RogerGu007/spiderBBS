@@ -1,9 +1,9 @@
 package com.school.magic.siteHandler;
 
-import com.school.entity.News;
+import com.school.entity.NewsDTO;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractSequenceType;
-import com.school.spiderConstants.LocationEnum;
+import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -177,7 +177,7 @@ public class NJUSiteHandler extends SQSiteHandler{
      * 返回item的信息
      * @return
      */
-    public News extractNews(Page page, Selectable item) {
+    public NewsDTO extractNews(Page page, Selectable item) {
         //如果没有详情或item需要过滤，无须再往下走了
         if(!hasChildPage(item))
             return null;
@@ -194,7 +194,7 @@ public class NJUSiteHandler extends SQSiteHandler{
         if (subjectItem == null || subjectItem.nodes().size() == 0)
             return null;
 
-        News subjectNews = News.generateNews(subjectItem.toString(), getmNewsType(), postDate);
+        NewsDTO subjectNews = NewsDTO.generateNews(subjectItem.toString(), getmNewsType(), postDate);
         setSubEnumType(subjectNews);
         subjectNews.setLinkUrl(page != null ? genSiteUrl(page.getHtml().xpath(getLinkUrl()).toString())
                 : genSiteUrl(item.xpath(getLinkUrl()).toString()));

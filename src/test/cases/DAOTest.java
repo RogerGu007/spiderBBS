@@ -1,7 +1,7 @@
 package cases;
 
 import com.school.dao.INewsDAO;
-import com.school.entity.News;
+import com.school.entity.NewsDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class DAOTest {
 
     @Test
     public void testDao() {
-        List<News> newsList = newsDAO.selectAllNews();
+        List<NewsDTO> newsList = newsDAO.selectAllNews();
         System.out.println(newsList.get(0).getmSubject());
     }
 }

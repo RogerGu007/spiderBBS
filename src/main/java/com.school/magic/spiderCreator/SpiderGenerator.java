@@ -5,7 +5,7 @@ import com.school.magic.pageProcessor.SQProcessor;
 import com.school.magic.siteHandler.NJUSiteHandler;
 import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.siteHandler.TJSiteHandler;
-import com.school.spiderConstants.NewsEnum;
+import com.school.spiderEnums.NewsTypeEnum;
 import us.codecraft.webmagic.Spider;
 
 import static com.school.magic.constants.NJUSiteConstant.JOB_URL;
@@ -23,7 +23,7 @@ public class SpiderGenerator {
                 sqSiteHandler.setLoginURL(LOGIN_URL);
                 sqSiteHandler.setUserNamePair("username", "tjshif");
                 sqSiteHandler.setPasswordPair("password", "19801004");
-                sqSiteHandler.setNewsType(NewsEnum.NEWS_FRIENDS);
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_FRIENDS);
                 sqSiteHandler.setNewsURL(FRIEND_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 break;
@@ -32,7 +32,7 @@ public class SpiderGenerator {
 //                sqSiteHandler.setLoginURL(LOGIN_URL);
 //                sqSiteHandler.setUserNamePair("username", "tjshif");
 //                sqSiteHandler.setPasswordPair("password", "19801004");
-                sqSiteHandler.setNewsType(NewsEnum.NEWS_JOB);
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
                 sqSiteHandler.setNewsURL(JOB_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 break;

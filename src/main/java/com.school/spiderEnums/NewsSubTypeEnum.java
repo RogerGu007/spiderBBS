@@ -1,13 +1,13 @@
-package com.school.spiderConstants;
+package com.school.spiderEnums;
 
-public enum NewsJobSubEnum {
+public enum NewsSubTypeEnum {
     SUB_FULLTIME(1),
     SUB_PARTTIME(2),
     SUB_INTERN(3);
 
     private Integer newsJobType;
 
-    private NewsJobSubEnum(int type) {
+    private NewsSubTypeEnum(int type) {
         this.newsJobType = type;
     }
 

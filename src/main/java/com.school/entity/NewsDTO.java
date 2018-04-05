@@ -1,11 +1,10 @@
 package com.school.entity;
 
-import com.school.spiderConstants.NewsEnum;
-import com.school.spiderConstants.NewsJobSubEnum;
+import com.school.spiderEnums.NewsTypeEnum;
 
 import java.util.Date;
 
-public class News extends BaseDTO {
+public class NewsDTO extends BaseDTO {
     private String subject;
 
     private int newsType;
@@ -18,10 +17,10 @@ public class News extends BaseDTO {
     private Date postDate;
     private String linkUrl;
 
-    public static News generateNews(String title,
-                NewsEnum newsType,
+    public static NewsDTO generateNews(String title,
+                NewsTypeEnum newsType,
                 Date postDate) {
-        News news = new News();
+        NewsDTO news = new NewsDTO();
         news.subject = title;
         news.newsType = newsType.getSiteCode();
         news.postDate = postDate;
