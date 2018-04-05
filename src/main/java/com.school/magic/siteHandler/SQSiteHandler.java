@@ -282,7 +282,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (page == null && item == null)
             return null;
 
-        Selectable date = (page != null) ? page.getHtml().xpath(getPageDetailPostDateXPath()) :
+        Selectable date = (page != null) ? page.getHtml().xpath(getPageDetailPostDateXPath()).regex(DateUtils.DATE_REGX) :
                 item.xpath(getPageDetailPostDateXPath()).regex(DateUtils.DATE_REGX);
 
         Date postDate = null;
