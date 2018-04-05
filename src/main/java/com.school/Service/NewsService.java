@@ -2,8 +2,8 @@ package com.school.Service;
 
 import com.school.dao.INewsDAO;
 import com.school.dao.INewsDetailDAO;
-import com.school.entity.News;
-import com.school.entity.NewsDetail;
+import com.school.entity.NewsDTO;
+import com.school.entity.NewsDetailDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class NewsService {
     private INewsDetailDAO newsDetailDAO;
 
     @Transactional
-    public void storeDataToDB(News subjectNews, NewsDetail detailNews) {
+    public void storeDataToDB(NewsDTO subjectNews, NewsDetailDTO detailNews) {
         if (subjectNews == null || detailNews == null)
             return;
 
@@ -42,7 +42,7 @@ public class NewsService {
     }
 
     @Transactional
-    public void storeDataToDB(News subjectNews) {
+    public void storeDataToDB(NewsDTO subjectNews) {
         if (subjectNews == null)
             return;
 
@@ -50,11 +50,11 @@ public class NewsService {
     }
 
     @Transactional
-    public void storeDataToDB(NewsDetail detailNews) {
+    public void storeDataToDB(NewsDetailDTO detailNews) {
         if (detailNews == null)
             return;
 
-        News subjectNews = newsDAO.findByUrl(new HashMap<String, String>() {{
+        NewsDTO subjectNews = newsDAO.findByUrl(new HashMap<String, String>() {{
             put("linkUrl", detailNews.getSourceArticleUrl());
         }});
         if (subjectNews != null) {
@@ -64,11 +64,11 @@ public class NewsService {
     }
 
     @Transactional
-    public void storeDataToDB(List<News> subjectNewsList) {
+    public void storeDataToDB(List<NewsDTO> subjectNewsList) {
         if (subjectNewsList == null || subjectNewsList.size() == 0)
             return;
 
-        for (News subjectNews : subjectNewsList) {
+        for (NewsDTO subjectNews : subjectNewsList) {
             newsDAO.insert(subjectNews);
         }
     }

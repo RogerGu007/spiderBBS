@@ -7,5 +7,5 @@ import com.school.entity.NewsDetailDTO;
  */
 public interface INewsDetailDAO {
 
-    int insert(NewsDetailDTO newsDetail);
+    int insert(NewsDetailDTO newsDetailDTO);
 }

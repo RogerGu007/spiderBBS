@@ -1,6 +1,6 @@
 package com.school.dao;
 
-import com.school.entity.News;
+import com.school.entity.NewsDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -8,9 +8,9 @@ import java.util.Map;
 
 public interface INewsDAO {
 
-    List<News> selectAllNews();
+    List<NewsDTO> selectAllNews();
 
-    int insert(News record);
+    int insert(NewsDTO record);
 
-    News findByUrl(Map<String, String> urlMap);
+    NewsDTO findByUrl(Map<String, String> urlMap);
 }
