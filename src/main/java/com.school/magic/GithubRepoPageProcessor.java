@@ -2,6 +2,8 @@ package com.school.magic;
 
 import com.school.magic.constants.SiteEnum;
 import com.school.magic.spiderCreator.SpiderGenerator;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
@@ -36,8 +38,9 @@ public class GithubRepoPageProcessor implements PageProcessor {
 
     public static void main(String[] args) {
 //        Spider.create(new GithubRepoPageProcessor()).addUrl("https://github.com/code4craft").thread(1).run();
-        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.NJU_BBS);
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS);
+        Spider spider = SpiderGenerator.createSpider(SiteEnum.NJU_BBS);
         spider.run();
     }
 }

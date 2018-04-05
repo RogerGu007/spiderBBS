@@ -6,6 +6,7 @@ import com.school.magic.constants.ExtractSequenceType;
 import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.storePipeline.ConsolePipeline;
 import com.school.magic.storePipeline.NewsToDBPipeline;
+import com.school.utils.ApplicationContextUtils;
 import com.school.utils.GsonUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
@@ -51,6 +52,25 @@ public class SQProcessor implements PageProcessor {
         extractNewsFromDetail(page);
     }
 
+    public static Spider getSpider(SQSiteHandler sqSiteHandler) {
+        if (sqSiteHandler == null)
+            return null;
+
+        SQProcessor sqProcessor = new SQProcessor(sqSiteHandler);
+        Spider spider = Spider.create(sqProcessor);
+
+        Request loginRequest = sqSiteHandler.getLoginRequest();
+        if (loginRequest != null)
+            spider.addRequest(loginRequest).addUrl(sqSiteHandler.getNewsURL());
+        else
+            spider.addUrl(sqSiteHandler.getNewsURL());
+
+        NewsToDBPipeline newsToDBPipeline = ApplicationContextUtils.getBean(NewsToDBPipeline.class);
+        spider.addPipeline(newsToDBPipeline);
+
+        return spider;
+    }
+
     private void extractNewsFromNode(Page page) {
         if (mSqSiteHandler.getExtractNewsSequence().getSequenceType()
                 .compareTo(ExtractSequenceType.INNER_INDEX.getSequenceType()) <= 0) {
@@ -84,24 +104,6 @@ public class SQProcessor implements PageProcessor {
         if (mSqSiteHandler == null)
             return null;
         return mSqSiteHandler.getSite();
-    }
-
-    public static Spider getSpider(SQSiteHandler sqSiteHandler) {
-        if (sqSiteHandler == null)
-            return null;
-
-        SQProcessor sqProcessor = new SQProcessor(sqSiteHandler);
-        Spider spider = Spider.create(sqProcessor);
-
-        Request loginRequest = sqSiteHandler.getLoginRequest();
-        if (loginRequest != null)
-            spider.addRequest(loginRequest).addUrl(sqSiteHandler.getNewsURL());
-        else
-            spider.addUrl(sqSiteHandler.getNewsURL());
-
-        spider.addPipeline(new NewsToDBPipeline());
-
-        return spider;
     }
 
     /**

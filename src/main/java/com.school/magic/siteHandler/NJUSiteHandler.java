@@ -118,15 +118,15 @@ public class NJUSiteHandler extends SQSiteHandler{
             Selectable item = body.nodes().get(ii);
             boolean hasChildPage = hasChildPage(item);
             if (hasChildPage) {
-                Selectable detailNode = item.xpath(getFormItemDetailXPath());
-                if (detailNode != null) {
+                Selectable detailNodeLink = item.xpath(getFormItemDetailXPath());
+                if (detailNodeLink != null) {
                     //"Mar 30 18:58" + "2018"
                     String modifiedDate = item.xpath(getFormItemModifyTimeXPath()).toString() +
                             " " + Calendar.getInstance().get(Calendar.YEAR);
                     if (isDroppedItem(modifiedDate)) //比预设的时间早，帖子丢弃
                         continue;
 
-                    String link = detailNode.toString();
+                    String link = detailNodeLink.toString();
                     if (StringUtils.isNotBlank(link))
                         requestLinks.add(genSiteUrl(link));
 
@@ -160,10 +160,11 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     private List<String> getNextPages() {
         List<String> linkList = getmPage().getHtml().xpath(getFormNextPagesXPath()).all();
-        if (linkList == null || linkList.size() <= 1)
+        //详情页相同标签的下一页以board=JobExpress结尾，需要过滤掉
+        if (linkList == null || linkList.size() < 1 || linkList.get(0).endsWith(INDEX_JOB_URL_TAG))
             return new ArrayList<>();
 
-        final String nextPageLink = genSiteUrl(linkList.get(1));
+        final String nextPageLink = genSiteUrl(linkList.get(0));
         return new ArrayList<String>() {{ add(nextPageLink); }};
     }
 

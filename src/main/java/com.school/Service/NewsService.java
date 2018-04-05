@@ -2,17 +2,18 @@ package com.school.Service;
 
 import com.school.dao.INewsDAO;
 import com.school.dao.INewsDetailDAO;
-import com.school.entity.NewsDTO;
-import com.school.entity.NewsDetailDTO;
+import com.school.entity.News;
+import com.school.entity.NewsDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
-@Service(value = "NewsService")
+@Service
 public class NewsService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -23,12 +24,8 @@ public class NewsService {
     @Autowired
     private INewsDetailDAO newsDetailDAO;
 
-    public NewsService() {
-        logger.info("test news service initial");
-    }
-
     @Transactional
-    public void storeDataToDB(NewsDTO subjectNews, NewsDetailDTO detailNews) {
+    public void storeDataToDB(News subjectNews, NewsDetail detailNews) {
         if (subjectNews == null || detailNews == null)
             return;
 
@@ -36,16 +33,16 @@ public class NewsService {
             storeDataToDB(subjectNews);
         }
 
-        if (detailNews != null) {
+        if (detailNews != null && subjectNews == null) {
+            storeDataToDB(detailNews);
+        } else if (detailNews != null && subjectNews != null) {
             detailNews.setNewsID(subjectNews.getId());
             newsDetailDAO.insert(detailNews);
-        } else {
-            storeDataToDB(detailNews);
         }
     }
 
     @Transactional
-    public void storeDataToDB(NewsDTO subjectNews) {
+    public void storeDataToDB(News subjectNews) {
         if (subjectNews == null)
             return;
 
@@ -53,12 +50,13 @@ public class NewsService {
     }
 
     @Transactional
-    public void storeDataToDB(NewsDetailDTO detailNews) {
+    public void storeDataToDB(NewsDetail detailNews) {
         if (detailNews == null)
             return;
 
-        String sourceArticleUrl = detailNews.getSourceArticleUrl();
-        NewsDTO subjectNews = newsDAO.findByUrl(sourceArticleUrl);
+        News subjectNews = newsDAO.findByUrl(new HashMap<String, String>() {{
+            put("linkUrl", detailNews.getSourceArticleUrl());
+        }});
         if (subjectNews != null) {
             detailNews.setNewsID(subjectNews.getId());
             newsDetailDAO.insert(detailNews);
@@ -66,11 +64,11 @@ public class NewsService {
     }
 
     @Transactional
-    public void storeDataToDB(List<NewsDTO> subjectNewsList) {
+    public void storeDataToDB(List<News> subjectNewsList) {
         if (subjectNewsList == null || subjectNewsList.size() == 0)
             return;
 
-        for (NewsDTO subjectNews : subjectNewsList) {
+        for (News subjectNews : subjectNewsList) {
             newsDAO.insert(subjectNews);
         }
     }

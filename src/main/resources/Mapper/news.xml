@@ -5,13 +5,13 @@
     <sql id="ColumnList">
       subject,
       newsType,
-      newsSubEnum,
-      isHot,
+      newsJobSubType,
       postDate,
       locationCode,
-      linkUrl,
+      isHot,
       createAt,
-      createBy
+      createBy,
+      linkUrl
     </sql>
 
     <sql id="FullColumn">
@@ -19,17 +19,17 @@
         <include refid="ColumnList"/>
     </sql>
 
-    <select id="selectAllNews" resultType="com.school.entity.NewsDTO">
-        select <include refid="FullColumn"/> from news
-    </select>
+    <!--<select id="selectAllNews" resultType="com.school.entity.News">-->
+        <!--select <include refid="FullColumn"/> from news-->
+    <!--</select>-->
 
-    <insert id="insert" parameterType="com.school.entity.NewsDTO" useGeneratedKeys="true" keyProperty="id">
-        insert into news <include refid="ColumnList"/> VALUES
-        (#{subject}, #{newsType}, #{newsSubEnum}, #{isHot}, #{postDate}, #{locationCode}, #{linkUrl}, now(), #{createBy})
+    <insert id="insert" parameterType="com.school.entity.News" useGeneratedKeys="true" keyProperty="id">
+        insert into News (<include refid="ColumnList"/>) VALUES
+        (#{subject}, #{newsType}, #{newsJobSubType}, #{postDate}, #{locationCode}, #{isHot}, now(), #{createBy}, #{linkUrl})
     </insert>
 
-    <select id="findByUrl" parameterMap="map" resultMap="com.school.entity.NewsDTO">
-        select <include refid="ColumnList"/> from news
-        where linkUrl = ${linkUrl}
+    <select id="findByUrl" parameterType="map" resultType="com.school.entity.News">
+        select <include refid="FullColumn"/> from news
+        where linkUrl = #{linkUrl}
     </select>
 </mapper>

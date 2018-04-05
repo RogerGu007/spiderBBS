@@ -13,12 +13,8 @@
         <include refid="ColumnList"/>
     </sql>
 
-    <select id="selectAllNews" resultType="com.school.entity.NewsDetailDTO">
-        select <include refid="FullColumn"/> from news
-    </select>
-
-    <insert id="insert" parameterType="com.school.entity.NewsDetailDTO" useGeneratedKeys="true" keyProperty="id">
-        insert into NewsDetail <include refid="ColumnList"/> VALUES
+    <insert id="insert" parameterType="com.school.entity.NewsDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into NewsDetail (<include refid="ColumnList"/>) VALUES
         (#{newsID}, #{sourceArticleUrl}, #{detailContent})
     </insert>
 
