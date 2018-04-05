@@ -10,7 +10,7 @@ public enum NewsTypeEnum {
         this.newsType = type;
     }
 
-    public Integer getSiteCode() {
+    public Integer getNewsTypeCode() {
         return this.newsType;
     }
 
