@@ -22,7 +22,7 @@ public class NewsDTO extends BaseDTO {
                 Date postDate) {
         NewsDTO news = new NewsDTO();
         news.subject = title;
-        news.newsType = newsType.getSiteCode();
+        news.newsType = newsType.getNewsTypeCode();
         news.postDate = postDate;
         return news;
     }
