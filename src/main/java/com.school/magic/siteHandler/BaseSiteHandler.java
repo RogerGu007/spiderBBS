@@ -2,7 +2,6 @@ package com.school.magic.siteHandler;
 
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
-import com.school.spiderEnums.LocationEnum;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.selector.Selectable;
 

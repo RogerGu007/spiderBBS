@@ -24,7 +24,7 @@ public class TJSiteHandler extends SQSiteHandler{
 
     @Override
     public int getSiteLocationCode() {
-        return com.school.spiderConstants.LocationEnum.SHANGHAI.getZipCode();
+        return com.school.spiderEnums.LocationEnum.SHANGHAI.getZipCode();
     }
 
     @Override

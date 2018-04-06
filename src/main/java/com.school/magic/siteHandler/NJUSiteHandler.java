@@ -28,7 +28,7 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     @Override
     public int getSiteLocationCode() {
-        return com.school.spiderConstants.LocationEnum.NANJING.getZipCode();
+        return com.school.spiderEnums.LocationEnum.NANJING.getZipCode();
     }
 
     @Override
