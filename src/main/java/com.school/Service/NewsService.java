@@ -78,4 +78,8 @@ public class NewsService {
             }
         }
     }
+
+    public NewsDetailDTO getNewsDetailByUrl(final String url) {
+        return newsDetailDAO.findByUrl(new HashMap<String, String>() {{ put("sourceArticleUrl", url); }});
+    }
 }

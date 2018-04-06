@@ -242,10 +242,13 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             }
         }
 
-        //下一页
-        List<String> nextPages = getNextPages();
-        //只能翻6页，每天更新内容一般不会超过6页
-        requestLinks.addAll(getSubList(nextPages, 0, 5));
+        // 下一页   startUrl才需要拿nextPages，否则会一直获取之后的数据
+        // 默认方式：列表页可以拿到2,3,4,5页的url，否则需要在SiteHandler的实现类重写getNextPages、getSubList方法来自定义
+        if (getmPage().getUrl().toString().equalsIgnoreCase(getNewsURL())) {
+            List<String> nextPages = getNextPages();
+            //只能翻6页，每天更新内容一般不会超过6页
+            requestLinks.addAll(getSubList(nextPages, 0, 5));
+        }
         return requestLinks;
     }
 

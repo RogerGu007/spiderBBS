@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.school.magic.constants.NJUSiteConstant.*;
 import static com.school.utils.DateUtils.ENGLISH_DATE_FORMAT;
@@ -134,10 +136,13 @@ public class NJUSiteHandler extends SQSiteHandler{
             }
         }
 
-        //下一页
-        List<String> nextPages = getNextPages();
-        //只能翻6页，每天更新内容一般不会超过6页
-        requestLinks.addAll(getSubList(nextPages, 0, 5));
+        //下一页 南大页面只会有下一页的提示，需要自己把后面五页都自己拼接出来，同时过滤掉翻页后找到的nextpages
+        //startUrl才需要拿nextPages，否则会一直获取之后的数据
+        if (getmPage().getUrl().toString().equalsIgnoreCase(getNewsURL())) {
+            List<String> nextPages = getNextPages();
+            //首页下面的to-from+1页被抓取
+            requestLinks.addAll(getSubList(nextPages, 0, 5));
+        }
         return requestLinks;
     }
 
@@ -165,6 +170,28 @@ public class NJUSiteHandler extends SQSiteHandler{
 
         final String nextPageLink = genSiteUrl(linkList.get(0));
         return new ArrayList<String>() {{ add(nextPageLink); }};
+    }
+
+    protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
+        List<String> subList = new ArrayList<>();
+        if (dataList.size() == 0) {
+            return subList;
+        }
+
+        String firstNextPageLinkUrl = dataList.get(0);
+        //NJU只有下一页的标签，特殊处理，拼接后面to-from页的数据
+        Matcher m = Pattern.compile("\\d+").matcher(firstNextPageLinkUrl);
+        if (m.find()) {
+            String startId = m.group();
+            for (int ii = from; ii < to; ii++) {
+                int nextStartIdInt = Integer.valueOf(startId) - 20*ii;
+                if (nextStartIdInt > 0)
+                    subList.add(firstNextPageLinkUrl.replace(startId, String.valueOf(nextStartIdInt)));
+                else
+                    break;
+            }
+        }
+        return subList;
     }
 
     @Override

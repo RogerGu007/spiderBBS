@@ -18,4 +18,8 @@
         (#{newsID}, #{sourceArticleUrl}, #{detailContent})
     </insert>
 
+    <select id="findByUrl" parameterType="map" resultType="com.school.entity.NewsDetailDTO">
+        select <include refid="FullColumn"/> from NewsDetail
+        where sourceArticleUrl = #{sourceArticleUrl}
+    </select>
 </mapper>

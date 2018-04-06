@@ -1,10 +1,10 @@
 package com.school.magic.pageProcessor;
 
+import com.school.Service.NewsService;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.ExtractSequenceType;
 import com.school.magic.siteHandler.SQSiteHandler;
-import com.school.magic.storePipeline.ConsolePipeline;
 import com.school.magic.storePipeline.NewsToDBPipeline;
 import com.school.utils.ApplicationContextUtils;
 import com.school.utils.GsonUtils;
@@ -13,14 +13,16 @@ import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectable;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.school.magic.constants.Constant.*;
 
 public class SQProcessor implements PageProcessor {
     private SQSiteHandler mSqSiteHandler;
+
+    private NewsService newsService = ApplicationContextUtils.getBean(NewsService.class);
 
     private SQProcessor(SQSiteHandler sqSiteHandler) {
         this.mSqSiteHandler = sqSiteHandler;
@@ -38,7 +40,15 @@ public class SQProcessor implements PageProcessor {
             return;
         }
 
-        //Step2: 获取第一页数据
+        final String siteUrl = page.getUrl().toString();
+        //重复的页面不再抓取
+        NewsDetailDTO newsDetailDTO = newsService.getNewsDetailByUrl(siteUrl);
+        if (newsDetailDTO != null) {
+            page.setSkip(true);
+            return;
+        }
+
+        //Step2: 获取一页的所有请求数据
         List<String> requestURLs = mSqSiteHandler.getRequests();
         if (requestURLs != null && requestURLs.size() > 0) {
             //form 页面，只需要找到具体的item就可以了
