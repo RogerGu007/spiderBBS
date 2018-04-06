@@ -7,10 +7,10 @@ import java.util.Date;
 public class NewsDTO extends BaseDTO {
     private String subject;
 
-    private Integer newsType;
+    private int newsType;
     private Integer newsSubType;
     private Boolean isHot;
-    private int locationCode;
+    private Integer locationCode;
 
     private Integer commentCount;
     private Integer gallaryImageCount;
@@ -35,19 +35,19 @@ public class NewsDTO extends BaseDTO {
         this.subject = mSubject;
     }
 
-    public int getNewsType() {
+    public Integer getNewsType() {
         return newsType;
     }
 
-    public void setNewsType(int newsType) {
+    public void setNewsType(Integer newsType) {
         this.newsType = newsType;
     }
 
-    public int getNewsSubType() {
+    public Integer getNewsSubType() {
         return newsSubType;
     }
 
-    public void setNewsSubType(int newsJobSubType) {
+    public void setNewsSubType(Integer newsJobSubType) {
         this.newsSubType = newsJobSubType;
     }
 
