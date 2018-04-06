@@ -18,6 +18,7 @@ public class NJUSiteConstant {
     public static final String FORMITEMMODIFYTIME= "//tr/td[4]/text()";
     //需要拼接  for example: bbstdoc?board=JobExpress&start=11878
     public static final String FORMITEMNEXTPAGE = "//a[4]/@href";
+
     public static final String FORMITEMTITEL = "//tr/td[5]/a/text()";
     //用于判断是否有详情页
     public static final String FORMITEMCHILD = "//tr/td[1]/text()";
