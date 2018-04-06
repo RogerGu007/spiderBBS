@@ -2,7 +2,6 @@ package com.school.magic.siteHandler;
 
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.TJSiteConstant;
-import com.school.spiderEnums.LocationEnum;
 import com.sun.org.apache.regexp.internal.RE;
 import us.codecraft.webmagic.Site;
 
@@ -25,7 +24,7 @@ public class TJSiteHandler extends SQSiteHandler{
 
     @Override
     public int getSiteLocationCode() {
-        return LocationEnum.SHANGHAI.getZipCode();
+        return com.school.spiderConstants.LocationEnum.SHANGHAI.getZipCode();
     }
 
     @Override

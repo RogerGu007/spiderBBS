@@ -13,7 +13,7 @@
         <include refid="ColumnList"/>
     </sql>
 
-    <insert id="insert" parameterType="com.school.entity.NewsDetail" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.school.entity.NewsDetailDTO" useGeneratedKeys="true" keyProperty="id">
         insert into NewsDetail (<include refid="ColumnList"/>) VALUES
         (#{newsID}, #{sourceArticleUrl}, #{detailContent})
     </insert>

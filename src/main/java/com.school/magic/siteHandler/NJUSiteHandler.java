@@ -3,7 +3,6 @@ package com.school.magic.siteHandler;
 import com.school.entity.NewsDTO;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractSequenceType;
-import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     @Override
     public int getSiteLocationCode() {
-        return LocationEnum.NANJING.getZipCode();
+        return com.school.spiderConstants.LocationEnum.NANJING.getZipCode();
     }
 
     @Override

@@ -8,7 +8,7 @@ public class NewsDTO extends BaseDTO {
     private String subject;
 
     private int newsType;
-    private int newsJobSubType;
+    private int newsSubType;
     private Boolean isHot;
     private int locationCode;
 
@@ -43,12 +43,12 @@ public class NewsDTO extends BaseDTO {
         this.newsType = newsType;
     }
 
-    public int getNewsJobSubType() {
-        return newsJobSubType;
+    public int getNewsSubType() {
+        return newsSubType;
     }
 
-    public void setNewsJobSubType(int newsJobSubType) {
-        this.newsJobSubType = newsJobSubType;
+    public void setNewsSubType(int newsJobSubType) {
+        this.newsSubType = newsJobSubType;
     }
 
     public Boolean getIsHot() {

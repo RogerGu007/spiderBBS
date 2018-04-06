@@ -267,7 +267,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
                 jobSubType = NewsSubTypeEnum.SUB_INTERN;
             else if (news.getmSubject().contains(Constant.PARTTIME))
                 jobSubType = NewsSubTypeEnum.SUB_PARTTIME;
-            news.setNewsJobSubType(jobSubType.getNewsSubTypeCode());
+            news.setNewsSubType(jobSubType.getNewsSubTypeCode());
         }
     }
 
