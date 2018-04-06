@@ -7,8 +7,8 @@ import java.util.Date;
 public class NewsDTO extends BaseDTO {
     private String subject;
 
-    private int newsType;
-    private int newsSubType;
+    private Integer newsType;
+    private Integer newsSubType;
     private Boolean isHot;
     private int locationCode;
 
