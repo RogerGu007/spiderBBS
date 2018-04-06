@@ -7,6 +7,7 @@ import com.school.entity.NewsDetailDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,7 @@ public class NewsService {
 
     @Transactional
     public void storeDataToDB(NewsDTO subjectNews, NewsDetailDTO detailNews) {
-        if (subjectNews == null || detailNews == null)
+        if (subjectNews == null && detailNews == null)
             return;
 
         if (subjectNews != null) {
@@ -69,7 +70,12 @@ public class NewsService {
             return;
 
         for (NewsDTO subjectNews : subjectNewsList) {
-            newsDAO.insert(subjectNews);
+            try {
+                //抛异常但不停止循环处理
+                newsDAO.insert(subjectNews);
+            } catch (DuplicateKeyException e) {
+                logger.error("uk duplication exception, " + e.getMessage());
+            }
         }
     }
 }

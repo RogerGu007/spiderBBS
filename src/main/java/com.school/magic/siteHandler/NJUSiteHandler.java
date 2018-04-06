@@ -196,6 +196,7 @@ public class NJUSiteHandler extends SQSiteHandler{
 
         NewsDTO subjectNews = NewsDTO.generateNews(subjectItem.toString(), getmNewsType(), postDate);
         setSubEnumType(subjectNews);
+        subjectNews.setLocationCode(getSiteLocationCode());
         subjectNews.setLinkUrl(page != null ? genSiteUrl(page.getHtml().xpath(getLinkUrl()).toString())
                 : genSiteUrl(item.xpath(getLinkUrl()).toString()));
         return subjectNews;
