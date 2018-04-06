@@ -29,7 +29,7 @@
     </insert>
 
     <select id="findByUrl" parameterType="map" resultType="com.school.entity.NewsDTO">
-        select <include refid="FullColumn"/> from news
+        select <include refid="FullColumn"/> from News
         where linkUrl = #{linkUrl}
     </select>
 </mapper>
