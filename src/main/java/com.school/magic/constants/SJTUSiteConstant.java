@@ -24,7 +24,7 @@ public class SJTUSiteConstant {
     //详情页是一个text，关键词：
     //标  题: 美团点评2018春季校招—大牛学长现场帮你内推
     //发信站: 饮水思源 (2018年04月06日11:43:54 星期五)
-    public static final String DETAIL = "//tbody/tr/td/pre";
+    public static final String DETAIL_CONTENT = "//tbody/tr/td/pre";
 
     //news的抽取顺序
     public static final ExtractSequenceType EXTRACT_NEWS_SEQUENCE = ExtractSequenceType.AFTER_INDEX;

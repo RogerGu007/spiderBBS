@@ -8,6 +8,7 @@ import com.school.spiderEnums.NewsSubTypeEnum;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.GsonUtils;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -158,9 +159,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return mNewsType;
     }
 
-    public Site getSite() {
-        return null;
-    }
+    public abstract Site getSite();
 
     public Page getmPage() {
         return mPage;
@@ -177,7 +176,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return subList;
         }
 
-        for (int ii = from; ii <= to && ii < dataList.size(); ii++) {
+        for (int ii = from; ii < to && ii < dataList.size(); ii++) {
             if (dataList.get(ii) == null)
                 break;
             subList.add(dataList.get(ii));
@@ -232,18 +231,19 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             if (childItems != null && childItems.nodes().size() > 0) {
                 Selectable detailNode = item.xpath(getFormItemDetailXPath());
                 if (detailNode != null) {
-                    String modifiedDate = item.xpath(getFormItemModifyTimeXPath()).toString();
+                    //各个bbs的时间格式差异较大，建议getPostDate在各自的SiteHandler里面重写
+                    String modifiedDate = getPostDate(item);
                     if (isDroppedItem(modifiedDate)) //比预设的时间早，帖子丢弃
                         continue;
 
-                    requestLinks.addAll(detailNode.links().all());
+                    requestLinks.add(detailNode.links().toString());
                     logger.info(String.format("title: {%s}", item.xpath(getFormItemTitleXPath()).toString()));
                 }
             }
         }
 
         // 下一页   startUrl才需要拿nextPages，否则会一直获取之后的数据
-        // 默认方式：列表页可以拿到2,3,4,5页的url，否则需要在SiteHandler的实现类重写getNextPages、getSubList方法来自定义
+        // 默认方式：列表页可以拿到2,3,4,5...页的url，否则需要在SiteHandler的实现类重写getNextPages、getSubList方法来自定义
         if (getmPage().getUrl().toString().equalsIgnoreCase(getNewsURL())) {
             List<String> nextPages = getNextPages();
             //只能翻6页，每天更新内容一般不会超过6页
@@ -252,7 +252,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return requestLinks;
     }
 
-    private List<String> getNextPages() {
+    protected List<String> getNextPages() {
         return getmPage().getHtml().xpath(getFormNextPagesXPath()).links().all();
     }
 
@@ -270,6 +270,10 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
                 jobSubType = NewsSubTypeEnum.SUB_INTERN;
             else if (news.getmSubject().contains(Constant.PARTTIME))
                 jobSubType = NewsSubTypeEnum.SUB_PARTTIME;
+            else if (news.getmSubject().contains(Constant.CAMPUS))
+                jobSubType = NewsSubTypeEnum.SUB_CAMPUS;
+            else if (news.getmSubject().contains(Constant.UPGRADE))
+                jobSubType = NewsSubTypeEnum.SUB_UPGRADE;
             news.setNewsSubType(jobSubType.getNewsSubTypeCode());
         }
     }
@@ -308,6 +312,13 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return subjectNews;
     }
 
+    /**
+     * 详情页的格式区别比较大，建议SiteHandler自己解析
+     *
+     * @param page
+     * @param item
+     * @return
+     */
     @Override
     public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
         if (page == null && item == null)
@@ -370,5 +381,9 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
 
     public String genSiteUrl(String url) {
         return url;
+    }
+
+    public String getPostDate(Selectable item) {
+        return item.xpath(getFormItemModifyTimeXPath()).toString();
     }
 }

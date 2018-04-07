@@ -15,4 +15,7 @@ public class Constant {
     //关键词
     public static final String PARTTIME= "兼职";
     public static final String INTERN = "实习";
+
+    public static final String CAMPUS= "校招";
+    public static final String UPGRADE = "社招";
 }

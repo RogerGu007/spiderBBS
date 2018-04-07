@@ -32,7 +32,7 @@ public class TSINGSiteConstant {
 
     //用xpath方式的extract函数抽取出多个数组
     // [0]:发信人+信区 [1]:标题 [2] 发信站（可以提取时间），其他列过滤为空的内容组合起来就是详情内容
-    public static final String DETAIL = "//tr[2]/td[2]/p/text()";
+    public static final String DETAIL_CONTENT = "//tr[2]/td[2]/p/text()";
     //详情页中抽取主题的关键词
     public static final String DETAIL_SUBJECT_TAG= "标\\s+题:\\s+\\S+\\n";
     //详情页中抽取发帖时间的关键词  Tue Mar 13 00:12:46 2018

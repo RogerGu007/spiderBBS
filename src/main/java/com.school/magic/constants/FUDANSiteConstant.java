@@ -27,7 +27,7 @@ public class FUDANSiteConstant {
     public static final String FORMITEMCHILD = "//a[@class=\"PageNum\"]/@href";
 
     //一行一个p标签，需要过滤掉为空的行
-    public static final String DETAIL = "//tbody/tr[4]/td[1]";
+    public static final String DETAIL_CONTENT = "//tbody/tr[4]/td[1]";
     //详情页标题
     public static final String DETAIL_SUBJECT_TAG= "//tbody/tr[1]/td/span/text()";
     //详情页中的发帖时间

@@ -5,7 +5,8 @@ public enum LocationEnum {
     GUANGDONG(20),
     SHANGHAI(21),
     NANJING(25),
-    WUHAN(27);
+    WUHAN(27),
+    HEFEI(551);
 
     private Integer zipCode;
 

@@ -32,7 +32,7 @@ public class ECNUSiteConstant {
     public static final String FORMITEMLINKURL = "//tr/th/a[3]/@href";
 
     //数组，需要extract后循环匹配出第一个
-    public static final String DETAIL = "//td[@class=\"t_f\"]";
+    public static final String DETAIL_CONTENT = "//td[@class=\"t_f\"]";
     //详情页标题
     public static final String DETAIL_SUBJECT = "//*[@id=\"thread_subject\"]/text()";
     //详情页中的发帖时间

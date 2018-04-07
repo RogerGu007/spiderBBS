@@ -12,8 +12,6 @@ import static com.school.magic.constants.TJSiteConstant.*;
 
 public class TJSiteHandler extends SQSiteHandler{
 
-    private Site site = Site.me().setDomain(TJBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
-
     private List<String> mChildNodes = new ArrayList<>();
 
     public TJSiteHandler() {
@@ -96,6 +94,7 @@ public class TJSiteHandler extends SQSiteHandler{
 
     @Override
     public Site getSite() {
+        Site site = Site.me().setDomain(TJBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
         return site;
     }
 }

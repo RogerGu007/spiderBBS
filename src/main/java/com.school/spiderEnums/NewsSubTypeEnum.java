@@ -6,6 +6,7 @@ public enum NewsSubTypeEnum {
     SUB_PARTTIME(2),  //兼职
     SUB_INTERN(3), //实习
 
+    //全职的子类型
     SUB_CAMPUS(4), //校园招聘
     SUB_UPGRADE(5);  //社会招聘
 
