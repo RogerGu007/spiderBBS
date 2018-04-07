@@ -231,7 +231,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             if (childItems != null && childItems.nodes().size() > 0) {
                 Selectable detailNode = item.xpath(getFormItemDetailXPath());
                 if (detailNode != null) {
-                    //各个bbs的时间格式差异较大，建议getPostDate在各自的SiteHandler里面重写
+                    //各个站点的时间格式差异较大，建议getPostDate在各自的SiteHandler里面重写
                     String modifiedDate = getPostDate(item);
                     if (isDroppedItem(modifiedDate)) //比预设的时间早，帖子丢弃
                         continue;

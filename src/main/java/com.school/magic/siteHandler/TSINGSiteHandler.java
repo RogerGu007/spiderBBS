@@ -1,28 +1,30 @@
 package com.school.magic.siteHandler;
 
+import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
+import org.omg.CORBA.CODESET_INCOMPATIBLE;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
-import static com.school.magic.constants.FUDANSiteConstant.*;
-import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
+import static com.school.magic.constants.TSINGSiteConstant.*;
+import static com.school.utils.DateUtils.DATE_REGX_FOR_DAY;
+import static com.school.utils.DateUtils.DATE_REGX_FOR_TIME;
+import static com.school.utils.DateUtils.NORMAL_ENGLISH_DATE_FORMAT;
 
-public class FUDANSiteHandler extends SQSiteHandler {
+public class TSINGSiteHandler extends SQSiteHandler {
 
     private List<String> childNodes = new ArrayList<>();
 
     @Override
     public int getSiteLocationCode() {
-        return LocationEnum.SHANGHAI.getZipCode();
+        return LocationEnum.BEIJING.getZipCode();
     }
 
     @Override
@@ -68,12 +70,16 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     @Override
     protected String getPageDetailPostDateXPath() {
-        return DETAIL_POSTDATE_TAG;
+        return DETAIL_POSTDATE_REGEX;
     }
 
     @Override
     protected String getPageDetailSubjectXPath() {
-        return DETAIL_SUBJECT_TAG;
+        return DETAIL_SUBJECT_REGEX_START;
+    }
+
+    protected String getPageDetailSubjectEndTagXPath() {
+        return DETAIL_SUBJECT_REGEX_END;
     }
 
     @Override
@@ -81,47 +87,117 @@ public class FUDANSiteHandler extends SQSiteHandler {
         return DETAIL_CONTENT;
     }
 
-    @Override
-    public Site getSite() {
-        return Site.me().setDomain(FUDAN_BBS_JOB_DOMAIN).setSleepTime(Constant.SLEEPTIME);
+    private String getPageSubDetailContentXPath() {
+        return SUB_DETAIL_CONTENT;
     }
 
-//    public String getPostDate(Selectable item) {
-//        //2018-3-23 16:13:11
-//        //在列表页用于时间判断，后三种都是最近的帖子，无须过滤
-//        String originDate = item.xpath(getFormItemModifyTimeXPath()).regex(DEFAULT_DATE_FORMAT).toString();
-//        if (originDate == null) {
-//            return DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT);
-//        }
-//        return String.valueOf(Calendar.getInstance().get(Calendar.YEAR)) + "-" + originDate;
-//    }
+    @Override
+    public Site getSite() {
+        return Site.me().setDomain(TSINGBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+    }
+
+    public String getPostDate(Selectable item) {
+        //两种格式：1、19:38:08，补足为当日 2018-04-06 19:38:08；2、2018-03-30，补足2018-03-30 00:00:00
+        String originDate = item.xpath(getFormItemModifyTimeXPath()).regex(DATE_REGX_FOR_DAY).toString();
+        if (originDate == null) { //表示当日
+            return DateUtils.getStringFromDate(new Date(), "yyyy-MM-dd") + " " +
+                    item.xpath(getFormItemModifyTimeXPath()).regex(DATE_REGX_FOR_TIME).toString();
+        }
+        return originDate + " 00:00:00";
+    }
 
     protected List<String> getNextPages() {
         List<String> pageList = getmPage().getHtml().xpath(getFormNextPagesXPath()).links().all();
         //去掉第一个，标识为当前页的linkUrl
-        pageList.remove(getmPage().getUrl().toString());
+        pageList.remove(0);
         return pageList;
     }
 
-//    @Override
-//    public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
-//        //Peking默认从详情页解析出详情
-//        if (page == null)
-//            return null;
-//
-//        String linkUrl = page.getUrl().toString();
-//
-//        Selectable contentsNodes = page.getHtml().xpath(getPageDetailContentXPath());
-//        if (contentsNodes == null || contentsNodes.nodes().size() == 0)
-//            return null;
-//
-//        String content = "";
-//        for (Selectable contentNode : contentsNodes.nodes()) {
-//            content += contentNode.toString();
-//            if (!contentNode.toString().equalsIgnoreCase(""))
-//                content += "\n";
-//        }
-//
-//        return NewsDetailDTO.generateNewsDetail(content, linkUrl);
-//    }
+    @Override
+    public NewsDTO extractNews(Page page, Selectable item) {
+        //从详情页抽取news
+        List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
+        Selectable contentItem;
+        if (selectableList != null && selectableList.size() > 0)
+            contentItem = selectableList.get(0);
+        else
+            return null;
+
+        //	第一列：发信人: blephant (甲骨文研发招聘), 信区: Career_Upgrade
+        //  第二列：标  题: [甲骨文北京]数据库运维工程师-Oracle Cloud DevOps_DBA
+        //  第三列：发信站: 水木社区 (Mon Jan 29 17:52:52 2018), 站内
+        //  下面都是详情内容
+        NewsDTO newsDTO = null;
+        String postDateStr =
+                contentItem.xpath(getPageSubDetailContentXPath()).regex(getPageDetailPostDateXPath()).toString();
+        Date postDate = formatPostDate(postDateStr);
+
+        List<String> contentList =
+                Arrays.asList(contentItem.xpath(getPageSubDetailContentXPath()).toString().split("\\s+"));
+        String newsSubject = "";
+        boolean isSubjectExtractStart = false;
+        for (int ii = 0; ii < contentList.size(); ii++) {
+            if (contentList.get(ii).startsWith(getPageDetailSubjectXPath())) {  //开始抽取的标签
+                isSubjectExtractStart = true;
+                continue;
+            }
+
+            if (contentList.get(ii).startsWith(getPageDetailSubjectEndTagXPath()))  //结束抽取的标签
+                break;
+
+            if (isSubjectExtractStart)
+                newsSubject += contentList.get(ii);
+        }
+
+        newsDTO = NewsDTO.generateNews(newsSubject, getmNewsType(), postDate);
+        setSubEnumType(newsDTO);
+        newsDTO.setLocationCode(getSiteLocationCode());
+        newsDTO.setLinkUrl(genSiteUrl(page.getUrl().toString()));
+
+        return newsDTO;
+    }
+
+    @Override
+    public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
+        //从详情页抽取newsDetail
+        List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
+        Selectable contentItem;
+        if (selectableList != null && selectableList.size() > 0)
+            contentItem = selectableList.get(0);
+        else
+            return null;
+
+        List<String> contentList =
+                Arrays.asList(contentItem.xpath(getPageSubDetailContentXPath()).toString().split("\\s+"));
+        String content = "";
+        boolean isContentExtractStart = false;
+        for (int ii = 0; ii < contentList.size(); ii++) {
+            if (!isContentExtractStart) {
+                if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_TAG))
+                    isContentExtractStart = true;
+                continue;
+            }
+
+            content += contentList.get(ii);
+            if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_TAG)) {
+                content += "\n";
+            }
+        }
+
+        return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
+    }
+
+    /**
+     * 特殊处理，去掉postDateStr头尾的括号
+     *
+     * @param postDateStr
+     * @return
+     */
+    private Date formatPostDate(String postDateStr) {
+        postDateStr = postDateStr.substring(1, postDateStr.length()-1);
+        Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
+        if (postDate == null) //兼容日期中有特殊符号的情况
+            postDate = DateUtils.getDateFromString(postDateStr, SPECIAL_ENGLISH_DATE_FORMAT);
+        return postDate;
+    }
 }

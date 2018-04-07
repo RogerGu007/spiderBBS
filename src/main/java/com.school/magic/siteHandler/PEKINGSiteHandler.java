@@ -17,7 +17,6 @@ import static com.school.magic.constants.PEKINGSiteConstant.*;
 import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
 
 public class PEKINGSiteHandler extends SQSiteHandler {
-    private Site site = Site.me().setDomain(PEKINGBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
 
     private List<String> childNodes = new ArrayList<>();
 

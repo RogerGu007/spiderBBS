@@ -1,11 +1,8 @@
 package com.school.magic.spiderCreator;
 
-import com.school.magic.constants.SiteEnum;
+import com.school.magic.constants.*;
 import com.school.magic.pageProcessor.SQProcessor;
-import com.school.magic.siteHandler.NJUSiteHandler;
-import com.school.magic.siteHandler.PEKINGSiteHandler;
-import com.school.magic.siteHandler.SQSiteHandler;
-import com.school.magic.siteHandler.TJSiteHandler;
+import com.school.magic.siteHandler.*;
 import com.school.spiderEnums.NewsTypeEnum;
 import us.codecraft.webmagic.Spider;
 
@@ -26,7 +23,7 @@ public class SpiderGenerator {
                 sqSiteHandler.setUserNamePair("username", "tjshif");
                 sqSiteHandler.setPasswordPair("password", "19801004");
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_FRIENDS);
-                sqSiteHandler.setNewsURL(FRIEND_URL);
+                sqSiteHandler.setNewsURL(TJSiteConstant.FRIEND_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 break;
             case NJU_BBS:
@@ -35,16 +32,30 @@ public class SpiderGenerator {
 //                sqSiteHandler.setUserNamePair("username", "tjshif");
 //                sqSiteHandler.setPasswordPair("password", "19801004");
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
-                sqSiteHandler.setNewsURL(JOB_URL);
+                sqSiteHandler.setNewsURL(NJUSiteConstant.JOB_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 break;
             case PEKING_BBS:
                 sqSiteHandler = new PEKINGSiteHandler();
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
-                for (String jobUrl : JOB_URL_LIST) {
+                for (String jobUrl : PEKINGSiteConstant.JOB_URL_LIST) {
                     sqSiteHandler.setNewsURL(jobUrl);
                     spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 }
+                break;
+            case TSING_BBS:
+                sqSiteHandler = new TSINGSiteHandler();
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
+                for (String jobUrl : TSINGSiteConstant.JOB_URL_LIST) {
+                    sqSiteHandler.setNewsURL(jobUrl);
+                    spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                }
+                break;
+            case FUDAN_BBS:
+                sqSiteHandler = new FUDANSiteHandler();
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
+                sqSiteHandler.setNewsURL(FUDANSiteConstant.JOB_URL);
+                spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 break;
             default:
                 break;
