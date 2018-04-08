@@ -5,9 +5,11 @@ import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
+import com.school.utils.HtmlUtils;
 import org.omg.CORBA.CODESET_INCOMPATIBLE;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
 import java.lang.reflect.Array;
@@ -128,25 +130,27 @@ public class TSINGSiteHandler extends SQSiteHandler {
         //  第三列：发信站: 水木社区 (Mon Jan 29 17:52:52 2018), 站内
         //  下面都是详情内容
         NewsDTO newsDTO = null;
-        String postDateStr =
-                contentItem.xpath(getPageSubDetailContentXPath()).regex(getPageDetailPostDateXPath()).toString();
+        String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
+                .regex(getPageDetailPostDateXPath()).toString().replaceAll("&nbsp;", " ");
         Date postDate = formatPostDate(postDateStr);
 
         List<String> contentList =
-                Arrays.asList(contentItem.xpath(getPageSubDetailContentXPath()).toString().split("\\s+"));
+                Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath()).toString()).split("\\s+"));
         String newsSubject = "";
         boolean isSubjectExtractStart = false;
         for (int ii = 0; ii < contentList.size(); ii++) {
-            if (contentList.get(ii).startsWith(getPageDetailSubjectXPath())) {  //开始抽取的标签
+            //主题抽取需要过滤掉 &nbsp;
+            String tempContent = contentList.get(ii).replaceAll("&nbsp;", " ");
+            if (tempContent.replaceAll(" ", "").startsWith(getPageDetailSubjectXPath())) {  //开始抽取的标签
                 isSubjectExtractStart = true;
                 continue;
             }
 
-            if (contentList.get(ii).startsWith(getPageDetailSubjectEndTagXPath()))  //结束抽取的标签
+            if (tempContent.replaceAll(" ", "").startsWith(getPageDetailSubjectEndTagXPath()))  //结束抽取的标签
                 break;
 
             if (isSubjectExtractStart)
-                newsSubject += contentList.get(ii);
+                newsSubject += tempContent;
         }
 
         newsDTO = NewsDTO.generateNews(newsSubject, getmNewsType(), postDate);
@@ -167,21 +171,19 @@ public class TSINGSiteHandler extends SQSiteHandler {
         else
             return null;
 
-        List<String> contentList =
-                Arrays.asList(contentItem.xpath(getPageSubDetailContentXPath()).toString().split("\\s+"));
+        String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).toString();
+        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split("\\s+"));
         String content = "";
         boolean isContentExtractStart = false;
         for (int ii = 0; ii < contentList.size(); ii++) {
             if (!isContentExtractStart) {
-                if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_TAG))
+                if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_ROW_TAG))
                     isContentExtractStart = true;
                 continue;
             }
-
-            content += contentList.get(ii);
-            if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_TAG)) {
-                content += "\n";
-            }
+            //&nbsp;&nbsp;标识为换行符
+            String tempContent = contentList.get(ii).replaceAll("&nbsp;&nbsp;", "\n");
+            content += tempContent;
         }
 
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());

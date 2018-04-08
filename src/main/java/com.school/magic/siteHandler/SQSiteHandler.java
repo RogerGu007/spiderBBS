@@ -8,6 +8,7 @@ import com.school.spiderEnums.NewsSubTypeEnum;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.GsonUtils;
+import com.school.utils.HtmlUtils;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.TextUtils;
@@ -230,7 +231,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             Selectable childItems = getChildPage(item);
             if (childItems != null && childItems.nodes().size() > 0) {
                 Selectable detailNode = item.xpath(getFormItemDetailXPath());
-                if (detailNode != null) {
+                if (detailNode != null && detailNode.toString() != null) {
                     //各个站点的时间格式差异较大，建议getPostDate在各自的SiteHandler里面重写
                     String modifiedDate = getPostDate(item);
                     if (isDroppedItem(modifiedDate)) //比预设的时间早，帖子丢弃
@@ -256,7 +257,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return getmPage().getHtml().xpath(getFormNextPagesXPath()).links().all();
     }
 
-    private Selectable getChildPage(Selectable item) {
+    protected Selectable getChildPage(Selectable item) {
         if (item == null || item.nodes().size() == 0)
             return null;
 
@@ -344,7 +345,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             if (item.links() != null && item.links().all().size() > 0)
                 link = item.links().all().get(0);
         }
-        return NewsDetailDTO.generateNewsDetail(detailContent.toString(), link);
+        return NewsDetailDTO.generateNewsDetail(HtmlUtils.filterHtmlTag(detailContent.toString()), link);
     }
 
     public void extractNodeNews(Page page) {
