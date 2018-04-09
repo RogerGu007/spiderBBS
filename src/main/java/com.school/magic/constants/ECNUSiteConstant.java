@@ -37,9 +37,4 @@ public class ECNUSiteConstant {
     public static final String DETAIL_SUBJECT = "//*[@id=\"thread_subject\"]/text()";
     //详情页中的发帖时间
     public static final String DETAIL_POSTDATE = "//div[@class=\"authi\"]/em";
-
-    //news的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWS_SEQUENCE = ExtractSequenceType.AFTER_INDEX;
-    //newsDetail的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWSDETAIL_SEQUENCE = ExtractSequenceType.AFTER_NEWS;
 }

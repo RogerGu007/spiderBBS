@@ -45,25 +45,12 @@ public class NewsToDBPipeline implements Pipeline {
 
         logger.info(String.format("SubjectGson:{%s}", subjectGson));
         logger.info(String.format("DetailNewsGson: {%s}", detailGson));
-        if (resultItems.get(IS_SUBJECT_LIST) == null) {
-            //都从详情页获取数据
-            NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
-            NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
-            try {
-                newsService.storeDataToDB(subjectNews, detailNews);
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-            }
-        } else {
-            //news从列表页获取
-            List<NewsDTO> subjectNewsList =
-                    new Gson().fromJson(subjectGson, new TypeToken<List<NewsDTO>>() {
-                    }.getType());
-            try {
-                newsService.storeDataToDB(subjectNewsList);
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-            }
+        NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
+        NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
+        try {
+            newsService.storeDataToDB(subjectNews, detailNews);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
 }

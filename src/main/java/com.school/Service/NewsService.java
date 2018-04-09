@@ -27,19 +27,12 @@ public class NewsService {
 
     @Transactional
     public void storeDataToDB(NewsDTO subjectNews, NewsDetailDTO detailNews) {
-        if (subjectNews == null && detailNews == null)
+        if (subjectNews == null || detailNews == null)
             return;
 
-        if (subjectNews != null) {
-            storeDataToDB(subjectNews);
-        }
-
-        if (detailNews != null && subjectNews == null) {
-            storeDataToDB(detailNews);
-        } else if (detailNews != null && subjectNews != null) {
-            detailNews.setNewsID(subjectNews.getId());
-            newsDetailDAO.insert(detailNews);
-        }
+        storeDataToDB(subjectNews);
+        detailNews.setNewsID(subjectNews.getId());
+        newsDetailDAO.insert(detailNews);
     }
 
     @Transactional
@@ -51,7 +44,7 @@ public class NewsService {
     }
 
     @Transactional
-    public void storeDataToDB(NewsDetailDTO detailNews) {
+    public void storeDataToDB(final NewsDetailDTO detailNews) {
         if (detailNews == null)
             return;
 
@@ -61,21 +54,6 @@ public class NewsService {
         if (subjectNews != null) {
             detailNews.setNewsID(subjectNews.getId());
             newsDetailDAO.insert(detailNews);
-        }
-    }
-
-    @Transactional
-    public void storeDataToDB(List<NewsDTO> subjectNewsList) {
-        if (subjectNewsList == null || subjectNewsList.size() == 0)
-            return;
-
-        for (NewsDTO subjectNews : subjectNewsList) {
-            try {
-                //抛异常但不停止循环处理
-                newsDAO.insert(subjectNews);
-            } catch (DuplicateKeyException e) {
-                logger.error("uk duplication exception, " + e.getMessage());
-            }
         }
     }
 

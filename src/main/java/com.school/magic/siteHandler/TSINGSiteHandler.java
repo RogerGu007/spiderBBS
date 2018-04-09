@@ -3,6 +3,7 @@ package com.school.magic.siteHandler;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
+import com.school.magic.constants.ExtractMode;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.HtmlUtils;
@@ -89,13 +90,18 @@ public class TSINGSiteHandler extends SQSiteHandler {
         return DETAIL_CONTENT;
     }
 
-    private String getPageSubDetailContentXPath() {
+    protected String getPageSubDetailContentXPath() {
         return SUB_DETAIL_CONTENT;
     }
 
     @Override
     public Site getSite() {
         return Site.me().setDomain(TSINGBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+    }
+
+    @Override
+    public void setExtractMode() {
+        this.extractMode = ExtractMode.EXTRACT_TEXT;
     }
 
     public String getPostDate(Selectable item) {
@@ -115,8 +121,12 @@ public class TSINGSiteHandler extends SQSiteHandler {
         return pageList;
     }
 
+    protected String getPageRowSeparator() {
+        return "\\s+";
+    }
+
     @Override
-    public NewsDTO extractNews(Page page, Selectable item) {
+    public NewsDTO extractNewsFromText(Page page) {
         //从详情页抽取news
         List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
         Selectable contentItem;
@@ -134,20 +144,8 @@ public class TSINGSiteHandler extends SQSiteHandler {
                 .regex(getPageDetailPostDateXPath()).toString().replaceAll("&nbsp;", " ");
         Date postDate = formatPostDate(postDateStr);
 
-//        List<String> contentList =
-//                Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath()).toString()).split("\n"));
-//        String newsSubject = "";
-//        for (int ii = 0; ii < contentList.size(); ii++) {
-//            //主题抽取需要过滤掉 &nbsp;
-//            String tempContent = contentList.get(ii).replaceAll("&nbsp;", "").replaceAll(" ", "");
-//            if (tempContent.startsWith(getPageDetailSubjectXPath())) {  //开始抽取的标签
-//                newsSubject += tempContent.substring(getPageDetailSubjectXPath().length(), tempContent.length());
-//                break;
-//            }
-//        }
-
-        List<String> contentList =
-                Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath()).toString()).split("\\s+"));
+        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(contentItem
+                .xpath(getPageSubDetailContentXPath()).toString()).split(getPageRowSeparator()));
         String newsSubject = "";
         boolean isSubjectExtractStart = false;
         for (int ii = 0; ii < contentList.size(); ii++) {
@@ -174,7 +172,7 @@ public class TSINGSiteHandler extends SQSiteHandler {
     }
 
     @Override
-    public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
+    public NewsDetailDTO extractNewsDetailsFromText(Page page) {
         //从详情页抽取newsDetail
         List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
         Selectable contentItem;
@@ -184,13 +182,12 @@ public class TSINGSiteHandler extends SQSiteHandler {
             return null;
 
         String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).toString();
-        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split("\n"));
+        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
         String content = "";
         boolean isContentExtractStart = false;
         for (int ii = 0; ii < contentList.size(); ii++) {
             if (!isContentExtractStart) {
-                if (contentList.get(ii).replaceAll("&nbsp;", "")
-                        .replaceAll(" ", "").trim().equalsIgnoreCase(""))
+                if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_ROW_TAG))
                     isContentExtractStart = true;
                 continue;
             }
@@ -198,19 +195,6 @@ public class TSINGSiteHandler extends SQSiteHandler {
             String tempContent = contentList.get(ii).replaceAll(String.format("(%s)+", DETAIL_CONTENT_ROW_TAG), "\n");
             content += tempContent;
         }
-//        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split("\\s+"));
-//        String content = "";
-//        boolean isContentExtractStart = false;
-//        for (int ii = 0; ii < contentList.size(); ii++) {
-//            if (!isContentExtractStart) {
-//                if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_ROW_TAG))
-//                    isContentExtractStart = true;
-//                continue;
-//            }
-//            //&nbsp;&nbsp;标识为换行符
-//            String tempContent = contentList.get(ii).replaceAll(String.format("(%s)+", DETAIL_CONTENT_ROW_TAG), "\n");
-//            content += tempContent;
-//        }
 
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
@@ -221,7 +205,7 @@ public class TSINGSiteHandler extends SQSiteHandler {
      * @param postDateStr
      * @return
      */
-    private Date formatPostDate(String postDateStr) {
+    protected Date formatPostDate(String postDateStr) {
         postDateStr = postDateStr.substring(1, postDateStr.length()-1);
         Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
         if (postDate == null) //兼容日期中有特殊符号的情况

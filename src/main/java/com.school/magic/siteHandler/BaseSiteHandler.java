@@ -11,9 +11,9 @@ public interface BaseSiteHandler {
 
     public List<String> getRequests();
 
-    public NewsDTO extractNews(Page page, Selectable item);
+    public NewsDTO extractNews(Page page);
 
-    public NewsDetailDTO extractNewsDetails(Page page, Selectable item);
+    public NewsDetailDTO extractNewsDetails(Page page);
 
     public boolean isLoginPage();
 

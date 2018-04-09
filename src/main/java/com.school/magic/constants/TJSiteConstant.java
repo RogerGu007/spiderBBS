@@ -26,9 +26,4 @@ public class TJSiteConstant {
     public static final String DETAILSUBJECT = "//*[@id=\"thread_subject\"]/text()";
     public static final String DETAILPOSTDATE= "//em[@id]/text()";
     public static final String DETAILCONTENTSANDCOMMENTS = "//*/td[@class=\"t_f\"]";
-
-    //news的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWS_SEQUENCE = ExtractSequenceType.AFTER_INDEX;
-    //newsDetail的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWSDETAIL_SEQUENCE = ExtractSequenceType.AFTER_NEWS;
 }

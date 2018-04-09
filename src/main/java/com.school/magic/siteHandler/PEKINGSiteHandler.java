@@ -104,7 +104,7 @@ public class PEKINGSiteHandler extends SQSiteHandler {
     }
 
     @Override
-    public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
+    public NewsDetailDTO extractNewsDetails(Page page) {
         //Peking默认从详情页解析出详情
         if (page == null)
             return null;

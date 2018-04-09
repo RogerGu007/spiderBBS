@@ -3,13 +3,11 @@ package com.school.magic.siteHandler;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
-import com.school.magic.constants.ExtractSequenceType;
+import com.school.magic.constants.ExtractMode;
 import com.school.spiderEnums.NewsSubTypeEnum;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
-import com.school.utils.GsonUtils;
 import com.school.utils.HtmlUtils;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -23,9 +21,8 @@ import us.codecraft.webmagic.selector.Selectable;
 import us.codecraft.webmagic.utils.HttpConstant;
 
 import java.util.*;
-
-import static com.school.magic.constants.Constant.RESULT_SUBJECT_FIELD;
 import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
+import static com.school.utils.DateUtils.NORMAL_ENGLISH_DATE_FORMAT;
 
 public abstract class SQSiteHandler implements BaseSiteHandler {
 
@@ -49,11 +46,10 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     private NewsTypeEnum mNewsType;
     private String mNewsURL;
     private Page mPage;
-    private ExtractSequenceType extractNewsSequence = ExtractSequenceType.AFTER_INDEX;
-    private ExtractSequenceType extractNewsDetailSequence = ExtractSequenceType.AFTER_NEWS;
+    protected ExtractMode extractMode = ExtractMode.EXTRACT_HTML_ITEM;
 
     SQSiteHandler() {
-        setExtractSequence();
+        setExtractMode();
     }
 
     SQSiteHandler(String userNameKey,
@@ -66,7 +62,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         setPasswordPair(pwdKey, password);
         setLoginURL(sqlURL);
         setNewsType(newsType);
-        setExtractSequence();
+        setExtractMode();
     }
 
     protected static Date getAcceptDate() {
@@ -99,24 +95,12 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return this.URL;
     }
 
-    public void setExtractSequence() {
+    public void setExtractMode() {
         //默认不设置，使用默认值
     }
 
-    public ExtractSequenceType getExtractNewsSequence() {
-        return extractNewsSequence;
-    }
-
-    public void setExtractNewsSequence(ExtractSequenceType extractNewsSequence) {
-        this.extractNewsSequence = extractNewsSequence;
-    }
-
-    public ExtractSequenceType getExtractNewsDetailSequence() {
-        return extractNewsDetailSequence;
-    }
-
-    public void setExtractNewsDetailSequence(ExtractSequenceType extractNewsDetailSequence) {
-        this.extractNewsDetailSequence = extractNewsDetailSequence;
+    public ExtractMode getExtractMode() {
+        return extractMode;
     }
 
     public boolean hasValidLoginInfo() {
@@ -169,7 +153,6 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     public void setmPage(Page mPage) {
         this.mPage = mPage;
     }
-
 
     protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
         List<String> subList = new ArrayList<>();
@@ -279,18 +262,24 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         }
     }
 
+    public String genSiteUrl(String url) {
+        return url;
+    }
+
+    public String getPostDate(Selectable item) {
+        return item.xpath(getFormItemModifyTimeXPath()).toString();
+    }
+
     /**
      * 返回item的信息
      * @return
      */
     @Override
-    public NewsDTO extractNews(Page page, Selectable item) {
-        if (page == null && item == null)
+    public NewsDTO extractNews(Page page) {
+        if (page == null)
             return null;
 
-        Selectable date = (page != null) ?
-                page.getHtml().xpath(getPageDetailPostDateXPath()).regex(DateUtils.DATE_REGX) :
-                        item.xpath(getPageDetailPostDateXPath()).regex(DateUtils.DATE_REGX);
+        Selectable date = page.getHtml().xpath(getPageDetailPostDateXPath()).regex(DateUtils.DATE_REGX);
 
         Date postDate = null;
         if (date != null)
@@ -298,17 +287,14 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         else
             return null;
 
-        Selectable subjectItem = (page != null) ? page.getHtml().xpath(getPageDetailSubjectXPath())
-                    : item.xpath(getPageDetailSubjectXPath());
-
+        Selectable subjectItem = page.getHtml().xpath(getPageDetailSubjectXPath());
         if (subjectItem == null || subjectItem.nodes().size() == 0)
             return null;
 
         NewsDTO subjectNews = NewsDTO.generateNews(subjectItem.toString(), getmNewsType(), postDate);
         setSubEnumType(subjectNews);
         subjectNews.setLocationCode(getSiteLocationCode());
-        subjectNews.setLinkUrl(page != null ? genSiteUrl(page.getUrl().toString())
-                : genSiteUrl(item.xpath(getLinkUrl()).toString()));
+        subjectNews.setLinkUrl(genSiteUrl(page.getUrl().toString()));
 
         return subjectNews;
     }
@@ -317,19 +303,14 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
      * 详情页的格式区别比较大，建议SiteHandler自己解析
      *
      * @param page
-     * @param item
      * @return
      */
     @Override
-    public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
-        if (page == null && item == null)
+    public NewsDetailDTO extractNewsDetails(Page page) {
+        if (page == null)
             return null;
 
-        Selectable contentsAndComments;
-        if (page != null)
-            contentsAndComments = page.getHtml().xpath(getPageDetailContentXPath());
-        else
-            contentsAndComments = item.xpath(getPageDetailContentXPath());
+        Selectable contentsAndComments = page.getHtml().xpath(getPageDetailContentXPath());
 
         if (contentsAndComments == null || contentsAndComments.nodes().size() == 0)
             return null;
@@ -338,53 +319,81 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (detailContent == null)
             return null;
 
-        String link = null;
-        if (page != null) {
-            link = page.getUrl().toString();
-        } else {
-            if (item.links() != null && item.links().all().size() > 0)
-                link = item.links().all().get(0);
-        }
+        String link = page.getUrl().toString();
         return NewsDetailDTO.generateNewsDetail(HtmlUtils.filterHtmlTag(detailContent.toString()), link);
     }
 
-    public void extractNodeNews(Page page) {
-        Selectable body = page.getHtml().xpath(getFormNodeXPath());
-        List<NewsDTO> newsList = new ArrayList<>();
-        for (int ii = 0; ii < body.nodes().size(); ii++) {
-            Selectable item = body.nodes().get(ii);
-            NewsDTO news = extractNews(null, item);
-            if (news != null)
-                newsList.add(news);
+    public NewsDTO extractNewsFromText(Page page) {
+        //从详情页抽取news
+        List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
+        Selectable contentItem;
+        if (selectableList != null && selectableList.size() > 0)
+            contentItem = selectableList.get(0);
+        else
+            return null;
+
+        String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
+                .regex(getPageDetailPostDateXPath()).toString().replaceAll("&nbsp;", " ");
+        Date postDate = formatPostDate(postDateStr);
+
+        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath())
+                .toString()).split(getPageRowSeparator()));
+        String newsSubject = "";
+        for (int ii = 0; ii < contentList.size(); ii++) {
+            //主题抽取需要过滤掉 &nbsp;
+            String tempContent = contentList.get(ii).replaceAll("&nbsp;", "").replaceAll(" ", "");
+            if (tempContent.startsWith(getPageDetailSubjectXPath())) {  //开始抽取的标签
+                newsSubject += tempContent.substring(getPageDetailSubjectXPath().length(), tempContent.length());
+                break;
+            }
         }
 
-        if (newsList.size() > 0) {
-            page.setSkip(false);
-            page.putField(RESULT_SUBJECT_FIELD, GsonUtils.toGsonString(newsList));
-        }
+        NewsDTO newsDTO = NewsDTO.generateNews(newsSubject, getmNewsType(), postDate);
+        setSubEnumType(newsDTO);
+        newsDTO.setLocationCode(getSiteLocationCode());
+        newsDTO.setLinkUrl(genSiteUrl(page.getUrl().toString()));
+        return newsDTO;
     }
 
-    public void extractNodeDetails(Page page) {
-        Selectable body = page.getHtml().xpath(getFormNodeXPath());
-        List<NewsDetailDTO> newsDetailList = new ArrayList<>();
-        for (int ii = 0; ii < body.nodes().size(); ii++) {
-            Selectable item = body.nodes().get(ii);
-            NewsDetailDTO newsDetail = extractNewsDetails(null, item);
-            if (newsDetail != null)
-                newsDetailList.add(newsDetail);
+    public NewsDetailDTO extractNewsDetailsFromText(Page page) {
+        //从详情页抽取newsDetail
+        List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
+        Selectable contentItem;
+        if (selectableList != null && selectableList.size() > 0)
+            contentItem = selectableList.get(0);
+        else
+            return null;
+
+        String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).toString();
+        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
+        String content = "";
+        boolean isContentExtractStart = false;
+        for (int ii = 0; ii < contentList.size(); ii++) {
+            if (!isContentExtractStart) {
+                if (contentList.get(ii).replaceAll("&nbsp;", "")
+                        .replaceAll(" ", "").trim().equalsIgnoreCase(""))
+                    isContentExtractStart = true;
+                continue;
+            }
+            //&nbsp;&nbsp;标识为换行符
+            String tempContent = contentList.get(ii).replaceAll(String.format("(%s)+", "&nbsp;&nbsp;"), "\n");
+            content += tempContent;
         }
 
-        if (newsDetailList.size() > 0) {
-            page.setSkip(false);
-            page.putField(RESULT_SUBJECT_FIELD, GsonUtils.toGsonString(newsDetailList));
-        }
+        return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 
-    public String genSiteUrl(String url) {
-        return url;
+    protected String getPageSubDetailContentXPath() {
+        return null;
     }
 
-    public String getPostDate(Selectable item) {
-        return item.xpath(getFormItemModifyTimeXPath()).toString();
+    protected String getPageRowSeparator() {
+        return "\n";
+    }
+
+    protected Date formatPostDate(String postDateStr) {
+        postDateStr = postDateStr.substring(1, postDateStr.length()-1);
+        Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
+        return postDate;
     }
 }

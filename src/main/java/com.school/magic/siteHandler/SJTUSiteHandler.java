@@ -2,6 +2,7 @@ package com.school.magic.siteHandler;
 
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractMode;
+import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,20 +15,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.school.magic.constants.NJUSiteConstant.*;
-import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
-import static com.school.utils.DateUtils.ENGLISH_DATE_FORMAT;
-import static com.school.utils.DateUtils.NORMAL_ENGLISH_DATE_FORMAT;
+import static com.school.magic.constants.SJTUSiteConstant.*;
+import static com.school.utils.DateUtils.*;
 
 
-public class NJUSiteHandler extends SQSiteHandler{
+public class SJTUSiteHandler extends SQSiteHandler{
 
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public int getSiteLocationCode() {
-        return com.school.spiderEnums.LocationEnum.NANJING.getZipCode();
+        return LocationEnum.SHANGHAI.getZipCode();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     @Override
     public Site getSite() {
-        return Site.me().setDomain(NJUBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+        return Site.me().setDomain(SJTU_BBS_JOB_DOMAIN).setSleepTime(Constant.SLEEPTIME);
     }
 
     @Override
@@ -121,7 +120,7 @@ public class NJUSiteHandler extends SQSiteHandler{
     protected List<String> getNextPages() {
         List<String> linkList = getmPage().getHtml().xpath(getFormNextPagesXPath()).links().all();
         //详情页相同标签的下一页以board=JobExpress结尾，需要过滤掉
-        if (linkList == null || linkList.size() < 1 || linkList.get(0).endsWith(INDEX_JOB_URL_TAG))
+        if (linkList == null || linkList.size() < 1)
             return new ArrayList<>();
         return linkList;
     }
@@ -143,24 +142,24 @@ public class NJUSiteHandler extends SQSiteHandler{
         return dataList;
     }
 
-    public String getPostDate(Selectable item) {
-        //格式：Apr 8 11:56
-        String originDate = item.xpath(getFormItemModifyTimeXPath()).toString();
-        originDate += " " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-        return DateUtils.getStringFromDate(DateUtils.getDateFromString(originDate, ENGLISH_DATE_FORMAT), DEFAULT_DATE_FORMAT);
-    }
+//    public String getPostDate(Selectable item) {
+//        //格式：Apr 8 11:56
+//        String originDate = item.xpath(getFormItemModifyTimeXPath()).toString();
+//        originDate += " " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+//        return DateUtils.getStringFromDate(DateUtils.getDateFromString(originDate, ENGLISH_DATE_FORMAT), DEFAULT_DATE_FORMAT);
+//    }
 
-    /**
-     * 特殊处理，去掉postDateStr头尾的括号
-     *
-     * @param postDateStr
-     * @return
-     */
-    protected Date formatPostDate(String postDateStr) {
-        postDateStr = postDateStr.substring(1, postDateStr.length()-1);
-        Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
-        if (postDate == null) //兼容日期中有特殊符号的情况
-            postDate = DateUtils.getDateFromString(postDateStr, SPECIAL_ENGLISH_DATE_FORMAT);
-        return postDate;
-    }
+//    /**
+//     * 特殊处理，去掉postDateStr头尾的括号
+//     *
+//     * @param postDateStr
+//     * @return
+//     */
+//    protected Date formatPostDate(String postDateStr) {
+//        postDateStr = postDateStr.substring(1, postDateStr.length()-1);
+//        Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
+//        if (postDate == null) //兼容日期中有特殊符号的情况
+//            postDate = DateUtils.getDateFromString(postDateStr, SPECIAL_ENGLISH_DATE_FORMAT);
+//        return postDate;
+//    }
 }

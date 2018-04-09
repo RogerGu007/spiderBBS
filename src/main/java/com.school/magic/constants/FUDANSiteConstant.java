@@ -32,9 +32,4 @@ public class FUDANSiteConstant {
     public static final String DETAIL_SUBJECT_TAG= "//tbody/tr[1]/td/span/text()";
     //详情页中的发帖时间
     public static final String DETAIL_POSTDATE_TAG = "//tbody/tr[3]/td/text()";
-
-    //news的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWS_SEQUENCE = ExtractSequenceType.AFTER_INDEX;
-    //newsDetail的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWSDETAIL_SEQUENCE = ExtractSequenceType.AFTER_NEWS;
 }

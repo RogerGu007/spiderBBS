@@ -28,9 +28,6 @@ public class SpiderGenerator {
                 break;
             case NJU_BBS:
                 sqSiteHandler = new NJUSiteHandler();
-//                sqSiteHandler.setLoginURL(LOGIN_URL);
-//                sqSiteHandler.setUserNamePair("username", "tjshif");
-//                sqSiteHandler.setPasswordPair("password", "19801004");
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
                 sqSiteHandler.setNewsURL(NJUSiteConstant.JOB_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);

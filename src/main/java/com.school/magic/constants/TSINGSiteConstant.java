@@ -42,9 +42,4 @@ public class TSINGSiteConstant {
             "\\([A-Za-z]{3}\\s+[A-Za-z]{3}.*\\d+\\s+\\d+:\\d+:\\d+\\s+\\d+\\)";
     public static final String DETAIL_CONTENT_ROW_TAG = "&nbsp;&nbsp;";
     public static final String SPECIAL_ENGLISH_DATE_FORMAT = "EEE MMM  d HH:mm:ss yyyy";
-
-    //news的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWS_SEQUENCE = ExtractSequenceType.AFTER_INDEX;
-    //newsDetail的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWSDETAIL_SEQUENCE = ExtractSequenceType.AFTER_NEWS;
 }

@@ -37,9 +37,4 @@ public class PEKINGSiteConstant {
     public static final String DETAIL_SUBJECT_TAG = "//*[@id=\"post-read\"]/header/h3/text()";
     //详情页中的发帖时间    2018-04-07 15:48:44
     public static final String DETAIL_POSTDATE_TAG = "//span[1]/span/text()";
-
-    //news的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWS_SEQUENCE = ExtractSequenceType.AFTER_INDEX;
-    //newsDetail的抽取顺序
-    public static final ExtractSequenceType EXTRACT_NEWSDETAIL_SEQUENCE = ExtractSequenceType.AFTER_NEWS;
 }

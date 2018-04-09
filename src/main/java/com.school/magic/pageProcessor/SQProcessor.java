@@ -3,7 +3,7 @@ package com.school.magic.pageProcessor;
 import com.school.Service.NewsService;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
-import com.school.magic.constants.ExtractSequenceType;
+import com.school.magic.constants.ExtractMode;
 import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.storePipeline.NewsToDBPipeline;
 import com.school.utils.ApplicationContextUtils;
@@ -14,7 +14,6 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static com.school.magic.constants.Constant.*;
@@ -55,11 +54,14 @@ public class SQProcessor implements PageProcessor {
             page.addTargetRequests(requestURLs);
             page.setSkip(true);
             //return是个特殊逻辑，决定了news和newsDetails的抽取顺序。 根据sequence来判断，在首页里页尝试抽取一次数据
-            extractNewsFromNode(page);
             return;
         }
 
-        extractNewsFromDetail(page);
+        //提取news
+        if (!extractSubjectFile(page))
+            return;
+        //提取news详情
+        extractDetailField(page);
     }
 
     public static Spider getSpider(SQSiteHandler sqSiteHandler) {
@@ -81,34 +83,6 @@ public class SQProcessor implements PageProcessor {
         return spider;
     }
 
-    private void extractNewsFromNode(Page page) {
-        if (mSqSiteHandler.getExtractNewsSequence().getSequenceType()
-                .compareTo(ExtractSequenceType.INNER_INDEX.getSequenceType()) <= 0) {
-            //抽取成功，重置skip，信息需要传到pipeline
-            mSqSiteHandler.extractNodeNews(page);
-            page.putField(IS_SUBJECT_LIST, true);
-        }
-
-        if (mSqSiteHandler.getExtractNewsDetailSequence().getSequenceType()
-                    .compareTo(ExtractSequenceType.INNER_INDEX.getSequenceType()) <= 0) {
-            extractDetailField(page);
-            mSqSiteHandler.extractNodeDetails(page);
-            page.putField(IS_DETAIL_LIST, true);
-        }
-    }
-
-    private void extractNewsFromDetail(Page page) {
-        //获取news
-        if (mSqSiteHandler.getExtractNewsSequence().getSequenceType()
-                .compareTo(ExtractSequenceType.AFTER_INDEX.getSequenceType()) >= 0)
-            if (!extractSubjectFile(page))
-                return;
-        //获取news detail
-        if (mSqSiteHandler.getExtractNewsDetailSequence().getSequenceType()
-                .compareTo(ExtractSequenceType.AFTER_INDEX.getSequenceType()) >= 0)
-            extractDetailField(page);
-    }
-
     @Override
     public Site getSite() {
         if (mSqSiteHandler == null)
@@ -122,7 +96,12 @@ public class SQProcessor implements PageProcessor {
      * @param page
      */
     private boolean extractSubjectFile(Page page) {
-        NewsDTO news = mSqSiteHandler.extractNews(page, null);
+        NewsDTO news = null;
+        if (mSqSiteHandler.getExtractMode().equals(ExtractMode.EXTRACT_HTML_ITEM))
+            news = mSqSiteHandler.extractNews(page);
+        else if (mSqSiteHandler.getExtractMode().equals(ExtractMode.EXTRACT_TEXT))
+            news = mSqSiteHandler.extractNewsFromText(page);
+
         if (news == null) {
             page.setSkip(true);
             return false;
@@ -137,7 +116,12 @@ public class SQProcessor implements PageProcessor {
      * @param page
      */
     private boolean extractDetailField(Page page) {
-        NewsDetailDTO details = mSqSiteHandler.extractNewsDetails(page, null);
+        NewsDetailDTO details = null;
+        if (mSqSiteHandler.getExtractMode().equals(ExtractMode.EXTRACT_HTML_ITEM))
+            details = mSqSiteHandler.extractNewsDetails(page);
+        else if (mSqSiteHandler.getExtractMode().equals(ExtractMode.EXTRACT_TEXT))
+            details = mSqSiteHandler.extractNewsDetailsFromText(page);
+
         if (details == null) {
             page.setSkip(true);
             return false;
