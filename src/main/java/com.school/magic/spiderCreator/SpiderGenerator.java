@@ -54,6 +54,12 @@ public class SpiderGenerator {
                 sqSiteHandler.setNewsURL(FUDANSiteConstant.JOB_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 break;
+            case SJTU_BBS:
+                sqSiteHandler = new SJTUSiteHandler();
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
+                sqSiteHandler.setNewsURL(SJTUSiteConstant.JOB_URL);
+                spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                break;
             default:
                 break;
         }

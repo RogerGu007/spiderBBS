@@ -142,24 +142,23 @@ public class SJTUSiteHandler extends SQSiteHandler{
         return dataList;
     }
 
-//    public String getPostDate(Selectable item) {
-//        //格式：Apr 8 11:56
-//        String originDate = item.xpath(getFormItemModifyTimeXPath()).toString();
-//        originDate += " " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-//        return DateUtils.getStringFromDate(DateUtils.getDateFromString(originDate, ENGLISH_DATE_FORMAT), DEFAULT_DATE_FORMAT);
-//    }
+    public String getPostDate(Selectable item) {
+        //格式：Apr 8 11:56
+        String originDate = item.xpath(getFormItemModifyTimeXPath()).toString();
+        originDate += " " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+        return DateUtils.getStringFromDate(DateUtils.getDateFromString(originDate, ENGLISH_DATE_FORMAT), DEFAULT_DATE_FORMAT);
+    }
 
-//    /**
-//     * 特殊处理，去掉postDateStr头尾的括号
-//     *
-//     * @param postDateStr
-//     * @return
-//     */
-//    protected Date formatPostDate(String postDateStr) {
-//        postDateStr = postDateStr.substring(1, postDateStr.length()-1);
-//        Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
-//        if (postDate == null) //兼容日期中有特殊符号的情况
-//            postDate = DateUtils.getDateFromString(postDateStr, SPECIAL_ENGLISH_DATE_FORMAT);
-//        return postDate;
-//    }
+    /**
+     * 特殊处理，去掉postDateStr头尾的括号和星期几
+     * 示例：2018年04月09日17:18:54 星期一
+     *
+     * @param postDateStr
+     * @return
+     */
+    protected Date formatPostDate(String postDateStr) {
+        postDateStr = postDateStr.substring(1, postDateStr.length()-4);
+        Date postDate = DateUtils.getDateFromString(postDateStr, "yyyy年MM月dd日hh:mm:ss");
+        return postDate;
+    }
 }
