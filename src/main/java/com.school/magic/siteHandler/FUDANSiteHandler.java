@@ -1,9 +1,14 @@
 package com.school.magic.siteHandler;
 
+import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
+import com.school.utils.HtmlUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
@@ -68,12 +73,12 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     @Override
     protected String getPageDetailPostDateXPath() {
-        return DETAIL_POSTDATE_TAG;
+        return DETAIL_POSTDATE;
     }
 
     @Override
     protected String getPageDetailSubjectXPath() {
-        return DETAIL_SUBJECT_TAG;
+        return DETAIL_SUBJECT;
     }
 
     @Override
@@ -86,42 +91,101 @@ public class FUDANSiteHandler extends SQSiteHandler {
         return Site.me().setDomain(FUDAN_BBS_JOB_DOMAIN).setSleepTime(Constant.SLEEPTIME);
     }
 
-//    public String getPostDate(Selectable item) {
-//        //2018-3-23 16:13:11
-//        //在列表页用于时间判断，后三种都是最近的帖子，无须过滤
-//        String originDate = item.xpath(getFormItemModifyTimeXPath()).regex(DEFAULT_DATE_FORMAT).toString();
-//        if (originDate == null) {
-//            return DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT);
-//        }
-//        return String.valueOf(Calendar.getInstance().get(Calendar.YEAR)) + "-" + originDate;
-//    }
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected List<String> getNextPages() {
-        List<String> pageList = getmPage().getHtml().xpath(getFormNextPagesXPath()).links().all();
-        //去掉第一个，标识为当前页的linkUrl
-        pageList.remove(getmPage().getUrl().toString());
-        return pageList;
+    @Override
+    public List<String> getRequests() {
+        //文中pages
+        Selectable body = getmPage().getHtml().xpath(getFormNodeXPath());
+        List<String> requestLinks = new ArrayList<>();
+
+        for (int ii = 0; ii < body.nodes().size(); ii++) {
+            Selectable item = body.nodes().get(ii);
+            Selectable childItems = getChildPage(item);
+            if (childItems != null && childItems.nodes().size() > 0) {
+                Selectable detailNode = item.xpath(getFormItemDetailXPath());
+                if (detailNode != null && detailNode.toString() != null) {
+                    String modifiedDate = getPostDate(item);
+                    if (isDroppedItem(modifiedDate)) //比预设的时间早，帖子丢弃
+                        continue;
+
+                    requestLinks.add(LINKTEMPLATE.replaceAll("PLACEHOLDER", detailNode.toString()));
+                    logger.info(String.format("title: {%s}", item.xpath(getFormItemTitleXPath()).toString()));
+                }
+            }
+        }
+
+        if (getmPage().getUrl().toString().equalsIgnoreCase(getNewsURL())) {
+            List<String> nextPages = getNextPages();
+            //只能翻6页，每天更新内容一般不会超过6页
+            requestLinks.addAll(getSubList(nextPages, 0, 5));
+        }
+        return requestLinks;
     }
 
-//    @Override
-//    public NewsDetailDTO extractNewsDetails(Page page, Selectable item) {
-//        //Peking默认从详情页解析出详情
-//        if (page == null)
-//            return null;
-//
-//        String linkUrl = page.getUrl().toString();
-//
-//        Selectable contentsNodes = page.getHtml().xpath(getPageDetailContentXPath());
-//        if (contentsNodes == null || contentsNodes.nodes().size() == 0)
-//            return null;
-//
-//        String content = "";
-//        for (Selectable contentNode : contentsNodes.nodes()) {
-//            content += contentNode.toString();
-//            if (!contentNode.toString().equalsIgnoreCase(""))
-//                content += "\n";
-//        }
-//
-//        return NewsDetailDTO.generateNewsDetail(content, linkUrl);
-//    }
+    public String getPostDate(Selectable item) {
+        //2018-03-01T21:42:32
+        //在列表页用于时间判断，后三种都是最近的帖子，无须过滤
+        String originDate = item.xpath(getFormItemModifyTimeXPath()).toString();
+        return originDate.replace("T", " ");
+    }
+
+    protected Selectable getChildPage(Selectable item) {
+        if (item == null || item.nodes().size() == 0)
+            return null;
+
+        if (item.xpath(FORMITEMFILTER).toString().equalsIgnoreCase("1"))
+            return null;
+
+        return item.xpath(getFormItemXPath());
+    }
+
+    protected List<String> getNextPages() {
+        Selectable nextPageNode = getmPage().getHtml().xpath(getFormNextPagesXPath());
+        if (nextPageNode == null)
+            return  null;
+        return new ArrayList<String>() {{ add(NEXTPAGETEMPLATE.replaceAll("PLACEHOLDER", nextPageNode.toString()));}};
+    }
+
+    protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
+        List<String> subList = new ArrayList<>();
+        if (dataList.size() == 0) {
+            return subList;
+        }
+
+        int startId = Integer.valueOf(dataList.get(0).split(NEXTPAGESEPERATE)[1]);
+        for (int ii = from; ii < to; ii++) {
+            if (startId - 20*(ii-from+1) > 0)
+                subList.add(NEXTPAGETEMPLATE.replaceAll("PLACEHOLDER", String.valueOf(startId-20*(ii-from+1))));
+            else
+                break;
+        }
+        return subList;
+    }
+
+    public NewsDTO extractNews(Page page) {
+        if (page == null)
+            return null;
+
+        Selectable date = page.getHtml().xpath(getPageDetailPostDateXPath());
+
+        Date postDate = null;
+        if (date == null || StringUtils.isEmpty(date.toString())) {
+            return null;
+        } else {
+            String dateStr = date.toString().substring(0, date.toString().length()-4).replaceAll("[\\u4e00-\\u9fa5]", " ");
+            postDate = DateUtils.getDateFromString(dateStr, "yyyy MM dd hh:mm:ss");
+        }
+
+        Selectable subjectItem = page.getHtml().xpath(getPageDetailSubjectXPath());
+        if (subjectItem == null || subjectItem.nodes().size() == 0)
+            return null;
+
+        NewsDTO subjectNews = NewsDTO.generateNews(subjectItem.toString(), getmNewsType(), postDate);
+        setSubEnumType(subjectNews);
+        subjectNews.setLocationCode(getSiteLocationCode());
+        subjectNews.setLinkUrl(genSiteUrl(page.getUrl().toString()));
+
+        return subjectNews;
+    }
 }

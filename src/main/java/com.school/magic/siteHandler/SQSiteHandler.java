@@ -320,7 +320,8 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return null;
 
         String link = page.getUrl().toString();
-        return NewsDetailDTO.generateNewsDetail(HtmlUtils.filterHtmlTag(detailContent.toString()), link);
+        return NewsDetailDTO.generateNewsDetail(HtmlUtils.filterHtmlTag(detailContent.toString())
+                .replaceAll("&nbsp;&nbsp;", "\n").replaceAll("&nbsp;", " "), link);
     }
 
     public NewsDTO extractNewsFromText(Page page) {

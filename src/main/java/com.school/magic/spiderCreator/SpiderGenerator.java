@@ -50,8 +50,8 @@ public class SpiderGenerator {
                 break;
             case FUDAN_BBS:
                 sqSiteHandler = new FUDANSiteHandler();
-                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
-                sqSiteHandler.setNewsURL(FUDANSiteConstant.JOB_URL);
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_FRIENDS);
+                sqSiteHandler.setNewsURL(FUDANSiteConstant.FRIEND_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
                 break;
             case SJTU_BBS:
