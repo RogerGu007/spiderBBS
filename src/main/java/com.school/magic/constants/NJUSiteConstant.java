@@ -32,9 +32,10 @@ public class NJUSiteConstant {
     //详情页中抽取主题的关键词
     public static final String DETAIL_SUBJECT_REGEX = "标 *题.*";
     public static final String DETAIL_SUBJECT_REGEX_Start = "标 *题: *";
+    public static final int DETAIL_CONTENT_START_ROWNUM = 5;
+    public static final int DETAIL_CONTENT_END_ROWNUM = 2;
     //详情页中抽取发帖时间的关键词  Sun Apr  8 15:40:48 2018
     public static final String DETAIL_POSTDATE_REGEX =
             "\\([A-Za-z]{3}\\s+[A-Za-z]{3}.*\\d+\\s+\\d+:\\d+:\\d+\\s+\\d+\\)";
-    public static final String DETAIL_CONTENT_ROW_TAG = "&nbsp;&nbsp;";
     public static final String SPECIAL_ENGLISH_DATE_FORMAT = "EEE MMM  d HH:mm:ss yyyy";
 }
