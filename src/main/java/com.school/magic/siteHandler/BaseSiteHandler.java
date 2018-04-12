@@ -9,15 +9,19 @@ import java.util.List;
 
 public interface BaseSiteHandler {
 
-    public List<String> getRequests();
+    List<String> getRequests();
 
-    public NewsDTO extractNews(Page page);
+    NewsDTO extractNews(Page page);
 
-    public NewsDetailDTO extractNewsDetails(Page page);
+    NewsDetailDTO extractNewsDetails(Page page);
 
-    public boolean isLoginPage();
+    boolean isLoginPage();
 
-    public int getSiteLocationCode();
+    int getSiteLocationCode();
 
-    public String getLinkUrl();
+    NewsDetailDTO extractNewsDetailsFromText(Page page);
+
+    NewsDTO extractNewsFromText(Page page);
+
+    String getLinkUrl();
 }

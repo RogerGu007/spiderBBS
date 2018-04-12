@@ -325,6 +325,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return NewsDetailDTO.generateNewsDetail(detailContent.toString(), link);
     }
 
+    @Override
     public NewsDTO extractNewsFromText(Page page) {
         //从详情页抽取news
         List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
@@ -357,6 +358,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return newsDTO;
     }
 
+    @Override
     public NewsDetailDTO extractNewsDetailsFromText(Page page) {
         //从详情页抽取newsDetail
         List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();

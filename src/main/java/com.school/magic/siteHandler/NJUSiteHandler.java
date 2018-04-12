@@ -1,10 +1,15 @@
 package com.school.magic.siteHandler;
 
+import com.school.entity.NewsDTO;
+import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractMode;
+import com.school.magic.constants.NJUSiteConstant;
 import com.school.utils.DateUtils;
+import com.school.utils.TextareaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
 
@@ -77,11 +82,7 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     @Override
     protected String getPageDetailSubjectXPath() {
-        return DETAIL_SUBJECT_REGEX_START;
-    }
-
-    protected String getPageDetailSubjectEndTagXPath() {
-        return DETAIL_SUBJECT_REGEX_END;
+        return DETAIL_SUBJECT_REGEX;
     }
 
     @Override
@@ -163,4 +164,50 @@ public class NJUSiteHandler extends SQSiteHandler{
             postDate = DateUtils.getDateFromString(postDateStr, SPECIAL_ENGLISH_DATE_FORMAT);
         return postDate;
     }
+
+    @Override
+    public NewsDTO extractNewsFromText(Page page) {
+        //从详情页抽取news
+        List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
+        Selectable contentItem;
+        if (selectableList != null && selectableList.size() > 0)
+            contentItem = selectableList.get(0);
+        else
+            return null;
+
+        Selectable detailSelector = contentItem.xpath(getPageSubDetailContentXPath());
+        if (detailSelector == null)
+            return null;
+
+        String postDateStr = detailSelector.regex(getPageDetailPostDateXPath()).toString();
+        Date postDate = formatPostDate(postDateStr);
+
+        String newsSubject = detailSelector.regex(NJUSiteConstant.DETAIL_SUBJECT_REGEX).toString();
+        if (newsSubject.indexOf(getPageRowSeparator()) > 0)
+            newsSubject = newsSubject.substring(0,newsSubject.indexOf(getPageRowSeparator()));
+        newsSubject = newsSubject.replaceAll(NJUSiteConstant.DETAIL_SUBJECT_REGEX_Start, "");
+
+        NewsDTO newsDTO = NewsDTO.generateNews(newsSubject, getmNewsType(), postDate);
+        setSubEnumType(newsDTO);
+        newsDTO.setLocationCode(getSiteLocationCode());
+        newsDTO.setLinkUrl(genSiteUrl(page.getUrl().toString()));
+        return newsDTO;
+    }
+
+    @Override
+    public NewsDetailDTO extractNewsDetailsFromText(Page page) {
+        //从详情页抽取newsDetail
+        List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
+
+        Selectable contentItem;
+        if (selectableList != null && selectableList.size() > 0)
+            contentItem = selectableList.get(0);
+        else
+            return null;
+
+        String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).regex(NJUSiteConstant.DETAIL_SUBJECT_REGEX).toString();
+        String content = TextareaUtils.convertTextareToHtml(htmlStr);
+        return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
+    }
+
 }
