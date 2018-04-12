@@ -46,6 +46,8 @@ public class TextareaUtils {
 					isNeedAddBR = true;
 				else if (isEndChar(line))//最后一个字符是结束行
 					isNeedAddBR = true;
+				else if (isEndWithHTTP(line))//以http链接结束，需要换行
+					isNeedAddBR = true;
 			}
 
 			if (isNeedAddBR)
@@ -59,9 +61,16 @@ public class TextareaUtils {
 		return result;
 	}
 
+	private static Boolean isEndWithHTTP(String line)
+	{
+		Pattern pattern = Pattern.compile("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]$");
+		Matcher matcher = pattern.matcher(line);
+		return matcher.find();
+	}
+
 	private static Boolean isEndChar(String line)
 	{
-		Pattern patPunc = Pattern.compile("[!)};>?！￥）}】”。？]$");
+		Pattern patPunc = Pattern.compile("[!)};>?！￥）}】”。？-]$");
 		Matcher matcher = patPunc.matcher(line);
 		return matcher.find();
 	}
