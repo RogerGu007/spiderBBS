@@ -61,7 +61,7 @@ public class TextareaUtils {
 
 	private static Boolean isEndChar(String line)
 	{
-		Pattern patPunc = Pattern.compile("[!)};>?！￥）}】”。？]$");
+		Pattern patPunc = Pattern.compile("[!)};>?！￥）}】”。？-]$");
 		Matcher matcher = patPunc.matcher(line);
 		return matcher.find();
 	}
