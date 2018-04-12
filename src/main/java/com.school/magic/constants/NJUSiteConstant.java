@@ -30,7 +30,7 @@ public class NJUSiteConstant {
     public static final String DETAIL_CONTENT = "//tr[2]/td";
     public static final String SUB_DETAIL_CONTENT = "//";
     //详情页中抽取主题的关键词
-    public static final String DETAIL_SUBJECT_REGEX_START = "标题:";
+    public static final String DETAIL_SUBJECT_REGEX_START = "标  题: ";
     public static final String DETAIL_SUBJECT_REGEX_END = "发信站:";
     //详情页中抽取发帖时间的关键词  Sun Apr  8 15:40:48 2018
     public static final String DETAIL_POSTDATE_REGEX =

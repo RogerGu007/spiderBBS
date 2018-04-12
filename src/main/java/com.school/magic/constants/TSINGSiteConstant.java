@@ -40,6 +40,6 @@ public class TSINGSiteConstant {
     //详情页中抽取发帖时间的关键词  Tue Mar 13 00:12:46 2018
     public static final String DETAIL_POSTDATE_REGEX =
             "\\([A-Za-z]{3}\\s+[A-Za-z]{3}.*\\d+\\s+\\d+:\\d+:\\d+\\s+\\d+\\)";
-    public static final String DETAIL_CONTENT_ROW_TAG = "&nbsp;&nbsp;";
+    public static final String DETAIL_CONTENT_ROW_TAG = "<br>&nbsp;&nbsp;<br>";
     public static final String SPECIAL_ENGLISH_DATE_FORMAT = "EEE MMM  d HH:mm:ss yyyy";
 }

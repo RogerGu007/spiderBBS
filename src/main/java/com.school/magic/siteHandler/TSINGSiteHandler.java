@@ -144,8 +144,8 @@ public class TSINGSiteHandler extends SQSiteHandler {
                 .regex(getPageDetailPostDateXPath()).toString().replaceAll("&nbsp;", " ");
         Date postDate = formatPostDate(postDateStr);
 
-        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(contentItem
-                .xpath(getPageSubDetailContentXPath()).toString()).split(getPageRowSeparator()));
+        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath())
+                .toString()).split(getPageRowSeparator()));
         String newsSubject = "";
         boolean isSubjectExtractStart = false;
         for (int ii = 0; ii < contentList.size(); ii++) {
@@ -159,8 +159,9 @@ public class TSINGSiteHandler extends SQSiteHandler {
             if (tempContent.replaceAll(" ", "").startsWith(getPageDetailSubjectEndTagXPath()))  //结束抽取的标签
                 break;
 
-            if (isSubjectExtractStart)
+            if (isSubjectExtractStart) {
                 newsSubject += tempContent;
+            }
         }
 
         newsDTO = NewsDTO.generateNews(newsSubject, getmNewsType(), postDate);
@@ -182,18 +183,19 @@ public class TSINGSiteHandler extends SQSiteHandler {
             return null;
 
         String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).toString();
-        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
+//        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
+        List<String> contentList = Arrays.asList(htmlStr.split(getPageRowSeparator()));
         String content = "";
         boolean isContentExtractStart = false;
         for (int ii = 0; ii < contentList.size(); ii++) {
             if (!isContentExtractStart) {
-                if (contentList.get(ii).trim().equalsIgnoreCase(DETAIL_CONTENT_ROW_TAG))
+                if (contentList.get(ii).startsWith(DETAIL_CONTENT_ROW_TAG))
+                    content += contentList.get(ii);
                     isContentExtractStart = true;
                 continue;
             }
             //&nbsp;&nbsp;标识为换行符
-            String tempContent = contentList.get(ii).replaceAll(String.format("(%s)+", DETAIL_CONTENT_ROW_TAG), "\n");
-            content += tempContent;
+            content += contentList.get(ii);
         }
 
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());

@@ -320,8 +320,9 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return null;
 
         String link = page.getUrl().toString();
-        return NewsDetailDTO.generateNewsDetail(HtmlUtils.filterHtmlTag(detailContent.toString())
-                .replaceAll("&nbsp;&nbsp;", "\n").replaceAll("&nbsp;", " "), link);
+//        return NewsDetailDTO.generateNewsDetail(HtmlUtils.filterHtmlTag(detailContent.toString())
+//                .replaceAll("&nbsp;&nbsp;", "\n").replaceAll("&nbsp;", " "), link);
+        return NewsDetailDTO.generateNewsDetail(detailContent.toString(), link);
     }
 
     public NewsDTO extractNewsFromText(Page page) {
@@ -366,18 +367,25 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return null;
 
         String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).toString();
-        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
+//        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
+        List<String> contentList = Arrays.asList(htmlStr.split(getPageRowSeparator()));
         String content = "";
         boolean isContentExtractStart = false;
         for (int ii = 0; ii < contentList.size(); ii++) {
             if (!isContentExtractStart) {
-                if (contentList.get(ii).replaceAll("&nbsp;", "")
-                        .replaceAll(" ", "").trim().equalsIgnoreCase(""))
+//                if (contentList.get(ii).replaceAll("&nbsp;", "")
+//                        .replaceAll(" ", "").trim().equalsIgnoreCase(""))
+//                    isContentExtractStart = true;
+//                continue;
+                if (contentList.get(ii).equalsIgnoreCase("")) {
                     isContentExtractStart = true;
+                    content += contentList.get(ii);
+                }
                 continue;
             }
             //&nbsp;&nbsp;标识为换行符
-            String tempContent = contentList.get(ii).replaceAll(String.format("(%s)+", "&nbsp;&nbsp;"), "\n");
+//            String tempContent = contentList.get(ii).replaceAll(String.format("(%s)+", "&nbsp;&nbsp;"), "\n");
+            String tempContent = contentList.get(ii);
             content += tempContent;
         }
 
