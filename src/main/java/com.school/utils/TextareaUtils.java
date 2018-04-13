@@ -50,6 +50,8 @@ public class TextareaUtils {
 					isNeedAddBR = true;
 			}
 
+			line = addImageTag(line);
+
 			if (isNeedAddBR)
 				result += (line + "<br>");
 			else
@@ -66,6 +68,27 @@ public class TextareaUtils {
 		Pattern pattern = Pattern.compile("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]$");
 		Matcher matcher = pattern.matcher(line);
 		return matcher.find();
+	}
+
+	private static String addImageTag(String sourceTxt)
+	{
+		if (TextUtils.isEmpty(sourceTxt))
+			return sourceTxt;
+		Pattern pattern = Pattern.compile("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|](.png|.jpg)");
+		Matcher matcher = pattern.matcher(sourceTxt);
+
+		StringBuffer sbTest = new StringBuffer();
+		Integer preStartPos = 0;
+
+		while (matcher.find())
+		{
+			System.out.println(matcher.group());
+			sbTest.append(sourceTxt.substring(preStartPos, matcher.start()));
+			sbTest.append(String.format("<img src=\"%s\" />", matcher.group()));
+			preStartPos = matcher.end();
+		}
+		sbTest.append(sourceTxt.substring(preStartPos));
+		return sbTest.toString();
 	}
 
 	private static Boolean isEndChar(String line)
