@@ -8,6 +8,7 @@ import com.school.spiderEnums.NewsSubTypeEnum;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.HtmlUtils;
+import com.school.utils.TextareaUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -200,6 +201,33 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     }
 
     /**
+     * 详情页是text的站点需要重写该方法
+     *
+     * @return
+     */
+    protected String getPageDetailSubjectRegex() {
+        return null;
+    }
+
+    /**
+     * 详情页是text的站点需要重写该方法
+     *
+     * @return
+     */
+    protected int getPageDetailContentStartRow() {
+        return 1;
+    }
+
+    /**
+     * 详情页是text的站点需要重写该方法
+     *
+     * @return
+     */
+    protected int getPageDetailContentEndRow() {
+        return 0;
+    }
+
+    /**
      *
      * @return
      */
@@ -336,7 +364,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return null;
 
         String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
-                .regex(getPageDetailPostDateXPath()).toString().replaceAll("&nbsp;", " ");
+                .regex(getPageDetailPostDateXPath()).toString();
         Date postDate = formatPostDate(postDateStr);
 
         List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath())
@@ -344,7 +372,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         String newsSubject = "";
         for (int ii = 0; ii < contentList.size(); ii++) {
             //主题抽取需要过滤掉 &nbsp;
-            String tempContent = contentList.get(ii).replaceAll("&nbsp;", "").replaceAll(" ", "");
+            String tempContent = contentList.get(ii);
             if (tempContent.startsWith(getPageDetailSubjectXPath())) {  //开始抽取的标签
                 newsSubject += tempContent.substring(getPageDetailSubjectXPath().length(), tempContent.length());
                 break;
@@ -368,29 +396,21 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         else
             return null;
 
-        String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).toString();
-//        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
-        List<String> contentList = Arrays.asList(htmlStr.split(getPageRowSeparator()));
-        String content = "";
-        boolean isContentExtractStart = false;
-        for (int ii = 0; ii < contentList.size(); ii++) {
-            if (!isContentExtractStart) {
-//                if (contentList.get(ii).replaceAll("&nbsp;", "")
-//                        .replaceAll(" ", "").trim().equalsIgnoreCase(""))
-//                    isContentExtractStart = true;
-//                continue;
-                if (contentList.get(ii).equalsIgnoreCase("")) {
-                    isContentExtractStart = true;
-                    content += contentList.get(ii);
-                }
+        String orihtmlStr = contentItem.xpath(getPageSubDetailContentXPath()).regex(getPageDetailSubjectRegex()).toString();
+        String htmlStr = "";
+        String[] contentArr = orihtmlStr.split("\n");
+        for (int ii=0; ii<contentArr.length; ii++) {
+            //从 DETAIL_CONTENT_START_ROWNUM 行开始截取
+            if (ii+1 < getPageDetailContentStartRow())
                 continue;
-            }
-            //&nbsp;&nbsp;标识为换行符
-//            String tempContent = contentList.get(ii).replaceAll(String.format("(%s)+", "&nbsp;&nbsp;"), "\n");
-            String tempContent = contentList.get(ii);
-            content += tempContent;
+            //到倒数 DETAIL_CONTENT_END_ROWNUM 行截取结束
+            if (contentArr.length - ii <= getPageDetailContentEndRow())
+                break;
+
+            htmlStr += contentArr[ii] + "\n";
         }
 
+        String content = TextareaUtils.convertTextareToHtml(htmlStr);
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 

@@ -58,7 +58,13 @@ public class SpiderGenerator {
                 sqSiteHandler = new SJTUSiteHandler();
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
                 sqSiteHandler.setNewsURL(SJTUSiteConstant.JOB_URL);
+                //设置代理抓包调试
+//                us.codecraft.webmagic.proxy.Proxy proxy = new us.codecraft.webmagic.proxy.Proxy("localhost", 8889);
+//                HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
+//                httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(proxy));
+//                spider = SQProcessor.getSpider(sqSiteHandler).setDownloader(httpClientDownloader).thread(1);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+//                SQProcessor.getSpider(sqSiteHandler).test(SJTUSiteConstant.JOB_URL);
                 break;
             default:
                 break;

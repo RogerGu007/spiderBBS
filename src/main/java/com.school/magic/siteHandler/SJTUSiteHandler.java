@@ -92,9 +92,28 @@ public class SJTUSiteHandler extends SQSiteHandler{
         return SUB_DETAIL_CONTENT;
     }
 
+    protected String getPageDetailSubjectRegex() {
+        return DETAIL_SUBJECT_REGEX;
+    }
+
+    protected int getPageDetailContentStartRow() {
+        return DETAIL_CONTENT_START_ROWNUM;
+    }
+
+    protected int getPageDetailContentEndRow() {
+        return DETAIL_CONTENT_END_ROWNUM;
+    }
+
     @Override
     public Site getSite() {
-        return Site.me().setDomain(SJTU_BBS_JOB_DOMAIN).setSleepTime(Constant.SLEEPTIME);
+        //必须加userAgent,否则返回403, forbidden; header都去掉，不然有乱码
+        return Site.me().setDomain(SJTU_BBS_JOB_DOMAIN)
+                .setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
+//                .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+//                .addHeader("Accept-Encoding", "gzip, deflate, br")
+//                .addHeader("Accept-Language", "zh-CN,zh;q=0.9")
+//                .setCharset("UTF-8")
+                .setSleepTime(Constant.SLEEPTIME);
     }
 
     @Override
@@ -111,7 +130,7 @@ public class SJTUSiteHandler extends SQSiteHandler{
         if (nodeList == null || nodeList.size() < 1)
             return null;
 
-        if (nodeList.get(0).toString().equalsIgnoreCase(JOB_FORUM_MODERATOR))
+        if (item.xpath(JOB_FORUM_FILTER).toString().equalsIgnoreCase(JOB_FORUM_MODERATOR))
             return null;
 
         return item.xpath(getFormItemXPath());
@@ -150,14 +169,13 @@ public class SJTUSiteHandler extends SQSiteHandler{
     }
 
     /**
-     * 特殊处理，去掉postDateStr头尾的括号和星期几
-     * 示例：2018年04月09日17:18:54 星期一
+     * 特殊处理
+     * 示例：2018年04月09日17:18:54
      *
      * @param postDateStr
      * @return
      */
     protected Date formatPostDate(String postDateStr) {
-        postDateStr = postDateStr.substring(1, postDateStr.length()-4);
         Date postDate = DateUtils.getDateFromString(postDateStr, "yyyy年MM月dd日hh:mm:ss");
         return postDate;
     }
