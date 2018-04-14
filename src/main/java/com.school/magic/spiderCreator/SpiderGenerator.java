@@ -66,6 +66,24 @@ public class SpiderGenerator {
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
 //                SQProcessor.getSpider(sqSiteHandler).test(SJTUSiteConstant.JOB_URL);
                 break;
+            case ECNU_BBS:
+                sqSiteHandler = new ECNUSiteHandler();
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
+                for (String jobUrl : ECNUSiteConstant.JOB_URL_LIST) {
+                    sqSiteHandler.setNewsURL(jobUrl);
+                    spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                }
+                break;
+            case ZJU_BBS:
+                sqSiteHandler = new ZJUSiteHandler();
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
+                sqSiteHandler.setNewsURL(ZJUSiteConstant.JOB_URL);
+                spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+            case WHU_BBS:
+                sqSiteHandler = new WHUSiteHandler();
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
+                sqSiteHandler.setNewsURL(WHUSiteConstant.JOB_URL);
+                spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
             default:
                 break;
         }

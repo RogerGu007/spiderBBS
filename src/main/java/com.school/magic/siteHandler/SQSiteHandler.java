@@ -9,6 +9,7 @@ import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.HtmlUtils;
 import com.school.utils.TextareaUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -274,7 +275,10 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (item == null || item.nodes().size() == 0)
             return null;
 
-        return item.xpath(getFormItemXPath());
+        Selectable selectable = item.xpath(getFormItemXPath());
+        if (StringUtils.isEmpty(selectable.toString()))
+            return null;
+        return selectable;
     }
 
     protected void setSubEnumType(NewsDTO news) {

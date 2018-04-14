@@ -25,7 +25,6 @@ public class NJUSiteConstant {
     //过滤掉版本的公告帖
     public static final String JOB_FORUM_MODERATOR = "yika1985";
 
-    //用xpath方式的extract函数抽取出多个数组
     // [0]:发信人+信区 [1]:标题 [2] 发信站（可以提取时间），其他列过滤为空的内容组合起来就是详情内容
     public static final String DETAIL_CONTENT = "//tr[2]/td";
     public static final String SUB_DETAIL_CONTENT = "//textarea/html()";

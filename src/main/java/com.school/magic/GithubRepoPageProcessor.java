@@ -45,7 +45,10 @@ public class GithubRepoPageProcessor implements PageProcessor {
         //todo
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.TSING_BBS);
-        Spider spider = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS);
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS);
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECNU_BBS);
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.ZJU_BBS);
+        Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS);
         spider.run();
     }
 }

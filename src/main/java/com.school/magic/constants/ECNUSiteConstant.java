@@ -14,14 +14,14 @@ public class ECNUSiteConstant {
 
     public static final String ECNU_BBS_DOMAIN = "bbs.iecnu.com";
 
-    public static final String FORMNODE = "//table[1]/tbody";
+    public static final String FORMNODE = "//table[1]/tbody/tr";
     //for example: thread-667618-1-1.html
     public static final String FORMITEMLINK = "//tr/th/a[3]";
     //两种格式：FORMITEMMODIFYTIME 2018-4-6，优先取 FORMITEMMODIFYTIME；取不到再取FORMITEMMODIFYTIME2
-    public static final String FORMITEMMODIFYTIME = "//tr[5]/td[2]/em/span/span/@title";
-    public static final String FORMITEMMODIFYTIME2 = "//tr[1]/td[2]/em/span/text()";
+    public static final String FORMITEMMODIFYTIME = "//tr/td[2]/em/span/span/@title";
+    public static final String FORMITEMMODIFYTIME_BAK = "//tr/td[2]/em/span/text()";
     //有页码，也有下一页，替换掉首页的字符串?bid=845&mode=topic即可  for example: ?bid=845&mode=topic&page=2
-    public static final String FORMITEMNEXTPAGE = "//*[@id=\"fd_page_bottom\"]/div/a/@href";
+    public static final String FORMITEMNEXTPAGE = "//*[@id=\"fd_page_bottom\"]/div/a";
     //主题
     public static final String FORMITEMTITEL = "//tr/th/a[3]/text()";
     //用于判断是否有详情页
