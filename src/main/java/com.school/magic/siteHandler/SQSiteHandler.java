@@ -40,6 +40,8 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     protected abstract String getPageDetailSubjectXPath();
     protected abstract String getPageDetailContentXPath();
 
+    public abstract String getPublisher();
+
     private Logger logger = LoggerFactory.getLogger(getClass());
     private BasicNameValuePair mUserNamePair = null;
     private BasicNameValuePair mPasswordPair = null;

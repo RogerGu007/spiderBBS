@@ -1,11 +1,10 @@
 package com.school.magic.siteHandler;
 
 import com.school.entity.NewsDTO;
-import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
+import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
-import com.school.utils.HtmlUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +13,10 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import static com.school.magic.constants.FUDANSiteConstant.*;
-import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
 
 public class FUDANSiteHandler extends SQSiteHandler {
 
@@ -84,6 +81,11 @@ public class FUDANSiteHandler extends SQSiteHandler {
     @Override
     protected String getPageDetailContentXPath() {
         return DETAIL_CONTENT;
+    }
+
+    @Override
+    public String getPublisher() {
+        return SiteEnum.FUDAN_BBS.name();
     }
 
     @Override

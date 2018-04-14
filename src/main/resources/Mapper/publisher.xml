@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.school.dao.IPublisherDAO">
+    <sql id="ColumnList">
+      username,
+      isVerified,
+      authInfo,
+      avatarUrl,
+      isFollowed,
+      followerCount,
+      description,
+      createAt,
+      createBy,
+      updateAt,
+      updateBy
+    </sql>
+
+    <sql id="FullColumn">
+        id,
+        <include refid="ColumnList"/>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.school.entity.PublisherDTO" useGeneratedKeys="true" keyProperty="id">
+        insert into publisher (<include refid="ColumnList"/>) VALUES
+        (#{username}, #{isVerified}, #{authInfo}, #{avatarUrl}, #{isFollowed}, #{followerCount}, #{description},
+        now(), #{createBy}, now(), #{updateBy})
+    </insert>
+
+    <select id="findByUsername" parameterType="String" resultType="com.school.entity.PublisherDTO">
+        select <include refid="FullColumn"/> from publisher
+        where username = #{username}
+    </select>
+</mapper>

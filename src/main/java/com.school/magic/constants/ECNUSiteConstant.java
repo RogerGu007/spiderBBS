@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ECNUSiteConstant {
-    //可以不用登陆，游客模式
-//    public static final String LOGIN_URL = "http://www.newsmth.net";
 
     public static final List<String> JOB_URL_LIST = new ArrayList<String>() {{
         add("http://bbs.iecnu.com/forum-134-1.html");  //全职
@@ -17,8 +15,8 @@ public class ECNUSiteConstant {
     public static final String ECNU_BBS_DOMAIN = "bbs.iecnu.com";
 
     public static final String FORMNODE = "//table[1]/tbody";
-    //加上domain即可  for example: thread-667618-1-1.html
-    public static final String FORMITEMLINK = "//tr/th/a[3]/@href";
+    //for example: thread-667618-1-1.html
+    public static final String FORMITEMLINK = "//tr/th/a[3]";
     //两种格式：FORMITEMMODIFYTIME 2018-4-6，优先取 FORMITEMMODIFYTIME；取不到再取FORMITEMMODIFYTIME2
     public static final String FORMITEMMODIFYTIME = "//tr[5]/td[2]/em/span/span/@title";
     public static final String FORMITEMMODIFYTIME2 = "//tr[1]/td[2]/em/span/text()";

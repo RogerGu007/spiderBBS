@@ -11,7 +11,8 @@
       isHot,
       createAt,
       createBy,
-      linkUrl
+      linkUrl,
+      publisherId
     </sql>
 
     <sql id="FullColumn">
@@ -25,7 +26,8 @@
 
     <insert id="insert" parameterType="com.school.entity.NewsDTO" useGeneratedKeys="true" keyProperty="id">
         insert into News (<include refid="ColumnList"/>) VALUES
-        (#{subject}, #{newsType}, #{newsSubType}, #{postDate}, #{locationCode}, #{isHot}, now(), #{createBy}, #{linkUrl})
+        (#{subject}, #{newsType}, #{newsSubType}, #{postDate}, #{locationCode}, #{isHot}, now(), #{createBy},
+        #{linkUrl}, #{publisherId})
     </insert>
 
     <select id="findByUrl" parameterType="map" resultType="com.school.entity.NewsDTO">

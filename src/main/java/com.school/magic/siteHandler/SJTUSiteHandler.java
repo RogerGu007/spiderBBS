@@ -2,6 +2,7 @@ package com.school.magic.siteHandler;
 
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractMode;
+import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import org.slf4j.Logger;
@@ -102,6 +103,11 @@ public class SJTUSiteHandler extends SQSiteHandler{
 
     protected int getPageDetailContentEndRow() {
         return DETAIL_CONTENT_END_ROWNUM;
+    }
+
+    @Override
+    public String getPublisher() {
+        return SiteEnum.SJTU_BBS.name();
     }
 
     @Override

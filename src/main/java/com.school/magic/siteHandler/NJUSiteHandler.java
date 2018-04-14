@@ -5,6 +5,7 @@ import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractMode;
 import com.school.magic.constants.NJUSiteConstant;
+import com.school.magic.constants.SiteEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.TextareaUtils;
 import org.slf4j.Logger;
@@ -102,6 +103,11 @@ public class NJUSiteHandler extends SQSiteHandler{
     @Override
     public void setExtractMode() {
         this.extractMode = ExtractMode.EXTRACT_TEXT;
+    }
+
+    @Override
+    public String getPublisher() {
+        return SiteEnum.NJU_BBS.name();
     }
 
     //过滤掉hot类型的广告

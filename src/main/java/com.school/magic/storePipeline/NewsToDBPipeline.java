@@ -1,14 +1,10 @@
 package com.school.magic.storePipeline;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.school.Service.NewsService;
-import com.school.dao.INewsDAO;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
-import com.school.magic.constants.TJSiteConstant;
+import com.school.entity.PublisherDTO;
 import com.school.utils.GsonUtils;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +13,6 @@ import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
-
-import java.util.List;
 
 import static com.school.magic.constants.Constant.*;
 
@@ -46,6 +40,11 @@ public class NewsToDBPipeline implements Pipeline {
         logger.info(String.format("SubjectGson:{%s}", subjectGson));
         logger.info(String.format("DetailNewsGson: {%s}", detailGson));
         NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
+        PublisherDTO publisherDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
+        if (publisherDTO != null) {
+            subjectNews.setPublisherId(publisherDTO.getId());
+        }
+
         NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
         try {
             newsService.storeDataToDB(subjectNews, detailNews);

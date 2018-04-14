@@ -8,9 +8,7 @@ public class Constant {
 
     public static final String RESULT_DETAIL_FIELD = "newsDetails";
 
-    public static final String IS_SUBJECT_LIST = "isSubjectList";
-
-    public static final String IS_DETAIL_LIST = "isDetailList";
+    public static final String RESULT_PUBLISHER_FIELD = "publisher";
 
     //关键词
     public static final String PARTTIME= "兼职";

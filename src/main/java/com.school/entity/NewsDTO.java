@@ -17,6 +17,8 @@ public class NewsDTO extends BaseDTO {
     private Date postDate;
     private String linkUrl;
 
+    private String publisherId;
+
     public static NewsDTO generateNews(String title,
                 NewsTypeEnum newsType,
                 Date postDate) {
@@ -97,5 +99,13 @@ public class NewsDTO extends BaseDTO {
 
     public void setLinkUrl(String linkUrl) {
         this.linkUrl = linkUrl;
+    }
+
+    public String getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(String publisherId) {
+        this.publisherId = publisherId;
     }
 }

@@ -106,6 +106,7 @@ public class SQProcessor implements PageProcessor {
             page.setSkip(true);
             return false;
         } else {
+            page.putField(RESULT_PUBLISHER_FIELD, mSqSiteHandler.getPublisher());
             page.putField(RESULT_SUBJECT_FIELD, GsonUtils.toGsonString(news));
         }
         return true;

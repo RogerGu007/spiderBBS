@@ -2,8 +2,10 @@ package com.school.Service;
 
 import com.school.dao.INewsDAO;
 import com.school.dao.INewsDetailDAO;
+import com.school.dao.IPublisherDAO;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
+import com.school.entity.PublisherDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class NewsService {
 
     @Autowired
     private INewsDetailDAO newsDetailDAO;
+
+    @Autowired
+    private IPublisherDAO publisherDAO;
 
     @Transactional
     public void storeDataToDB(NewsDTO subjectNews, NewsDetailDTO detailNews) {
@@ -59,5 +64,9 @@ public class NewsService {
 
     public NewsDetailDTO getNewsDetailByUrl(final String url) {
         return newsDetailDAO.findByUrl(new HashMap<String, String>() {{ put("sourceArticleUrl", url); }});
+    }
+
+    public PublisherDTO getPublisherId(String username) {
+        return publisherDAO.findByUsername(username);
     }
 }

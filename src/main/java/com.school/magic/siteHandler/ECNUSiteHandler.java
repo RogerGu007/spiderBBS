@@ -2,24 +2,16 @@ package com.school.magic.siteHandler;
 
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.SiteEnum;
-import com.school.magic.constants.TJSiteConstant;
-import com.sun.org.apache.regexp.internal.RE;
 import us.codecraft.webmagic.Site;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.school.magic.constants.TJSiteConstant.*;
+import static com.school.magic.constants.ECNUSiteConstant.*;
 
-public class TJSiteHandler extends SQSiteHandler{
+public class ECNUSiteHandler extends SQSiteHandler{
 
     private List<String> mChildNodes = new ArrayList<>();
-
-    public TJSiteHandler() {
-        mChildNodes.add("static/image/common/pin_1.gif");
-        mChildNodes.add("static/image/common/folder_new.gif");
-        mChildNodes.add("static/image/common/folder_common.gif");
-    }
 
     @Override
     public int getSiteLocationCode() {
@@ -33,12 +25,6 @@ public class TJSiteHandler extends SQSiteHandler{
 
     @Override
     public boolean isLoginPage() {
-        if (getmPage() == null)
-            return false;
-
-        if (getmPage().getUrl().toString().equalsIgnoreCase(LOGIN_URL))
-            return true;
-
         return false;
     }
 
@@ -80,27 +66,27 @@ public class TJSiteHandler extends SQSiteHandler{
 
     @Override
     protected String getPageDetailPostDateXPath() {
-        return DETAILPOSTDATE;
+        return DETAIL_POSTDATE;
     }
 
     @Override
     protected String getPageDetailSubjectXPath() {
-        return DETAILSUBJECT;
+        return DETAIL_SUBJECT;
     }
 
     @Override
     protected String getPageDetailContentXPath() {
-        return DETAILCONTENTSANDCOMMENTS;
+        return DETAIL_CONTENT;
     }
 
     @Override
     public Site getSite() {
-        Site site = Site.me().setDomain(TJBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+        Site site = Site.me().setDomain(ECNU_BBS_DOMAIN).setSleepTime(Constant.SLEEPTIME);
         return site;
     }
 
     @Override
     public String getPublisher() {
-        return SiteEnum.TJ_BBS.name();
+        return SiteEnum.ECNU_BBS.name();
     }
 }

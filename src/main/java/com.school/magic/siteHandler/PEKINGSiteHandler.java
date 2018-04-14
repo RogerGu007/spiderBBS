@@ -2,6 +2,7 @@ package com.school.magic.siteHandler;
 
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
+import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import us.codecraft.webmagic.Page;
@@ -84,6 +85,11 @@ public class PEKINGSiteHandler extends SQSiteHandler {
     @Override
     public Site getSite() {
         return Site.me().setDomain(PEKINGBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+    }
+
+    @Override
+    public String getPublisher() {
+        return SiteEnum.PEKING_BBS.name();
     }
 
     public String getPostDate(Selectable item) {

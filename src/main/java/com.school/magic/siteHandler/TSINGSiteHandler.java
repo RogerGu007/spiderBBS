@@ -4,6 +4,7 @@ import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractMode;
+import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.HtmlUtils;
@@ -102,6 +103,11 @@ public class TSINGSiteHandler extends SQSiteHandler {
     @Override
     public void setExtractMode() {
         this.extractMode = ExtractMode.EXTRACT_TEXT;
+    }
+
+    @Override
+    public String getPublisher() {
+        return SiteEnum.TSING_BBS.name();
     }
 
     public String getPostDate(Selectable item) {

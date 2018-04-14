@@ -19,8 +19,9 @@ public enum SiteEnum {
     WHU_BBS(271),  //武汉大学
     HUST_BBS(272), //华中科技大学
 
-    USTC_BBS(5511);  //中科大
+    USTC_BBS(5511),  //中科大
 
+    ZJU_BBS(5711);  //浙江大学
 
     private Integer siteCode;
 
