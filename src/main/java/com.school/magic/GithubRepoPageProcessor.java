@@ -41,14 +41,15 @@ public class GithubRepoPageProcessor implements PageProcessor {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.NJU_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.PEKING_BBS);
-        //todo
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.PEKING_BBS)
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.TSING_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECNU_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ZJU_BBS);
         Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS);
+        //todo
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECUST_BBS);
         spider.run();
     }
 }

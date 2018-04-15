@@ -24,6 +24,7 @@ import us.codecraft.webmagic.utils.HttpConstant;
 
 import java.util.*;
 import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT;
+import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT3;
 import static com.school.utils.DateUtils.NORMAL_ENGLISH_DATE_FORMAT;
 
 public abstract class SQSiteHandler implements BaseSiteHandler {
@@ -51,6 +52,8 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     private String mNewsURL;
     private Page mPage;
     protected ExtractMode extractMode = ExtractMode.EXTRACT_HTML_ITEM;
+    //设置了expectedDate，如果news的发布时间不等于该时间即丢弃
+    private Date expectedDate;
 
     SQSiteHandler() {
         setExtractMode();
@@ -158,6 +161,14 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         this.mPage = mPage;
     }
 
+    public Date getExpectedDate() {
+        return expectedDate;
+    }
+
+    public void setExpectedDate(Date expectedDate) {
+        this.expectedDate = expectedDate;
+    }
+
     protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
         List<String> subList = new ArrayList<>();
         if (dataList.size() == 0) {
@@ -186,6 +197,16 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     protected Boolean isDroppedItem(Date itemDate) {
         if(itemDate == null)
             return false;
+
+        if (expectedDate != null) {
+            //日期转化为字符串比较
+            String expectedDay = DateUtils.getStringFromDate(expectedDate, DEFAULT_DATE_FORMAT3);
+            String itemDay = DateUtils.getStringFromDate(itemDate, DEFAULT_DATE_FORMAT3);
+            if (itemDay.equals(expectedDay))
+                return false;
+            else
+                return true;
+        }
 
         if(itemDate.compareTo(getAcceptDate()) < 0) {
             return true;

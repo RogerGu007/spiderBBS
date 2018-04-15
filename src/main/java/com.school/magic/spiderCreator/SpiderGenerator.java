@@ -5,6 +5,11 @@ import com.school.magic.pageProcessor.SQProcessor;
 import com.school.magic.siteHandler.*;
 import com.school.spiderEnums.NewsTypeEnum;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
+import us.codecraft.webmagic.proxy.SimpleProxyProvider;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import static com.school.magic.constants.NJUSiteConstant.JOB_URL;
 import static com.school.magic.constants.PEKINGSiteConstant.JOB_URL_LIST;
@@ -79,11 +84,31 @@ public class SpiderGenerator {
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
                 sqSiteHandler.setNewsURL(ZJUSiteConstant.JOB_URL);
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                break;
             case WHU_BBS:
                 sqSiteHandler = new WHUSiteHandler();
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
                 sqSiteHandler.setNewsURL(WHUSiteConstant.JOB_URL);
+                //test expectedDate
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(new Date());
+//                calendar.add(Calendar.DAY_OF_MONTH, -3);
+//                sqSiteHandler.setExpectedDate(calendar.getTime());
                 spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                break;
+            case ECUST_BBS:
+                sqSiteHandler = new ECUSTSiteHandler();
+                sqSiteHandler.setLoginURL(ECUSTSiteConstant.LOGIN_URL);
+                sqSiteHandler.setUserNamePair("username", "rogergu");
+                sqSiteHandler.setPasswordPair("password", "20180330");
+                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_FRIENDS);
+                sqSiteHandler.setNewsURL(ECUSTSiteConstant.JOB_URL);
+                us.codecraft.webmagic.proxy.Proxy proxy = new us.codecraft.webmagic.proxy.Proxy("localhost", 8889);
+                HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
+                httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(proxy));
+                spider = SQProcessor.getSpider(sqSiteHandler).setDownloader(httpClientDownloader).thread(1);
+//                spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                break;
             default:
                 break;
         }

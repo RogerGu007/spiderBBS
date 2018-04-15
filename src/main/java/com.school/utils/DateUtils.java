@@ -17,6 +17,7 @@ public class DateUtils {
     public static String DATE_REGX_FOR_TIME = "\\d+:\\d+:\\d+"; //hh-mm-ss
     public static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd hh:mm";
     public static String DEFAULT_DATE_FORMAT2 = "yyyy-MM-dd hh:mm:ss";
+    public static String DEFAULT_DATE_FORMAT3 = "yyyy-MM-dd";
     public static String ENGLISH_DATE_FORMAT = "MMM d HH:mm yyyy";
     public static String NORMAL_ENGLISH_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy";
 
