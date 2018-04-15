@@ -2,6 +2,7 @@ package com.school.magic;
 
 import com.school.magic.constants.SiteEnum;
 import com.school.magic.spiderCreator.SpiderGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import us.codecraft.webmagic.Page;
