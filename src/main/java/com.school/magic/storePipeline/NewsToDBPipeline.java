@@ -3,7 +3,7 @@ package com.school.magic.storePipeline;
 import com.school.Service.NewsService;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
-import com.school.entity.PublisherDTO;
+import com.school.entity.UserDTO;
 import com.school.utils.GsonUtils;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -40,9 +40,9 @@ public class NewsToDBPipeline implements Pipeline {
         logger.info(String.format("SubjectGson:{%s}", subjectGson));
         logger.info(String.format("DetailNewsGson: {%s}", detailGson));
         NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
-        PublisherDTO publisherDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
-        if (publisherDTO != null) {
-            subjectNews.setPublisherId(publisherDTO.getId());
+        UserDTO userDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
+        if (userDTO != null) {
+            subjectNews.setPublisherId(userDTO.getId());
         }
 
         NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
