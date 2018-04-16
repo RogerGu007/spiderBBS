@@ -18,8 +18,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for `newsdetail`
 -- ----------------------------
-DROP TABLE IF EXISTS `newsdetail`;
-CREATE TABLE `newsdetail` (
+DROP TABLE IF EXISTS `Newsdetail`;
+CREATE TABLE `Newsdetail` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `newsID` varchar(32) NOT NULL,
   `sourceArticleUrl` varchar(512) NOT NULL,

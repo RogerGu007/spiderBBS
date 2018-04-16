@@ -29,14 +29,14 @@ CREATE TABLE `News` (
   `isHot` tinyint(4) DEFAULT NULL,
   `linkUrl` varchar(512) DEFAULT NULL,
   `CreateAt` datetime NOT NULL,
-  `CreateBy` varchar(45) DEFAULT NOT NULL,
+  `CreateBy` varchar(45) NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDX_LINKURL` (`linkUrl`) USING BTREE,
   KEY `UK_SUBJECT` (`Subject`),
   KEY `IDX_TYPE_SUBTYPE` (`NewsType`,`NewsSubType`),
   KEY `IDX_CREATEDATE` (`CreateAt`),
   KEY `IDX_LOCATION` (`LocationCode`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='News info';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='News info'
 -- ----------------------------
 -- Records of news
 -- ----------------------------
