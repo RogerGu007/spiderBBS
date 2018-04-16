@@ -16,10 +16,10 @@ Date: 2018-04-06 15:00:00
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `newsdetail`
+-- Table structure for `NewsDetail`
 -- ----------------------------
-DROP TABLE IF EXISTS `Newsdetail`;
-CREATE TABLE `Newsdetail` (
+DROP TABLE IF EXISTS `NewsDetail`;
+CREATE TABLE `NewsDetail` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `newsID` varchar(32) NOT NULL,
   `sourceArticleUrl` varchar(512) NOT NULL,
