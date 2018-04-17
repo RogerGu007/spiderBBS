@@ -30,13 +30,16 @@ CREATE TABLE `News` (
   `linkUrl` varchar(512) DEFAULT NULL,
   `CreateAt` datetime NOT NULL,
   `CreateBy` varchar(45) NOT NULL,
+  `publisherId` int(10) unsigned NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDX_LINKURL` (`linkUrl`) USING BTREE,
   KEY `UK_SUBJECT` (`Subject`),
   KEY `IDX_TYPE_SUBTYPE` (`NewsType`,`NewsSubType`),
   KEY `IDX_CREATEDATE` (`CreateAt`),
   KEY `IDX_LOCATION` (`LocationCode`)
+  CONSTRAINT `FK_PublishID` FOREIGN KEY (`publisherId`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='News info'
+
 -- ----------------------------
 -- Records of news
 -- ----------------------------
