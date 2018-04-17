@@ -1,6 +1,6 @@
 package com.school.entity;
 
-public class PublisherDTO extends BaseDTO {
+public class UserDTO extends BaseDTO {
     private String username;
     private Boolean isVerified;
     private String authInfo;
