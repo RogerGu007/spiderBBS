@@ -8,12 +8,15 @@ import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.storePipeline.NewsToDBPipeline;
 import com.school.utils.ApplicationContextUtils;
 import com.school.utils.GsonUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.util.TextUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.school.magic.constants.Constant.*;
@@ -41,8 +44,7 @@ public class SQProcessor implements PageProcessor {
 
         final String siteUrl = page.getUrl().toString();
         //重复的页面不再抓取
-        NewsDetailDTO newsDetailDTO = newsService.getNewsDetailByUrl(siteUrl);
-        if (newsDetailDTO != null) {
+        if (isSkipUrl(siteUrl)) {
             page.setSkip(true);
             return;
         }
@@ -50,8 +52,16 @@ public class SQProcessor implements PageProcessor {
         //Step2: 获取一页的所有请求数据
         List<String> requestURLs = mSqSiteHandler.getRequests();
         if (requestURLs != null && requestURLs.size() > 0) {
+            List<String> filterURLs = new ArrayList<>();
+
+            for (String url : requestURLs)
+            {
+                if (isSkipUrl(url))
+                    continue;
+                filterURLs.add(url);
+            }
             //form 页面，只需要找到具体的item就可以了
-            page.addTargetRequests(requestURLs);
+            page.addTargetRequests(filterURLs);
             page.setSkip(true);
             //return是个特殊逻辑，决定了news和newsDetails的抽取顺序。 根据sequence来判断，在首页里页尝试抽取一次数据
             return;
@@ -62,6 +72,17 @@ public class SQProcessor implements PageProcessor {
             return;
         //提取news详情
         extractDetailField(page);
+    }
+
+    private Boolean isSkipUrl(String siteUrl)
+    {
+        if (TextUtils.isEmpty(siteUrl))
+            return true;
+        NewsDetailDTO newsDetailDTO = newsService.getNewsDetailByUrl(siteUrl);
+        if (newsDetailDTO != null) {
+            return true;
+        }
+        return false;
     }
 
     public static Spider getSpider(SQSiteHandler sqSiteHandler) {

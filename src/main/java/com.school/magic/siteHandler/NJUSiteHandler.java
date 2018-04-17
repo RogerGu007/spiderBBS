@@ -8,6 +8,7 @@ import com.school.magic.constants.NJUSiteConstant;
 import com.school.magic.constants.SiteEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.TextareaUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
@@ -191,6 +192,9 @@ public class NJUSiteHandler extends SQSiteHandler{
         Date postDate = formatPostDate(postDateStr);
 
         String newsSubject = detailSelector.regex(NJUSiteConstant.DETAIL_SUBJECT_REGEX).toString();
+        newsSubject = StringEscapeUtils.unescapeHtml4(newsSubject);
+
+
         if (newsSubject.indexOf(getPageRowSeparator()) > 0)
             newsSubject = newsSubject.substring(0,newsSubject.indexOf(getPageRowSeparator()));
         newsSubject = newsSubject.replaceAll(NJUSiteConstant.DETAIL_SUBJECT_REGEX_Start, "");
