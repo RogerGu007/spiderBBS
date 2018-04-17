@@ -36,7 +36,7 @@ CREATE TABLE `News` (
   KEY `UK_SUBJECT` (`Subject`),
   KEY `IDX_TYPE_SUBTYPE` (`NewsType`,`NewsSubType`),
   KEY `IDX_CREATEDATE` (`CreateAt`),
-  KEY `IDX_LOCATION` (`LocationCode`)
+  KEY `IDX_LOCATION` (`LocationCode`),
   CONSTRAINT `FK_PublishID` FOREIGN KEY (`publisherId`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='News info'
 

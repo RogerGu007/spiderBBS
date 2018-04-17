@@ -1,3 +1,6 @@
+-- ----------------------------
+DROP TABLE IF EXISTS `User`;
+
 CREATE TABLE `User` (
   `ID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `PhoneNumber` varchar(15) DEFAULT NULL,
