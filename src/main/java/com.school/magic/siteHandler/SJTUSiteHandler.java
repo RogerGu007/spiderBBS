@@ -107,7 +107,7 @@ public class SJTUSiteHandler extends SQSiteHandler{
 
     @Override
     public String getPublisher() {
-        return SiteEnum.SJTU_BBS.name();
+        return SiteEnum.SJTU_BBS.getNickName();
     }
 
     @Override

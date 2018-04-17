@@ -101,6 +101,6 @@ public class TJSiteHandler extends SQSiteHandler{
 
     @Override
     public String getPublisher() {
-        return SiteEnum.TJ_BBS.name();
+        return SiteEnum.TJ_BBS.getNickName();
     }
 }

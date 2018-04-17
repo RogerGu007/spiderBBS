@@ -43,6 +43,10 @@ public class NewsToDBPipeline implements Pipeline {
         UserDTO userDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
         if (userDTO != null) {
             subjectNews.setPublisherId(userDTO.getId());
+        } else {
+            //不存在user为空，但是需要发布内容的
+            logger.info("user为空,nickname=" + resultItems.get(RESULT_PUBLISHER_FIELD));
+            return;
         }
 
         NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);

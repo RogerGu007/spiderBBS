@@ -88,7 +88,7 @@ public class ECNUSiteHandler extends SQSiteHandler{
 
     @Override
     public String getPublisher() {
-        return SiteEnum.ECNU_BBS.name();
+        return SiteEnum.ECNU_BBS.getNickName();
     }
 
     public String getPostDate(Selectable item) {

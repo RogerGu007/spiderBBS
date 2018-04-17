@@ -110,7 +110,7 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     @Override
     public String getPublisher() {
-        return SiteEnum.NJU_BBS.name();
+        return SiteEnum.NJU_BBS.getNickName();
     }
 
     //过滤掉hot类型的广告
