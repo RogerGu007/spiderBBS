@@ -8,10 +8,10 @@ import com.school.entity.NewsDetailDTO;
 import com.school.entity.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 
 @Service
@@ -19,13 +19,13 @@ public class NewsService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private INewsDAO newsDAO;
 
-    @Autowired
+    @Resource
     private INewsDetailDAO newsDetailDAO;
 
-    @Autowired
+    @Resource
     private IUserDAO userDAO;
 
     @Transactional
