@@ -7,6 +7,5 @@ CREATE TABLE `Smsmessage` (
   `UpdateBy` varchar(45) CHARACTER SET latin1 NOT NULL,
   `Count` int(11) NOT NULL,
   PRIMARY KEY (`PhoneNumber`),
-  KEY `IDX_PHONE_CODE` (`PhoneNumber`,`Code`),
-  KEY `IDX_UPDATE` (`UpdateAt`)
+  KEY `IDX_PHONE_UpdateAt` (`PhoneNumber`,`UpdateAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
