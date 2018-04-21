@@ -95,6 +95,6 @@ public class ECUSTSiteHandler extends SQSiteHandler{
 
     @Override
     public String getPublisher() {
-        return SiteEnum.ECUST_BBS.name();
+        return SiteEnum.ECUST_BBS.getNickName();
     }
 }

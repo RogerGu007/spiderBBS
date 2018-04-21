@@ -107,7 +107,7 @@ public class TSINGSiteHandler extends SQSiteHandler {
 
     @Override
     public String getPublisher() {
-        return SiteEnum.TSING_BBS.name();
+        return SiteEnum.TSING_BBS.getNickName();
     }
 
     public String getPostDate(Selectable item) {

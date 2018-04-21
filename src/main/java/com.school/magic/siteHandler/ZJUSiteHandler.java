@@ -87,7 +87,7 @@ public class ZJUSiteHandler extends SQSiteHandler{
 
     @Override
     public String getPublisher() {
-        return SiteEnum.ZJU_BBS.name();
+        return SiteEnum.ZJU_BBS.getNickName();
     }
 
     @Override

@@ -89,7 +89,7 @@ public class PEKINGSiteHandler extends SQSiteHandler {
 
     @Override
     public String getPublisher() {
-        return SiteEnum.PEKING_BBS.name();
+        return SiteEnum.PEKING_BBS.getNickName();
     }
 
     public String getPostDate(Selectable item) {

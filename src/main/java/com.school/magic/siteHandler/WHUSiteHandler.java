@@ -8,6 +8,7 @@ import com.school.magic.constants.NJUSiteConstant;
 import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
+import com.school.utils.HtmlUtils;
 import com.school.utils.TextareaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -116,7 +117,7 @@ public class WHUSiteHandler extends SQSiteHandler{
 
     @Override
     public String getPublisher() {
-        return SiteEnum.WHU_BBS.name();
+        return SiteEnum.WHU_BBS.getNickName();
     }
 
     @Override
@@ -156,6 +157,36 @@ public class WHUSiteHandler extends SQSiteHandler{
     protected Boolean isDroppedItem(String itemDate) {
         Date convertDate = DateUtils.getDateFromString(itemDate, DEFAULT_DATE_FORMAT);
         return isDroppedItem(convertDate);
+    }
+
+    @Override
+    public NewsDTO extractNewsFromText(Page page) {
+        //从详情页抽取news
+        List<Selectable> selectableList = page.getHtml().xpath(getPageDetailContentXPath()).nodes();
+        Selectable contentItem;
+        if (selectableList != null && selectableList.size() > 0)
+            contentItem = selectableList.get(0);
+        else
+            return null;
+
+        String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
+                .regex(getPageDetailPostDateXPath()).toString();
+        Date postDate = formatPostDate(postDateStr);
+
+        String newsSubject = "";
+        String oriContent = HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath()).toString());
+        String[] firstSeperate = oriContent.split(getPageDetailSubjectXPath());
+        if (firstSeperate.length < 2)
+            newsSubject = firstSeperate[0];
+        else {
+            newsSubject = firstSeperate[1].split(getPageDetailContentStartRegex())[0];
+        }
+
+        NewsDTO newsDTO = NewsDTO.generateNews(newsSubject, getmNewsType(), postDate);
+        setSubEnumType(newsDTO);
+        newsDTO.setLocationCode(getSiteLocationCode());
+        newsDTO.setLinkUrl(genSiteUrl(page.getUrl().toString()));
+        return newsDTO;
     }
 
     @Override

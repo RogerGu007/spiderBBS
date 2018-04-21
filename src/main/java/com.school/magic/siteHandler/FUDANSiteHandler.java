@@ -85,7 +85,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     @Override
     public String getPublisher() {
-        return SiteEnum.FUDAN_BBS.name();
+        return SiteEnum.FUDAN_BBS.getNickName();
     }
 
     @Override
