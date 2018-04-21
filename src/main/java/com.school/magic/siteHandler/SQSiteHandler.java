@@ -305,14 +305,9 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     protected void setSubEnumType(NewsDTO news) {
         if (mNewsType == NewsTypeEnum.NEWS_JOB) {
             NewsSubTypeEnum jobSubType = NewsSubTypeEnum.SUB_FULLTIME;
-            if (news.getmSubject().contains(Constant.INTERN))
-                jobSubType = NewsSubTypeEnum.SUB_INTERN;
-            else if (news.getmSubject().contains(Constant.PARTTIME))
+            if (news.getmSubject().contains(Constant.INTERN) ||
+                    news.getmSubject().contains(Constant.PARTTIME))
                 jobSubType = NewsSubTypeEnum.SUB_PARTTIME;
-            else if (news.getmSubject().contains(Constant.CAMPUS))
-                jobSubType = NewsSubTypeEnum.SUB_CAMPUS;
-            else if (news.getmSubject().contains(Constant.UPGRADE))
-                jobSubType = NewsSubTypeEnum.SUB_UPGRADE;
             news.setNewsSubType(jobSubType.getNewsSubTypeCode());
         }
     }

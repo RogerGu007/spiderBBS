@@ -45,7 +45,7 @@ public class NewsToDBPipeline implements Pipeline {
             subjectNews.setPublisherId(userDTO.getId());
         } else {
             //不存在user为空，但是需要发布内容的
-            logger.info("user为空,nickname=" + resultItems.get(RESULT_PUBLISHER_FIELD));
+            logger.error("user为空,nickname=" + resultItems.get(RESULT_PUBLISHER_FIELD));
             return;
         }
 
