@@ -50,6 +50,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     private String URL;
     private NewsTypeEnum mNewsType;
     private String mNewsURL;
+    private List<String> mNewsURLList;
     private Page mPage;
     protected ExtractMode extractMode = ExtractMode.EXTRACT_HTML_ITEM;
     //设置了expectedDate，如果news的发布时间不等于该时间即丢弃
@@ -143,6 +144,14 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
 
     public String getNewsURL() {
         return mNewsURL;
+    }
+
+    public List<String> getNewsURLList() {
+        return mNewsURLList;
+    }
+
+    public void setNewsURLList(List<String> mNewsURLList) {
+        this.mNewsURLList = mNewsURLList;
     }
 
     public void setNewsType(NewsTypeEnum newsType) {

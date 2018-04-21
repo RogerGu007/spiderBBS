@@ -2,6 +2,7 @@ package com.school.job;
 
 import com.school.magic.constants.SiteEnum;
 import com.school.magic.spiderCreator.SpiderGenerator;
+import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.PropertyUtil;
 import com.school.entity.Constant;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.*;
 
 import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT2;
@@ -55,19 +57,23 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
             Date endDate = DateUtils.getDateFromString(FIRST_END_DATE, DateUtils.DEFAULT_DATE_FORMAT3);
 //            Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, startDate, endDate);
 //            spider.run();
-            for (final SiteEnum siteEnum : SiteEnum.values()) {
-                if (siteEnum.equals(SiteEnum.ECUST_BBS)) //华理的还有bug，先跳过抓取
-                    continue;
-                logger.info("获取数据从站点:" + siteEnum.name());
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-//                        logger.info(siteEnum.getNickName());
-                        Spider spider = SpiderGenerator.createSpider(siteEnum, startDate, endDate);
-                        spider.run();
-                    }
-                });
-                logger.info("完成获取数据从站点:" + siteEnum.name());
+            for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {
+                for (final SiteEnum siteEnum : SiteEnum.values()) {
+                    if (siteEnum.equals(SiteEnum.ECUST_BBS)) //华理的还有bug，先跳过抓取
+                        continue;
+                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+                            " 从站点获取数据:" + siteEnum.name());
+                    executor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, startDate, endDate);
+                            for (Spider spider : spiderList)
+                                spider.run();
+                        }
+                    });
+                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+                            " 从站点完成获取数据:" + siteEnum.name());
+                }
             }
         }
     }
@@ -75,11 +81,16 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     @Scheduled(cron="0 30 * * * ? ")
     public void bbsSpider(){
         if (SPIDER_SWITCH.equals(Constant.SWITCH_ON)) {
-            for (SiteEnum siteEnum : SiteEnum.values()) {
-                logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) + " 获取数据从站点:" + siteEnum.name());
-                Spider spider = SpiderGenerator.createSpider(siteEnum, new Date());
-                spider.run();
-                logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) + " 完成获取数据从站点:" + siteEnum.name());
+            for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {
+                for (SiteEnum siteEnum : SiteEnum.values()) {
+                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+                            " 从站点获取数据:" + siteEnum.name());
+                    List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, new Date());
+                    for (Spider spider : spiderList)
+                        spider.run();
+                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+                            " 从站点完成获取数据:" + siteEnum.name());
+                }
             }
         }
     }

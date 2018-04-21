@@ -95,6 +95,14 @@ public class TSINGSiteHandler extends SQSiteHandler {
         return SUB_DETAIL_CONTENT;
     }
 
+    protected String getPageDetailContentStartRegex() {
+        return DETAIL_CONTENT_START_REGEX;
+    }
+
+    protected String getPageDetailContentEndRegex() {
+        return DETAIL_CONTENT_END_REGEX;
+    }
+
     @Override
     public Site getSite() {
         return Site.me().setDomain(TSINGBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
@@ -188,22 +196,17 @@ public class TSINGSiteHandler extends SQSiteHandler {
         else
             return null;
 
-        String htmlStr = contentItem.xpath(getPageSubDetailContentXPath()).toString();
-//        List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(htmlStr).split(getPageRowSeparator()));
-        List<String> contentList = Arrays.asList(htmlStr.split(getPageRowSeparator()));
+        String contentOri = contentItem.xpath(getPageSubDetailContentXPath()).toString();
         String content = "";
-        boolean isContentExtractStart = false;
-        for (int ii = 0; ii < contentList.size(); ii++) {
-            if (!isContentExtractStart) {
-                if (contentList.get(ii).startsWith(DETAIL_CONTENT_ROW_TAG))
-                    content += contentList.get(ii);
-                    isContentExtractStart = true;
-                continue;
-            }
-            //&nbsp;&nbsp;标识为换行符
-            content += contentList.get(ii);
+        String[] firstSeperate =
+                contentOri.split(getPageDetailContentStartRegex());
+        if (firstSeperate.length < 2)
+            content = contentOri;
+        else {
+            String temp = firstSeperate[1];
+            String[] secondSeperate = temp.split(getPageDetailContentEndRegex());
+            content = secondSeperate[0];
         }
-
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 

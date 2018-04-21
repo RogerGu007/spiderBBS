@@ -2,6 +2,7 @@ package com.school.magic;
 
 import com.school.magic.constants.SiteEnum;
 import com.school.magic.spiderCreator.SpiderGenerator;
+import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +14,7 @@ import us.codecraft.webmagic.processor.PageProcessor;
 
 import javax.net.ssl.SSLContext;
 import java.util.Date;
+import java.util.List;
 
 /**
  * test webmagic
@@ -42,20 +44,27 @@ public class GithubRepoPageProcessor implements PageProcessor {
     public static void main(String[] args) {
 //        Spider.create(new GithubRepoPageProcessor()).addUrl("https://github.com/code4craft").thread(1).run();
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        Date startDate = DateUtils.getDateFromString("2018-03-01", DateUtils.DEFAULT_DATE_FORMAT3);
+        Date endDate = DateUtils.getDateFromString("2018-04-21", DateUtils.DEFAULT_DATE_FORMAT3);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.NJU_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.PEKING_BBS)
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.TSING_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECNU_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ZJU_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS);
-        Date startDate = DateUtils.getDateFromString("2018-03-01", DateUtils.DEFAULT_DATE_FORMAT3);
-        Date endDate = DateUtils.getDateFromString("2018-04-21", DateUtils.DEFAULT_DATE_FORMAT3);
-        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, startDate, endDate);
+        //tj done
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        // tsing done
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TSING_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TSING_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        //peking   鹊桥需要用户权限，先不做  half done
+        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.PEKING_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
         //todo
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECUST_BBS);
-        spider.run();
+        for (Spider spider : spiderList)
+            spider.run();
     }
 }

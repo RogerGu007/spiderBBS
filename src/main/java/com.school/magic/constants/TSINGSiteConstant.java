@@ -12,7 +12,7 @@ public class TSINGSiteConstant {
         add("http://www.newsmth.net/nForum/board/Career_Upgrade");  //社招
     }};
 
-//    public static final String FRIEND_URL = "https://bbs.tongji.net/forum-336-1.html";
+    public static final String FRIEND_URL = "http://www.newsmth.net/nForum/board/PieLove";
 
     public static final String TSINGBBSDOMAIN = "www.newsmth.net";
     //需要过滤掉top类的tr标签，这是群公告的信息
@@ -24,7 +24,7 @@ public class TSINGSiteConstant {
     //需要去掉第一个，为当前页
     public static final String FORMITEMNEXTPAGE = "//div[4]/div[1]/ul/li[2]/ol/li/a";
     //详情页标题
-    public static final String FORMITEMTITEL = "//tr/td[2]/text()";
+    public static final String FORMITEMTITEL = "//tr/td[2]/a/text()";
     //用于判断是否有详情页
     public static final String FORMITEMCHILD = "//tr/td[1]/a/@href";
     //列表页的详情页href
@@ -37,6 +37,8 @@ public class TSINGSiteConstant {
     //详情页中抽取主题的关键词
     public static final String DETAIL_SUBJECT_REGEX_START = "标题:";
     public static final String DETAIL_SUBJECT_REGEX_END = "发信站:";
+    public static final String DETAIL_CONTENT_START_REGEX = "发信站: .*站内";
+    public static final String DETAIL_CONTENT_END_REGEX = "※ 来源:.*";
     //详情页中抽取发帖时间的关键词  Tue Mar 13 00:12:46 2018
     public static final String DETAIL_POSTDATE_REGEX =
             "\\([A-Za-z]{3}\\s+[A-Za-z]{3}.*\\d+\\s+\\d+:\\d+:\\d+\\s+\\d+\\)";

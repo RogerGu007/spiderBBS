@@ -12,7 +12,8 @@ public class PEKINGSiteConstant {
         add("https://bbs.pku.edu.cn/v2/thread.php?bid=845&mode=topic");  //全职
     }};
 
-//    public static final String FRIEND_URL = "https://bbs.tongji.net/forum-336-1.html";
+    //校外ip需要登录。 暂时无法注册，需要北大的邮箱或学位证书认证
+//    public static final String FRIEND_URL = "https://bbs.pku.edu.cn/v2/thread.php?bid=167&mode=topic";
 
     public static final String PEKINGBBSDOMAIN = "bbs.pku.edu.cn";
     //不需要再过滤了，根据class就可以过滤
