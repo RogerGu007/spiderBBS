@@ -34,4 +34,14 @@
         select <include refid="FullColumn"/> from News
         where linkUrl = #{linkUrl}
     </select>
+
+    <select id="findById" parameterType="int" resultType="com.school.entity.NewsDTO">
+        select <include refid="FullColumn"/> from News
+        where id = #{id}
+    </select>
+
+    <update id="invalidNews" parameterType="String">
+        UPDATE News set isValid=0
+        where linkUrl=#{linkUrl}
+    </update>
 </mapper>

@@ -18,7 +18,7 @@ public class TJSiteConstant {
     public static final String TJBBSDOMAIN = "bbs.tongji.net";
     public static final String FORMNODE = "//tbody[@id]/tr";
     public static final String FORMITEMLINK = "//a[@class=\"s xst\"]";
-    public static final String FORMITEMMODIFYTIME= "//em/a[@href]/text()";
+    public static final String FORMITEMMODIFYTIME= "//td[2]/em/span/text()";
     public static final String FORMITEMNEXTPAGE = "//span[@id=\"fd_page_bottom\"]";
     public static final String FORMITEMTITEL = "//tr/th/a[3]/text()";
 

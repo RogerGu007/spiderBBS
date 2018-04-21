@@ -6,6 +6,7 @@ import com.school.dao.IUserDAO;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.entity.UserDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -66,5 +67,15 @@ public class NewsService {
 
     public UserDTO getPublisherId(String nickname) {
         return userDAO.findByNickname(nickname);
+    }
+
+    public void invalidNews(String id, String linkUrl) throws Exception {
+        if (StringUtils.isEmpty(linkUrl) && StringUtils.isNotEmpty(id)) {
+            NewsDTO newsDTO = newsDAO.findById(Integer.valueOf(id));
+            linkUrl = newsDTO.getLinkUrl();
+        } else if (StringUtils.isEmpty(id) && StringUtils.isEmpty(linkUrl)) {
+            throw new Exception("传参为空");
+        }
+        newsDAO.invalidNews(linkUrl);
     }
 }

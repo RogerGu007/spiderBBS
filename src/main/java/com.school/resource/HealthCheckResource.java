@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 
 @Component
 @Path("/health")
-public class HealthCheck {
+public class HealthCheckResource {
     @GET
     @Path("/check")
     @Produces(MediaType.APPLICATION_JSON)

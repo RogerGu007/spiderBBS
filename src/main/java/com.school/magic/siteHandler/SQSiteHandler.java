@@ -54,6 +54,8 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     protected ExtractMode extractMode = ExtractMode.EXTRACT_HTML_ITEM;
     //设置了expectedDate，如果news的发布时间不等于该时间即丢弃
     private Date expectedDate;
+    private Date beginDate;
+    private Date endDate;
 
     SQSiteHandler() {
         setExtractMode();
@@ -169,6 +171,22 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         this.expectedDate = expectedDate;
     }
 
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
     protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
         List<String> subList = new ArrayList<>();
         if (dataList.size() == 0) {
@@ -199,19 +217,21 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return false;
 
         if (expectedDate != null) {
-            //日期转化为字符串比较
-            String expectedDay = DateUtils.getStringFromDate(expectedDate, DEFAULT_DATE_FORMAT3);
-            String itemDay = DateUtils.getStringFromDate(itemDate, DEFAULT_DATE_FORMAT3);
-            if (itemDay.equals(expectedDay))
+            if (expectedDate.compareTo(itemDate) == 0)
                 return false;
-            else
-                return true;
-        }
-
-        if(itemDate.compareTo(getAcceptDate()) < 0) {
             return true;
         }
-        return false;
+
+        if (beginDate != null && endDate != null) {
+            if (itemDate.compareTo(beginDate) >= 0 && itemDate.compareTo(endDate) <= 0)
+                return false;
+            return true;
+        }
+
+        if(itemDate.compareTo(getAcceptDate()) >= 0) {
+            return false;
+        }
+        return true;
     }
 
     protected Date getPostDate(Html pageHtml, String dateXPath) {

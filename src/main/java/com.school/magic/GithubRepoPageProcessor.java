@@ -2,6 +2,7 @@ package com.school.magic;
 
 import com.school.magic.constants.SiteEnum;
 import com.school.magic.spiderCreator.SpiderGenerator;
+import com.school.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -11,6 +12,7 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 import javax.net.ssl.SSLContext;
+import java.util.Date;
 
 /**
  * test webmagic
@@ -48,7 +50,10 @@ public class GithubRepoPageProcessor implements PageProcessor {
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECNU_BBS);
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ZJU_BBS);
-        Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS);
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS);
+        Date startDate = DateUtils.getDateFromString("2018-03-01", DateUtils.DEFAULT_DATE_FORMAT3);
+        Date endDate = DateUtils.getDateFromString("2018-04-21", DateUtils.DEFAULT_DATE_FORMAT3);
+        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, startDate, endDate);
         //todo
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECUST_BBS);
         spider.run();

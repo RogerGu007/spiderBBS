@@ -14,4 +14,8 @@ public interface INewsDAO {
     int insert(NewsDTO record);
 
     NewsDTO findByUrl(Map<String, String> urlMap);
+
+    NewsDTO findById(int id);
+
+    void invalidNews(String linkUrl);
 }

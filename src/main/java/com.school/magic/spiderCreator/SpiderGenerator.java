@@ -19,6 +19,20 @@ import static com.school.magic.constants.TJSiteConstant.LOGIN_URL;
 public class SpiderGenerator {
 
     public static Spider createSpider(SiteEnum siteEnum) {
+        return createSpider(siteEnum, null, null, null);
+    }
+
+    public static Spider createSpider(SiteEnum siteEnum, Date date) {
+        //从配置文件读取时间
+        return createSpider(siteEnum, date, null, null);
+    }
+
+    public static Spider createSpider(SiteEnum siteEnum, Date beginDate, Date endDate) {
+        //从配置文件读取时间
+        return createSpider(siteEnum, null, beginDate, endDate);
+    }
+
+    public static Spider createSpider(SiteEnum siteEnum, Date date, Date beginDate, Date endDate) {
         Spider spider = null;
         SQSiteHandler sqSiteHandler = null;
         switch (siteEnum) {
@@ -112,7 +126,21 @@ public class SpiderGenerator {
             default:
                 break;
         }
-
+        setSiteHandlerDate(sqSiteHandler, date, beginDate, endDate);
         return spider;
+    }
+
+    private static void setSiteHandlerDate(SQSiteHandler sqSiteHandler, Date date, Date beginDate, Date endDate) {
+        if (date != null) {
+            sqSiteHandler.setExpectedDate(date);
+        }
+
+        if (beginDate != null) {
+            sqSiteHandler.setBeginDate(beginDate);
+        }
+
+        if (endDate != null) {
+            sqSiteHandler.setEndDate(endDate);
+        }
     }
 }
