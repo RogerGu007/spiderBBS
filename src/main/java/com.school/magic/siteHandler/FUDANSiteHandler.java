@@ -5,6 +5,8 @@ import com.school.magic.constants.Constant;
 import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
+import com.school.spiderEnums.NewsTypeEnum;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     @Override
     public String getLinkUrl() {
-        return FORMITEMLINK;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_FORMITEMLINK : JOB_FORMNODE;
     }
 
     @Override
@@ -40,47 +42,47 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     @Override
     protected String getFormNodeXPath() {
-        return FORMNODE;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_FORMNODE : JOB_FORMNODE;
     }
 
     @Override
     protected String getFormItemXPath() {
-        return FORMITEMCHILD;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_FORMITEMCHILD : JOB_FORMITEMCHILD;
     }
 
     @Override
     protected String getFormItemDetailXPath() {
-        return FORMITEMLINK;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_FORMITEMLINK : JOB_FORMITEMLINK;
     }
 
     @Override
     protected String getFormItemModifyTimeXPath() {
-        return FORMITEMMODIFYTIME;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_FORMITEMMODIFYTIME : JOB_FORMITEMMODIFYTIME;
     }
 
     @Override
     protected String getFormNextPagesXPath() {
-        return FORMITEMNEXTPAGE;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_FORMITEMNEXTPAGE : JOB_FORMITEMNEXTPAGE;
     }
 
     @Override
     protected String getFormItemTitleXPath() {
-        return FORMITEMTITEL;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_FORMITEMTITEL : JOB_FORMITEMTITEL;
     }
 
     @Override
     protected String getPageDetailPostDateXPath() {
-        return DETAIL_POSTDATE;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_DETAIL_POSTDATE : JOB_DETAIL_POSTDATE;
     }
 
     @Override
     protected String getPageDetailSubjectXPath() {
-        return DETAIL_SUBJECT;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_DETAIL_SUBJECT : JOB_DETAIL_SUBJECT;
     }
 
     @Override
     protected String getPageDetailContentXPath() {
-        return DETAIL_CONTENT;
+        return getmNewsType().equals(NewsTypeEnum.NEWS_FRIENDS) ? FRIEND_DETAIL_CONTENT : JOB_DETAIL_CONTENT;
     }
 
     @Override
@@ -111,7 +113,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
                     if (isDroppedItem(modifiedDate)) //比预设的时间早，帖子丢弃
                         continue;
 
-                    requestLinks.add(LINKTEMPLATE.replaceAll("PLACEHOLDER", detailNode.toString()));
+                    requestLinks.add(FRIEND_LINKTEMPLATE.replaceAll("PLACEHOLDER", detailNode.toString()));
                     logger.info(String.format("title: {%s}", item.xpath(getFormItemTitleXPath()).toString()));
                 }
             }
@@ -136,7 +138,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
         if (item == null || item.nodes().size() == 0)
             return null;
 
-        if (item.xpath(FORMITEMFILTER).toString().equalsIgnoreCase("1"))
+        if (item.xpath(FRIEND_FORMITEMFILTER).toString().equalsIgnoreCase("1"))
             return null;
 
         return item.xpath(getFormItemXPath());
@@ -146,7 +148,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
         Selectable nextPageNode = getmPage().getHtml().xpath(getFormNextPagesXPath());
         if (nextPageNode == null)
             return  null;
-        return new ArrayList<String>() {{ add(NEXTPAGETEMPLATE.replaceAll("PLACEHOLDER", nextPageNode.toString()));}};
+        return new ArrayList<String>() {{ add(FRIEND_NEXTPAGETEMPLATE.replaceAll("PLACEHOLDER", nextPageNode.toString()));}};
     }
 
     protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
@@ -155,10 +157,10 @@ public class FUDANSiteHandler extends SQSiteHandler {
             return subList;
         }
 
-        int startId = Integer.valueOf(dataList.get(0).split(NEXTPAGESEPERATE)[1]);
+        int startId = Integer.valueOf(dataList.get(0).split(FRIEND_NEXTPAGESEPERATE)[1]);
         for (int ii = from; ii < to; ii++) {
             if (startId - 20*(ii-from+1) > 0)
-                subList.add(NEXTPAGETEMPLATE.replaceAll("PLACEHOLDER", String.valueOf(startId-20*(ii-from+1))));
+                subList.add(FRIEND_NEXTPAGETEMPLATE.replaceAll("PLACEHOLDER", String.valueOf(startId-20*(ii-from+1))));
             else
                 break;
         }
@@ -177,6 +179,8 @@ public class FUDANSiteHandler extends SQSiteHandler {
         } else {
             String dateStr = date.toString().substring(0, date.toString().length()-4).replaceAll("[\\u4e00-\\u9fa5]", " ");
             postDate = DateUtils.getDateFromString(dateStr, "yyyy MM dd hh:mm:ss");
+            if(isDroppedItem(postDate))
+                return null;
         }
 
         Selectable subjectItem = page.getHtml().xpath(getPageDetailSubjectXPath());

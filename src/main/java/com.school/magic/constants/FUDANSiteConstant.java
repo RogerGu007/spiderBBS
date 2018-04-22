@@ -15,31 +15,50 @@ public class FUDANSiteConstant {
     public static final String FUDAN_BBS_JOB_DOMAIN = "bbs.fudan.edu.cn";
 
 //    public static final String FORMNODE = "//tbody/tr";
-    public static final String FORMNODE = "//body/bbsdoc/po";
+    public static final String FRIEND_FORMNODE = "//body/bbsdoc/po";
+    public static final String JOB_FORMNODE = "//table[3]/tbody/tr";
     //拼接上域名即可
     //https://bbs.fudan.edu.cn/bbs/tcon?new=1&bid=70&f=3180055149393479130
 //    public static final String FORMITEMLINK = "//td[5]/a";
-    public static final String FORMITEMLINK = "//po/@id";
-    public static final String LINKTEMPLATE = "https://bbs.fudan.edu.cn/bbs/tcon?new=1&bid=70&f=PLACEHOLDER";
+    public static final String FRIEND_FORMITEMLINK = "//po/@id";
+    public static final String FRIEND_LINKTEMPLATE = "https://bbs.fudan.edu.cn/bbs/tcon?new=1&bid=70&f=PLACEHOLDER";
+
+    public static final String JOB_FORMITEMLINK = "//po/@id";
+    public static final String JOB_LINKTEMPLATE = "https://bbs.fudan.edu.cn/bbs/tcon?new=1&bid=70&f=PLACEHOLDER";
     //发帖时间：2018-03-01T21:42:32
 //    public static final String FORMITEMMODIFYTIME= "//td[4]/text()";
-    public static final String FORMITEMMODIFYTIME= "//po/@time";
+    public static final String FRIEND_FORMITEMMODIFYTIME= "//po/@time";
+    public static final String JOB_FORMITEMMODIFYTIME= "//po/@time";
     //for example: tdoc?bid=70&start=2072
-    public static final String FORMITEMNEXTPAGE = "//body/bbsdoc/brd/@start";
-    public static final String NEXTPAGETEMPLATE = "https://bbs.fudan.edu.cn/bbs/tdoc?bid=70&start=PLACEHOLDER";
-    public static final String NEXTPAGESEPERATE = "start=";
+    public static final String FRIEND_FORMITEMNEXTPAGE = "//body/bbsdoc/brd/@start";
+    public static final String FRIEND_NEXTPAGETEMPLATE = "https://bbs.fudan.edu.cn/bbs/tdoc?bid=70&start=PLACEHOLDER";
+    public static final String FRIEND_NEXTPAGESEPERATE = "start=";
+
+    public static final String JOB_FORMITEMNEXTPAGE = "//body/bbsdoc/brd/@start";
+    public static final String JOB_NEXTPAGETEMPLATE = "https://bbs.fudan.edu.cn/bbs/tdoc?bid=70&start=PLACEHOLDER";
+    public static final String JOB_NEXTPAGESEPERATE = "start=";
     //主题
     //public static final String FORMITEMTITEL = "//td[5]/a/text()";
-    public static final String FORMITEMTITEL = "//po/text()";
-    //用于判断是否有详情页
-    public static final String FORMITEMCHILD = "//po";
+    public static final String FRIEND_FORMITEMTITEL = "//po/text()";
 
-    public static final String FORMITEMFILTER = "//@sticky";
+    public static final String JOB_FORMITEMTITEL = "//po/text()";
+
+    //用于判断是否有详情页
+    public static final String FRIEND_FORMITEMCHILD = "//po";
+    public static final String JOB_FORMITEMCHILD = "//po";
+
+    public static final String FRIEND_FORMITEMFILTER = "//@sticky";
+    public static final String JOB_FORMITEMFILTER = "//@sticky";
 
     //一行一个p标签，组合起来即可
-    public static final String DETAIL_CONTENT = "//pa";
+    public static final String FRIEND_DETAIL_CONTENT = "//pa";
+    public static final String JOB_DETAIL_CONTENT = "//pa";
+
     //详情页标题
-    public static final String DETAIL_SUBJECT = "//title[1]/text()";
+    public static final String FRIEND_DETAIL_SUBJECT = "//title[1]/text()";
+    public static final String JOB_DETAIL_SUBJECT = "//title[1]/text()";
+
     //详情页中的发帖时间
-    public static final String DETAIL_POSTDATE = "//date[1]/text()";
+    public static final String FRIEND_DETAIL_POSTDATE = "//date[1]/text()";
+    public static final String JOB_DETAIL_POSTDATE = "//date[1]/text()";
 }

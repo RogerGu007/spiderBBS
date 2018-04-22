@@ -300,9 +300,12 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
                     String modifiedDate = getPostDate(item);
                     if (isDroppedItem(modifiedDate)) //比预设的时间早，帖子丢弃
                         continue;
-
                     requestLinks.add(detailNode.links().toString());
-                    logger.info(String.format("title: {%s}", item.xpath(getFormItemTitleXPath()).toString()));
+
+                    String subject = item.xpath(getFormItemTitleXPath()).toString();
+                    if (isDroppedItemBySubject(subject))
+                        continue;
+                    logger.info(String.format("title: {%s}", subject));
                 }
             }
         }
@@ -350,6 +353,18 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
     }
 
     /**
+     * 对没有过滤的主题做一次过滤
+     *
+     * @param subject
+     * @return
+     */
+    private boolean isDroppedItemBySubject(String subject) {
+        if (subject.contains("RE") || subject.contains("Re") || subject.contains("re"))
+            return true;
+        return false;
+    }
+
+    /**
      * 返回item的信息
      * @return
      */
@@ -364,6 +379,9 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (date != null)
             postDate = DateUtils.getDateFromString(date.toString(), DEFAULT_DATE_FORMAT);
         else
+            return null;
+        //列表页没有详细的日期，此处落地数据前再次过滤一次
+        if (isDroppedItem(postDate))
             return null;
 
         Selectable subjectItem = page.getHtml().xpath(getPageDetailSubjectXPath());
@@ -417,6 +435,9 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
                 .regex(getPageDetailPostDateXPath()).toString();
         Date postDate = formatPostDate(postDateStr);
+        //列表页没有详细的日期，此处落地数据前再次过滤一次
+        if (isDroppedItem(postDate))
+            return null;
 
         List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath())
                 .toString()).split(getPageRowSeparator()));

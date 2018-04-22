@@ -10,7 +10,7 @@ public class ECNUSiteConstant {
         add("http://bbs.iecnu.com/forum-135-1.html");  //兼职
     }};
 
-//    public static final String FRIEND_URL = "https://bbs.tongji.net/forum-336-1.html";
+    public static final String FRIEND_URL = "http://bbs.iecnu.com/forum-14-1.html";
 
     public static final String ECNU_BBS_DOMAIN = "bbs.iecnu.com";
 

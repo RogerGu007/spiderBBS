@@ -2,9 +2,8 @@ package com.school.magic.siteHandler;
 
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
-import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractMode;
-import com.school.magic.constants.NJUSiteConstant;
+import com.school.spiderEnums.NewsTypeEnum;
 import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
@@ -13,12 +12,12 @@ import com.school.utils.TextareaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.security.provider.MD5;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -26,7 +25,7 @@ import java.util.regex.Pattern;
 
 import static com.school.magic.constants.WHUSiteConstant.*;
 import static com.school.utils.DateUtils.*;
-
+import com.school.utils.MD5Utils;
 
 public class WHUSiteHandler extends SQSiteHandler{
 
@@ -107,7 +106,21 @@ public class WHUSiteHandler extends SQSiteHandler{
 
     @Override
     public Site getSite() {
-        return Site.me().setDomain(WHU_BBS_DOMAIN).setSleepTime(Constant.SLEEPTIME);
+        String loginTime = String.valueOf(System.currentTimeMillis());
+        return Site.me().setDomain(WHU_BBS_DOMAIN)
+                //.setDomain("bbs.whu.edu.cn")
+                .setSleepTime(300)
+                .setUserAgent(
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31")
+//                .addCookie("LOGINTIME", "1524377313")
+                .addCookie("LOGINTIME", loginTime)
+//                .addCookie("PHPSESSID", "cc41894e0257bf951dc1b658ef348996")
+                .addCookie("PHPSESSID", MD5Utils.MD5(loginTime))  //PHPSESSID需要可变，以防止过期
+                .addCookie("UTMPKEY", "4289383")
+                .addCookie("UTMPNUM", "1517")
+                .addCookie("UTMPUSERID", "rogergu007")
+                .addCookie("WWWPARAMS", "0")
+                ;
     }
 
     @Override
@@ -140,7 +153,11 @@ public class WHUSiteHandler extends SQSiteHandler{
 
             String[] tempArr = temp.substring(1, temp.length()-1).split(",");
             String linkUrlIndex = tempArr[0];
-            String linkUrl = FORM_ITEM_LINK_TEMPLATE.replaceAll("PLACEHOLDER_ID", linkUrlIndex);
+            String linkUrl = "";
+            if (getmNewsType().equals(NewsTypeEnum.NEWS_JOB))
+                linkUrl = JOB_FORM_ITEM_LINK_TEMPLATE.replaceAll("PLACEHOLDER_ID", linkUrlIndex);
+            else
+                linkUrl = FRIEND_FORM_ITEM_LINK_TEMPLATE.replaceAll("PLACEHOLDER_ID", linkUrlIndex);
             requestLinks.add(linkUrl);
         }
 
@@ -172,6 +189,8 @@ public class WHUSiteHandler extends SQSiteHandler{
         String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
                 .regex(getPageDetailPostDateXPath()).toString();
         Date postDate = formatPostDate(postDateStr);
+        if (isDroppedItem(postDate))
+            return null;
 
         String newsSubject = "";
         String oriContent = HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath()).toString());

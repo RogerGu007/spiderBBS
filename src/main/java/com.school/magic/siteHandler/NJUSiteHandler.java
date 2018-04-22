@@ -9,6 +9,7 @@ import com.school.magic.constants.SiteEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.TextareaUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
@@ -72,6 +73,10 @@ public class NJUSiteHandler extends SQSiteHandler{
         return FORMITEMNEXTPAGE;
     }
 
+    protected String getFormNextPageXPathBak() {
+        return FORMITEMNEXTPAGE_BAK;
+    }
+
     @Override
     protected String getPageDetailPostDateXPath() {
         return DETAIL_POSTDATE_REGEX;
@@ -129,9 +134,16 @@ public class NJUSiteHandler extends SQSiteHandler{
     }
 
     protected List<String> getNextPages() {
-        List<String> linkList = getmPage().getHtml().xpath(getFormNextPagesXPath()).links().all();
+        List<String> linkList = new ArrayList<>();
+        Selectable selectable = getmPage().getHtml().xpath(getFormNextPagesXPath()).links();
+        if (StringUtils.isNotEmpty(selectable.toString())) {
+            linkList = selectable.all();
+        } else {
+            linkList = getmPage().getHtml().xpath(getFormNextPageXPathBak()).links().all();
+        }
         //详情页相同标签的下一页以board=JobExpress结尾，需要过滤掉
-        if (linkList == null || linkList.size() < 1 || linkList.get(0).endsWith(INDEX_JOB_URL_TAG))
+        if (linkList == null || linkList.size() < 1
+                || linkList.get(0).equals(JOB_URL) || linkList.get(0).equals(FRIEND_URL))
             return new ArrayList<>();
         return linkList;
     }
@@ -155,7 +167,7 @@ public class NJUSiteHandler extends SQSiteHandler{
 
     public String getPostDate(Selectable item) {
         //格式：Apr 8 11:56
-        String originDate = item.xpath(getFormItemModifyTimeXPath()).toString();
+        String originDate = item.xpath(getFormItemModifyTimeXPath()).regex(FORM_ITEM_DATE_FORMAT).toString();
         originDate += " " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
         return DateUtils.getStringFromDate(DateUtils.getDateFromString(originDate, ENGLISH_DATE_FORMAT), DEFAULT_DATE_FORMAT);
     }
@@ -190,6 +202,8 @@ public class NJUSiteHandler extends SQSiteHandler{
 
         String postDateStr = detailSelector.regex(getPageDetailPostDateXPath()).toString();
         Date postDate = formatPostDate(postDateStr);
+        if (isDroppedItem(postDate))
+            return null;
 
         String newsSubject = detailSelector.regex(NJUSiteConstant.DETAIL_SUBJECT_REGEX).toString();
         newsSubject = StringEscapeUtils.unescapeHtml4(newsSubject);

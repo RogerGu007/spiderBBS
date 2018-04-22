@@ -40,6 +40,9 @@ public class NewsToDBPipeline implements Pipeline {
         logger.info(String.format("SubjectGson:{%s}", subjectGson));
         logger.info(String.format("DetailNewsGson: {%s}", detailGson));
         NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
+        if (isDropped(subjectNews))
+            return;
+
         UserDTO userDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
         if (userDTO != null) {
             subjectNews.setPublisherId(userDTO.getId());
@@ -55,5 +58,17 @@ public class NewsToDBPipeline implements Pipeline {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+    }
+
+    /**
+     * 落表前再做一次过滤
+     *
+     * @param newsDTO
+     * @return
+     */
+    private boolean isDropped(NewsDTO newsDTO) {
+        if (newsDTO.getmSubject().contains("RE") || newsDTO.getmSubject().contains("Re"))
+            return true;
+        return false;
     }
 }

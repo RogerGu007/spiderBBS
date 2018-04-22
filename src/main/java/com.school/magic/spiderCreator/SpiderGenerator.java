@@ -4,6 +4,7 @@ import com.school.magic.constants.*;
 import com.school.magic.pageProcessor.SQProcessor;
 import com.school.magic.siteHandler.*;
 import com.school.spiderEnums.NewsTypeEnum;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.commons.collections.map.HashedMap;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
@@ -50,15 +51,15 @@ public class SpiderGenerator {
                 break;
             case NJU_BBS:
                 sqSiteHandler = new NJUSiteHandler();
-                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
-                sqSiteHandler.setNewsURLList(Arrays.asList(NJUSiteConstant.JOB_URL));
-
+                if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(NJUSiteConstant.JOB_URL));
+                else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(NJUSiteConstant.FRIEND_URL));
                 break;
             case PEKING_BBS:
                 sqSiteHandler = new PEKINGSiteHandler();
                 if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
                     sqSiteHandler.setNewsURLList(PEKINGSiteConstant.JOB_URL_LIST);
-
                 break;
             case TSING_BBS:
                 sqSiteHandler = new TSINGSiteHandler();
@@ -70,13 +71,17 @@ public class SpiderGenerator {
                 break;
             case FUDAN_BBS:
                 sqSiteHandler = new FUDANSiteHandler();
-                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_FRIENDS);
-                sqSiteHandler.setNewsURLList(Arrays.asList(FUDANSiteConstant.FRIEND_URL));
+                if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(FUDANSiteConstant.FRIEND_URL));
+                else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(FUDANSiteConstant.JOB_URL));
                 break;
             case SJTU_BBS:
                 sqSiteHandler = new SJTUSiteHandler();
-                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
-                sqSiteHandler.setNewsURLList(Arrays.asList(SJTUSiteConstant.JOB_URL));
+                if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(SJTUSiteConstant.JOB_URL));
+                else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(SJTUSiteConstant.FRIEND_URL));
                 //设置代理抓包调试
 //                us.codecraft.webmagic.proxy.Proxy proxy = new us.codecraft.webmagic.proxy.Proxy("localhost", 8889);
 //                HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
@@ -86,18 +91,21 @@ public class SpiderGenerator {
                 break;
             case ECNU_BBS:
                 sqSiteHandler = new ECNUSiteHandler();
-                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
-                sqSiteHandler.setNewsURLList(ECNUSiteConstant.JOB_URL_LIST);
+                if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
+                    sqSiteHandler.setNewsURLList(ECNUSiteConstant.JOB_URL_LIST);
+                else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(ECNUSiteConstant.FRIEND_URL));
                 break;
             case ZJU_BBS:
                 sqSiteHandler = new ZJUSiteHandler();
-                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
                 sqSiteHandler.setNewsURLList(Arrays.asList(ZJUSiteConstant.JOB_URL));
                 break;
             case WHU_BBS:
                 sqSiteHandler = new WHUSiteHandler();
-                sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
-                sqSiteHandler.setNewsURLList(Arrays.asList(WHUSiteConstant.JOB_URL));
+                if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(WHUSiteConstant.JOB_URL));
+                else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(WHUSiteConstant.FRIEND_URL));
                 //test expectedDate
 //                Calendar calendar = Calendar.getInstance();
 //                calendar.setTime(new Date());
@@ -106,9 +114,6 @@ public class SpiderGenerator {
                 break;
             case ECUST_BBS:
                 sqSiteHandler = new ECUSTSiteHandler();
-                sqSiteHandler.setLoginURL(ECUSTSiteConstant.LOGIN_URL);
-                sqSiteHandler.setUserNamePair("username", "rogergu");
-                sqSiteHandler.setPasswordPair("password", "20180330");
                 sqSiteHandler.setNewsType(NewsTypeEnum.NEWS_JOB);
                 sqSiteHandler.setNewsURL(ECUSTSiteConstant.JOB_URL);
                 us.codecraft.webmagic.proxy.Proxy proxy = new us.codecraft.webmagic.proxy.Proxy("localhost", 8889);

@@ -4,6 +4,7 @@ public class ZJUSiteConstant {
 
     public static final String JOB_URL  = "http://www.zju1.com/cxz.asp?bd=71";
 
+    //www.zju1.com没有找到交友的入口
 //    public static final String FRIEND_URL = "https://bbs.tongji.net/forum-336-1.html";
 
     public static final String ZJU_BBS_DOMAIN = "www.zju1.com";

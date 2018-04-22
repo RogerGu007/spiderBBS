@@ -63,7 +63,6 @@ public class SQProcessor implements PageProcessor {
             //form 页面，只需要找到具体的item就可以了
             page.addTargetRequests(filterURLs);
             page.setSkip(true);
-            //return是个特殊逻辑，决定了news和newsDetails的抽取顺序。 根据sequence来判断，在首页里页尝试抽取一次数据
             return;
         }
 

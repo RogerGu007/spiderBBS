@@ -46,24 +46,35 @@ public class GithubRepoPageProcessor implements PageProcessor {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
         Date startDate = DateUtils.getDateFromString("2018-03-01", DateUtils.DEFAULT_DATE_FORMAT3);
-        Date endDate = DateUtils.getDateFromString("2018-04-21", DateUtils.DEFAULT_DATE_FORMAT3);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.TJ_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.NJU_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECNU_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.ZJU_BBS);
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS);
+        Date endDate = DateUtils.getDateFromString("2018-04-23", DateUtils.DEFAULT_DATE_FORMAT3);
+        //todo
+//        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECUST_BBS);
         //tj done
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
         // tsing done
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TSING_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TSING_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
-        //peking   鹊桥需要用户权限，先不做  half done
-        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.PEKING_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        //peking   鹊桥需要用户权限；无法注册，需要北大的邮箱或学位证书认证  half done
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.PEKING_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        //nju  done
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.NJU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.NJU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
+        //fudan
+        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
         //todo
-//        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECUST_BBS);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        //sjtu  done
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
+        //ecnu  done
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.ECNU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.ECNU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
+        //zju  www.zju1.com没有找到交友的入口，注册也是需要按月收费的
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.ZJU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        //whu  done
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
         for (Spider spider : spiderList)
             spider.run();
     }

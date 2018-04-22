@@ -6,6 +6,7 @@ import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
+import com.school.utils.MD5Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,22 @@ public class ECNUSiteHandler extends SQSiteHandler{
 
     @Override
     public Site getSite() {
-        Site site = Site.me().setDomain(ECNU_BBS_DOMAIN).setSleepTime(Constant.SLEEPTIME);
+        String loginTime = String.valueOf(System.currentTimeMillis());
+        Site site = Site.me().setDomain(ECNU_BBS_DOMAIN)
+                .setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
+                .addCookie("PHPSESSID", MD5Utils.MD5(loginTime))
+                .addCookie("nj0v_5a4b_sid", "eqB86j")
+                .addCookie("nj0v_5a4b_saltkey", "tbcJ228j")
+//                .addCookie("nj0v_5a4b_lastvisit", "1524402005")
+                .addCookie("nj0v_5a4b_lastvisit", loginTime)
+//                .addCookie("nj0v_5a4b_sendmail", "1")
+                .addCookie("nj0v_5a4b_st_t", "0%7C1524405686%7Cb4bce9396d7ace7b0cfd706e15cf89b6")
+                .addCookie("_fmdata", "bqTkP6lXoAwotXYY6tQqyWof1vzt0yStyh%2B53QruCYdhHX%2FnbfiMkYyrx8MiLcnKi%2FMnCVABbxvaKq%2F7fENUc3S5Zn1SkNFbZAaHjpRBrTs%3D")
+                .addCookie("nj0v_5a4b_seccode", "906.2ae5522bbdf4cad0c9")
+//                .addCookie("nj0v_5a4b_lastact", "1524405713%09plugin.php%09")
+                .addCookie("nj0v_5a4b_ulastactivity", "ebcdhMndoPT%2FZDm8eSHBaqso0eE033AucxpGJyHLEIBijyYsMhKx")
+                .addCookie("nj0v_5a4b_auth", "d4c4yz7DPoZzXM9dgQ75n5bW%2BzYifvnqoUKqsxhl34fsCxdO2OAtaf7iaVzA9%2Bv8VJtVBFlIcwNFlsFsE9wPj%2FjlzVM")
+                .setSleepTime(Constant.SLEEPTIME);
         return site;
     }
 
