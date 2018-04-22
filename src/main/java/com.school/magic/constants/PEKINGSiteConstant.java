@@ -32,8 +32,7 @@ public class PEKINGSiteConstant {
     //列表页的详情页href
     public static final String FORMITEMLINKURL = "//div[@class=\"list-item-topic list-item\"]/a/@href";
 
-    //一行一个p标签，需要过滤掉为空的行
-    public static final String DETAIL_CONTENT = "//*[@id=\"post-read\"]/div[2]/div/div[3]/div[1]/div[1]/p/text()";
+    public static final String DETAIL_CONTENT = "//*[@id=\"post-read\"]/div[2]/div/div[3]/div[1]/div[1]";
     //详情页标题
     public static final String DETAIL_SUBJECT_TAG = "//*[@id=\"post-read\"]/header/h3/text()";
     //详情页中的发帖时间    2018-04-07 15:48:44

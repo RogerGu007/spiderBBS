@@ -108,26 +108,4 @@ public class PEKINGSiteHandler extends SQSiteHandler {
         pageList.remove(getmPage().getUrl().toString());
         return pageList;
     }
-
-    @Override
-    public NewsDetailDTO extractNewsDetails(Page page) {
-        //Peking默认从详情页解析出详情
-        if (page == null)
-            return null;
-
-        String linkUrl = page.getUrl().toString();
-
-        Selectable contentsNodes = page.getHtml().xpath(getPageDetailContentXPath());
-        if (contentsNodes == null || contentsNodes.nodes().size() == 0)
-            return null;
-
-        String content = "";
-        for (Selectable contentNode : contentsNodes.nodes()) {
-            content += contentNode.toString();
-            if (!contentNode.toString().equalsIgnoreCase(""))
-                content += "\n";
-        }
-
-        return NewsDetailDTO.generateNewsDetail(content, linkUrl);
-    }
 }
