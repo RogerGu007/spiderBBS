@@ -8,6 +8,7 @@ import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.HtmlUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.omg.CORBA.CODESET_INCOMPATIBLE;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -154,8 +155,10 @@ public class TSINGSiteHandler extends SQSiteHandler {
         //  第三列：发信站: 水木社区 (Mon Jan 29 17:52:52 2018), 站内
         //  下面都是详情内容
         NewsDTO newsDTO = null;
-        String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
-                .regex(getPageDetailPostDateXPath()).toString().replaceAll("&nbsp;", " ");
+        Selectable selectable = contentItem.xpath(getPageSubDetailContentXPath()).regex(getPageDetailPostDateXPath());
+        if (selectable == null || StringUtils.isEmpty(selectable.toString()))
+            return null;
+        String postDateStr = selectable.toString().replaceAll("&nbsp;", " ");
         Date postDate = formatPostDate(postDateStr);
 
         List<String> contentList = Arrays.asList(HtmlUtils.filterHtmlTag(contentItem.xpath(getPageSubDetailContentXPath())

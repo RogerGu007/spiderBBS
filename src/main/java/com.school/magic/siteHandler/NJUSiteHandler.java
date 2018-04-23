@@ -179,11 +179,18 @@ public class NJUSiteHandler extends SQSiteHandler{
      * @return
      */
     protected Date formatPostDate(String postDateStr) {
-        postDateStr = postDateStr.substring(1, postDateStr.length()-1);
-        Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
-        if (postDate == null) //兼容日期中有特殊符号的情况
-            postDate = DateUtils.getDateFromString(postDateStr, SPECIAL_ENGLISH_DATE_FORMAT);
-        return postDate;
+        try {
+            if (StringUtils.isEmpty(postDateStr))
+                return null;
+            postDateStr = postDateStr.substring(1, postDateStr.length() - 1);
+            Date postDate = DateUtils.getDateFromString(postDateStr, NORMAL_ENGLISH_DATE_FORMAT);
+            if (postDate == null) //兼容日期中有特殊符号的情况
+                postDate = DateUtils.getDateFromString(postDateStr, SPECIAL_ENGLISH_DATE_FORMAT);
+            return postDate;
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -208,6 +215,8 @@ public class NJUSiteHandler extends SQSiteHandler{
         String newsSubject = detailSelector.regex(NJUSiteConstant.DETAIL_SUBJECT_REGEX).toString();
         newsSubject = StringEscapeUtils.unescapeHtml4(newsSubject);
 
+        if (StringUtils.isEmpty(newsSubject))
+            return null;
 
         if (newsSubject.indexOf(getPageRowSeparator()) > 0)
             newsSubject = newsSubject.substring(0,newsSubject.indexOf(getPageRowSeparator()));

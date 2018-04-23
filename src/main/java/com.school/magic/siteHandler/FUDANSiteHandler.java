@@ -146,7 +146,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     protected List<String> getNextPages() {
         Selectable nextPageNode = getmPage().getHtml().xpath(getFormNextPagesXPath());
-        if (nextPageNode == null)
+        if (nextPageNode == null || StringUtils.isEmpty(nextPageNode.toString()))
             return  null;
         return new ArrayList<String>() {{ add(FRIEND_NEXTPAGETEMPLATE.replaceAll("PLACEHOLDER", nextPageNode.toString()));}};
     }

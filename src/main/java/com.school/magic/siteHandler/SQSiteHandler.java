@@ -212,6 +212,8 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
 
     protected Boolean isDroppedItem(String itemDate) {
         Date convertDate = DateUtils.getDateFromString(itemDate, DEFAULT_DATE_FORMAT);
+        if (convertDate == null)
+            return false;
         return isDroppedItem(convertDate);
     }
 
@@ -226,9 +228,13 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             return false;
 
         if (expectedDate != null) {
-            if (expectedDate.compareTo(itemDate) == 0)
+            //日期转化为字符串比较
+            String expectedDay = DateUtils.getStringFromDate(expectedDate, DEFAULT_DATE_FORMAT3);
+            String itemDay = DateUtils.getStringFromDate(itemDate, DEFAULT_DATE_FORMAT3);
+            if (itemDay.equals(expectedDay))
                 return false;
-            return true;
+            else
+                return true;
         }
 
         if (beginDate != null && endDate != null) {

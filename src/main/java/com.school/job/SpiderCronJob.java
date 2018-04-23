@@ -47,7 +47,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次抓取数据的job
      */
-    @Scheduled(cron = "0 20 0/10 * * ?")
+    @Scheduled(cron = "0 10 * * * ?")
 //    @Scheduled(cron = "0/15 * * * * ?")
     public void bbsSpiderFirst(){
         if (FIRST_SWITCH.equals(Constant.SWITCH_ON)) {
@@ -55,6 +55,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
             //设置开关在指定时间的内抓取数据
             Date startDate = DateUtils.getDateFromString(FIRST_START_DATE, DateUtils.DEFAULT_DATE_FORMAT3);
             Date endDate = DateUtils.getDateFromString(FIRST_END_DATE, DateUtils.DEFAULT_DATE_FORMAT3);
+            final List<Date> dateList = DateUtils.findDates(startDate, endDate);
 //            Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, startDate, endDate);
 //            spider.run();
             for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {
@@ -66,9 +67,11 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
                     executor.execute(new Runnable() {
                         @Override
                         public void run() {
-                            List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, startDate, endDate);
-                            for (Spider spider : spiderList)
-                                spider.run();
+                            for (Date date : dateList) { //按时间从远到近访问
+                                List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, date);
+                                for (Spider spider : spiderList)
+                                    spider.run();
+                            }
                         }
                     });
                     logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
