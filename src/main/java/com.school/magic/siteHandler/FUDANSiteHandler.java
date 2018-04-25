@@ -7,6 +7,7 @@ import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import com.school.spiderEnums.NewsTypeEnum;
 
+import com.school.utils.PropertyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,7 +123,10 @@ public class FUDANSiteHandler extends SQSiteHandler {
         if (getmPage().getUrl().toString().equalsIgnoreCase(getNewsURL())) {
             List<String> nextPages = getNextPages();
             //只能翻6页，每天更新内容一般不会超过6页
-            requestLinks.addAll(getSubList(nextPages, 0, 5));
+            if (com.school.entity.Constant.SWITCH_ON.equals(PropertyUtil.getProperty("FIRST_SPIDER_SWITCH")))
+                requestLinks.addAll(getSubList(nextPages, 0, 10));
+            else
+                requestLinks.addAll(getSubList(nextPages, 0, 5));
         }
         return requestLinks;
     }
@@ -153,7 +157,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     protected List<String> getSubList(List<String> dataList, Integer from, Integer to) {
         List<String> subList = new ArrayList<>();
-        if (dataList.size() == 0) {
+        if (dataList == null || dataList.size() == 0) {
             return subList;
         }
 

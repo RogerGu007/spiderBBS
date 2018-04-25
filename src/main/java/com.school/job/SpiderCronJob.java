@@ -2,12 +2,14 @@ package com.school.job;
 
 import com.school.magic.constants.SiteEnum;
 import com.school.magic.spiderCreator.SpiderGenerator;
+import com.school.spiderEnums.LocationEnum;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.PropertyUtil;
 import com.school.entity.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
@@ -19,6 +21,7 @@ import java.util.concurrent.*;
 import static com.school.utils.DateUtils.DEFAULT_DATE_FORMAT2;
 
 @Component
+@EnableScheduling
 public class SpiderCronJob implements ISpiderCronBaseJob {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -47,7 +50,8 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次抓取数据的job
      */
-    @Scheduled(cron = "0 15 * * * ?")
+    @Scheduled(cron = "0 26 * * * ?")
+    @Override
 //    @Scheduled(cron = "0/15 * * * * ?")
     public void bbsSpiderFirst(){
         if (FIRST_SWITCH.equals(Constant.SWITCH_ON)) {
@@ -58,30 +62,58 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
             final List<Date> dateList = DateUtils.findDates(startDate, endDate);
 //            Spider spider = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, startDate, endDate);
 //            spider.run();
-            for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {
-                for (final SiteEnum siteEnum : SiteEnum.values()) {
-                    if (siteEnum.equals(SiteEnum.ECUST_BBS)) //华理的还有bug，先跳过抓取
-                        continue;
-                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
-                            " 从站点获取数据:" + siteEnum.name());
+            //城市 + newsType作为前端展示的分类条件，内部的postdate要保证postdate按顺序落地，所以可以在多线程的run之外
+            for (final LocationEnum locationEnum : LocationEnum.values()) {
+                for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) { //job, friend
                     executor.execute(new Runnable() {
                         @Override
                         public void run() {
-                            for (Date date : dateList) { //按时间从远到近访问
-                                List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, date);
-                                for (Spider spider : spiderList)
-                                    spider.run();
+                            //每个分类按时间从远到近处理，一天处理完再处理下一天
+                            for (Date date : dateList) {
+                                for (final SiteEnum siteEnum : SiteEnum.values()) {
+                                    if (!siteEnum.getLocationEnum().equals(locationEnum))
+                                        continue;
+                                    if (siteEnum.equals(SiteEnum.ECUST_BBS)) //华理的还有bug，先跳过抓取
+                                        continue;
+                                    logger.info(DateUtils.getStringFromDate(date, DEFAULT_DATE_FORMAT2) +
+                                            " 从站点获取数据:" + siteEnum.name());
+                                    List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, date);
+                                    for (Spider spider : spiderList)
+                                        spider.run();
+                                    logger.info(DateUtils.getStringFromDate(date, DEFAULT_DATE_FORMAT2) +
+                                            " 从站点完成获取数据:" + siteEnum.name());
+                                }
                             }
                         }
                     });
-                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
-                            " 从站点完成获取数据:" + siteEnum.name());
                 }
             }
+
+//            for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {
+//                for (final SiteEnum siteEnum : SiteEnum.values()) {
+//                    if (siteEnum.equals(SiteEnum.ECUST_BBS)) //华理的还有bug，先跳过抓取
+//                        continue;
+//                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+//                            " 从站点获取数据:" + siteEnum.name());
+//                    executor.execute(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            for (Date date : dateList) { //按时间从远到近访问
+//                                List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, date);
+//                                for (Spider spider : spiderList)
+//                                    spider.run();
+//                            }
+//                        }
+//                    });
+//                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+//                            " 从站点完成获取数据:" + siteEnum.name());
+//                }
+//            }
         }
     }
 
     @Scheduled(cron="0 30 * * * ? ")
+    @Override
     public void bbsSpider(){
         if (SPIDER_SWITCH.equals(Constant.SWITCH_ON)) {
             for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {

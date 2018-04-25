@@ -53,12 +53,12 @@ public class GithubRepoPageProcessor implements PageProcessor {
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TJ_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
         // tsing done
-//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TSING_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
+        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TSING_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.TSING_BBS, NewsTypeEnum.NEWS_JOB, new Date());
         //peking   鹊桥需要用户权限；无法注册，需要北大的邮箱或学位证书认证  half done
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.PEKING_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
         //nju  done
-        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.NJU_BBS, NewsTypeEnum.NEWS_JOB, new Date());
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.NJU_BBS, NewsTypeEnum.NEWS_JOB, new Date());
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.NJU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
         //fudan
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);

@@ -8,6 +8,7 @@ import com.school.spiderEnums.NewsSubTypeEnum;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.HtmlUtils;
+import com.school.utils.PropertyUtil;
 import com.school.utils.TextareaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -326,7 +327,10 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (getmPage().getUrl().toString().equalsIgnoreCase(getNewsURL())) {
             List<String> nextPages = getNextPages();
             //只能翻6页，每天更新内容一般不会超过6页
-            requestLinks.addAll(getSubList(nextPages, 0, 5));
+            if (com.school.entity.Constant.SWITCH_ON.equals(PropertyUtil.getProperty("FIRST_SPIDER_SWITCH")))
+                requestLinks.addAll(getSubList(nextPages, 0, 10));
+            else
+                requestLinks.addAll(getSubList(nextPages, 0, 5));
         }
         return requestLinks;
     }

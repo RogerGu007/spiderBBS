@@ -6,9 +6,7 @@ import com.school.magic.constants.ExtractMode;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
-import com.school.utils.DateUtils;
-import com.school.utils.HtmlUtils;
-import com.school.utils.TextareaUtils;
+import com.school.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ import java.util.regex.Pattern;
 
 import static com.school.magic.constants.WHUSiteConstant.*;
 import static com.school.utils.DateUtils.*;
-import com.school.utils.MD5Utils;
 
 public class WHUSiteHandler extends SQSiteHandler{
 
@@ -166,7 +163,10 @@ public class WHUSiteHandler extends SQSiteHandler{
         if (getmPage().getUrl().toString().equalsIgnoreCase(getNewsURL())) {
             List<String> nextPages = getNextPages();
             //只能翻6页，每天更新内容一般不会超过6页
-            requestLinks.addAll(getSubList(nextPages, 0, 5));
+            if (com.school.entity.Constant.SWITCH_ON.equals(PropertyUtil.getProperty("FIRST_SPIDER_SWITCH")))
+                requestLinks.addAll(getSubList(nextPages, 0, 10));
+            else
+                requestLinks.addAll(getSubList(nextPages, 0, 5));
         }
         return requestLinks;
     }
