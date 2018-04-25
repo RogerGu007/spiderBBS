@@ -50,7 +50,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次抓取数据的job
      */
-    @Scheduled(cron = "0 59 21 * * ?")
+    @Scheduled(cron = "0 15 22 * * ?")
     @Override
     public void bbsSpiderFirst(){
         if (FIRST_SWITCH.equals(Constant.SWITCH_ON)) {
@@ -115,16 +115,24 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     @Override
     public void bbsSpider(){
         if (SPIDER_SWITCH.equals(Constant.SWITCH_ON)) {
-            for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {
-                for (SiteEnum siteEnum : SiteEnum.values()) {
-                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
-                            " 从站点获取数据:" + siteEnum.name());
-                    List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, new Date());
-                    for (Spider spider : spiderList)
-                        spider.run();
-                    logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
-                            " 从站点完成获取数据:" + siteEnum.name());
-                }
+            //充分利用线程，按站点来捞取
+            for (SiteEnum siteEnum : SiteEnum.values()) {
+                if (siteEnum.equals(SiteEnum.ECUST_BBS)) //华理的还有bug，先跳过抓取
+                    continue;
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (NewsTypeEnum newsTypeEnum : NewsTypeEnum.values()) {
+                            logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+                                    " 从站点获取数据:" + siteEnum.name());
+                            List<Spider> spiderList = SpiderGenerator.createSpider(siteEnum, newsTypeEnum, new Date());
+                            for (Spider spider : spiderList)
+                                spider.run();
+                            logger.info(DateUtils.getStringFromDate(new Date(), DEFAULT_DATE_FORMAT2) +
+                                    " 从站点完成获取数据:" + siteEnum.name());
+                        }
+                    }
+                });
             }
         }
     }
