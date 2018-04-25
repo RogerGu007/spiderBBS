@@ -50,7 +50,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次抓取数据的job
      */
-    @Scheduled(cron = "0 26 * * * ?")
+    @Scheduled(cron = "0 40 0/3 * * ?")
     @Override
 //    @Scheduled(cron = "0/15 * * * * ?")
     public void bbsSpiderFirst(){
