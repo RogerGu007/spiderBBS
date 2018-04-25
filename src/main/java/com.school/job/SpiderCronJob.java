@@ -50,9 +50,8 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次抓取数据的job
      */
-    @Scheduled(cron = "0 40 0/3 * * ?")
+    @Scheduled(cron = "0 59 21 * * ?")
     @Override
-//    @Scheduled(cron = "0/15 * * * * ?")
     public void bbsSpiderFirst(){
         if (FIRST_SWITCH.equals(Constant.SWITCH_ON)) {
             logger.info(String.format("初次执行抓取的起止时间: %s ~ %s", FIRST_START_DATE, FIRST_END_DATE));
@@ -112,7 +111,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
         }
     }
 
-    @Scheduled(cron="0 30 * * * ? ")
+    @Scheduled(cron="0 0/10 * * * ? ")
     @Override
     public void bbsSpider(){
         if (SPIDER_SWITCH.equals(Constant.SWITCH_ON)) {

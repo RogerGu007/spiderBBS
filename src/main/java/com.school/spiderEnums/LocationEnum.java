@@ -2,7 +2,7 @@ package com.school.spiderEnums;
 
 public enum LocationEnum {
     BEIJING(10),
-    GUANGDONG(20),
+//    GUANGDONG(20),
     SHANGHAI(21),
     NANJING(25),
     WUHAN(27),
