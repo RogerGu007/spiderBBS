@@ -47,7 +47,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次抓取数据的job
      */
-    @Scheduled(cron = "0 10 * * * ?")
+    @Scheduled(cron = "0 15 * * * ?")
 //    @Scheduled(cron = "0/15 * * * * ?")
     public void bbsSpiderFirst(){
         if (FIRST_SWITCH.equals(Constant.SWITCH_ON)) {

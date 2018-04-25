@@ -129,13 +129,18 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         if (!hasValidLoginInfo())
             return null;
 
-        Request request = new Request(getLoginURL());
-        Map<String, Object> params = new HashMap<>();
-        params.put(mUserNamePair.getName(), mUserNamePair.getValue());
-        params.put(mPasswordPair.getName(), mPasswordPair.getValue());
-        request.setMethod(HttpConstant.Method.POST);
-        request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
-        return request;
+        try {
+            Request request = new Request(getLoginURL());
+            Map<String, Object> params = new HashMap<>();
+            params.put(mUserNamePair.getName(), mUserNamePair.getValue());
+            params.put(mPasswordPair.getName(), mPasswordPair.getValue());
+            request.setMethod(HttpConstant.Method.POST);
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+            return request;
+        } catch (Exception e) {
+            logger.error("登录失败：" + e.getMessage());
+            return null;
+        }
     }
 
     public void setNewsURL(String newsURL) {

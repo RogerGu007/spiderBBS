@@ -67,7 +67,9 @@ public class NewsToDBPipeline implements Pipeline {
      * @return
      */
     private boolean isDropped(NewsDTO newsDTO) {
-        if (newsDTO.getmSubject().contains("RE") || newsDTO.getmSubject().contains("Re"))
+        if (newsDTO.getmSubject().contains("RE")
+                || newsDTO.getmSubject().contains("Re")
+                || newsDTO.getmSubject().contains("re"))
             return true;
         return false;
     }
