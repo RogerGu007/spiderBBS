@@ -98,7 +98,8 @@ public class SpiderGenerator {
                 break;
             case ZJU_BBS:
                 sqSiteHandler = new ZJUSiteHandler();
-                sqSiteHandler.setNewsURLList(Arrays.asList(ZJUSiteConstant.JOB_URL));
+                if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
+                    sqSiteHandler.setNewsURLList(Arrays.asList(ZJUSiteConstant.JOB_URL));
                 break;
             case WHU_BBS:
                 sqSiteHandler = new WHUSiteHandler();
