@@ -129,10 +129,13 @@ public class SpiderGenerator {
         sqSiteHandler.setNewsType(newsTypeEnum);
         setSiteHandlerDate(sqSiteHandler, date, beginDate, endDate);
         //特殊处理，如job信息又分为了校招、社招两个入口
-        for (String newsUrls : sqSiteHandler.getNewsURLList()) {
-            sqSiteHandler.setNewsURL(newsUrls);
-            spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
-            spiderList.add(spider);
+        List<String> urlList = sqSiteHandler.getNewsURLList();
+        if (urlList!= null && urlList.size() > 0) {
+            for (String newsUrls : urlList) {
+                sqSiteHandler.setNewsURL(newsUrls);
+                spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                spiderList.add(spider);
+            }
         }
 
         return spiderList;
