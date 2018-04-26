@@ -12,6 +12,7 @@ CREATE TABLE `FirstLevelComment` (
   `nickName` varchar(145) NOT NULL,
   `avatarUrl` varchar(255) DEFAULT NULL,
   `comment` varchar(500) NOT NULL,
+  `count` int(11) NOT NULL DEFAULT '1',
   `createAt` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `IDX_NEWSID` (`newsID`)
