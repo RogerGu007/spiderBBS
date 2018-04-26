@@ -41,7 +41,8 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次运行抓取的结束时间
      */
-    private static String FIRST_END_DATE = PropertyUtil.getProperty("FIRST_SPIDER_END_DATE");
+//    private static String FIRST_END_DATE = PropertyUtil.getProperty("FIRST_SPIDER_END_DATE");
+    private static String FIRST_END_DATE = DateUtils.getStringFromDate(new Date(), DateUtils.DEFAULT_DATE_FORMAT3);
     /**
      * spider开关
      */
@@ -50,7 +51,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
     /**
      * 首次抓取数据的job
      */
-    @Scheduled(cron = "0 15 22 * * ?")
+    @Scheduled(cron = "0 38 8 * * ?")
     @Override
     public void bbsSpiderFirst(){
         if (FIRST_SWITCH.equals(Constant.SWITCH_ON)) {
@@ -111,7 +112,7 @@ public class SpiderCronJob implements ISpiderCronBaseJob {
         }
     }
 
-    @Scheduled(cron="0 0/10 * * * ? ")
+    @Scheduled(cron="0 6/10 * * * ? ")
     @Override
     public void bbsSpider(){
         if (SPIDER_SWITCH.equals(Constant.SWITCH_ON)) {
