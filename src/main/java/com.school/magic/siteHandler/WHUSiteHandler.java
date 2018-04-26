@@ -114,7 +114,7 @@ public class WHUSiteHandler extends SQSiteHandler{
 //                .addCookie("PHPSESSID", "cc41894e0257bf951dc1b658ef348996")
                 .addCookie("PHPSESSID", MD5Utils.MD5(loginTime))  //PHPSESSID需要可变，以防止过期
                 .addCookie("UTMPKEY", "4289383")
-                .addCookie("UTMPNUM", "1517")
+                .addCookie("UTMPNUM", "900")
                 .addCookie("UTMPUSERID", "rogergu007")
                 .addCookie("WWWPARAMS", "0")
                 ;
