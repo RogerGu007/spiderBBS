@@ -24,13 +24,12 @@ CREATE TABLE `NewsDetail` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `newsID` int(10) unsigned NOT NULL,
   `sourceArticleUrl` varchar(512) NOT NULL,
-  `detailContent` text,
+  `detailContent` mediumtext,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `newsID_UNIQUE` (`newsID`),
   UNIQUE KEY `LinkUrl_UNIQUE` (`sourceArticleUrl`) USING BTREE,
   CONSTRAINT `FK_NewsID` FOREIGN KEY (`newsID`) REFERENCES `News` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 -- ----------------------------
 -- Records of newsdetail
 -- ----------------------------

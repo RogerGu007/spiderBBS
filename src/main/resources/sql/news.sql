@@ -18,24 +18,26 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for `news`
 -- ----------------------------
-DROP TABLE IF EXISTS `news`;
-CREATE TABLE `news` (
+DROP TABLE IF EXISTS `News`;
+CREATE TABLE `News` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Subject` varchar(512) NOT NULL,
   `NewsType` tinyint(4) NOT NULL,
   `NewsSubType` tinyint(4) DEFAULT NULL,
   `PostDate` datetime DEFAULT NULL,
-  `LocationCode` int(4) DEFAULT NULL,
+  `LocationCode` int(8) DEFAULT NULL,
   `isHot` tinyint(4) DEFAULT NULL,
-  `CreateAt` datetime NOT NULL,
-  `CreateBy` varchar(45) CHARACTER SET latin1 NOT NULL,
   `linkUrl` varchar(512) DEFAULT NULL,
-  `publisherId` int(8) DEFAULT NULL,
-  `isValid` tinyint(1) DEFAULT '1',
+  `CreateAt` datetime NOT NULL,
+  `CreateBy` varchar(45) NOT NULL,
+  `publisherId` int(10) unsigned NOT NULL,
+  `isValid` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDX_LINKURL` (`linkUrl`) USING BTREE,
   KEY `UK_SUBJECT` (`Subject`),
-  KEY `IDX_TYPE_SUBTYPE` (`NewsType`,`NewsSubType`),
   KEY `IDX_CREATEDATE` (`CreateAt`),
-  KEY `IDX_LOCATION` (`LocationCode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `IDX_LOCATION` (`LocationCode`),
+  KEY `FK_PublishID` (`publisherId`),
+  KEY `IDX_TYPE_SUBTYPE_locate` (`NewsType`,`NewsSubType`,`LocationCode`),
+  CONSTRAINT `FK_PublishID` FOREIGN KEY (`publisherId`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='News info'
