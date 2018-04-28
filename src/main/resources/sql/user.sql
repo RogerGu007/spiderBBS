@@ -7,6 +7,8 @@ CREATE TABLE `User` (
   `NickName` varchar(45) NOT NULL,
   `avatarUrl` varchar(255) DEFAULT NULL,
   `isVerified` tinyint(4) NOT NULL DEFAULT '0',
+  `sex` tinyint(4) DEFAULT NULL,
+  `college` varchar(255) DEFAULT NULL,
   `CreateAt` datetime NOT NULL,
   `CreateBy` varchar(45) NOT NULL,
   `UpdateAt` datetime NOT NULL,
@@ -14,4 +16,4 @@ CREATE TABLE `User` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `NickName_UNIQUE` (`NickName`),
   UNIQUE KEY `UK_PhoneNumber` (`PhoneNumber`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
