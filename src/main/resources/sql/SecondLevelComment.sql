@@ -12,9 +12,9 @@ CREATE TABLE `SecondLevelComment` (
   `fromUserNickName` varchar(145) DEFAULT NULL,
   `toUserID` int(11) unsigned DEFAULT NULL,
   `toUserNickName` varchar(145) DEFAULT NULL,
-  `replyComment` varchar(245) DEFAULT NULL,
+  `replyComment` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `createAt` datetime DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `ID_FLC` (`flID`),
   CONSTRAINT `FK_FLID` FOREIGN KEY (`flID`) REFERENCES `FirstLevelComment` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

@@ -1,0 +1,20 @@
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `SecondLevelComment`
+-- ----------------------------
+DROP TABLE IF EXISTS `SecondLevelComment`;
+
+CREATE TABLE `SecondLevelComment` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `flID` int(11) unsigned DEFAULT NULL,
+  `fromUserID` int(11) unsigned NOT NULL,
+  `fromUserNickName` varchar(145) DEFAULT NULL,
+  `toUserID` int(11) unsigned DEFAULT NULL,
+  `toUserNickName` varchar(145) DEFAULT NULL,
+  `replyComment` varchar(245) DEFAULT NULL,
+  `createAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `ID_FLC` (`flID`),
+  CONSTRAINT `FK_FLID` FOREIGN KEY (`flID`) REFERENCES `FirstLevelComment` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
