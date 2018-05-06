@@ -36,8 +36,9 @@ CREATE TABLE `News` (
   UNIQUE KEY `IDX_LINKURL` (`linkUrl`) USING BTREE,
   KEY `UK_SUBJECT` (`Subject`),
   KEY `IDX_CREATEDATE` (`CreateAt`),
-  KEY `IDX_LOCATION` (`LocationCode`),
   KEY `FK_PublishID` (`publisherId`),
-  KEY `IDX_TYPE_SUBTYPE_locate` (`NewsType`,`NewsSubType`,`LocationCode`),
+  KEY `IDX_LOCATION` (`LocationCode`,`isValid`),
+  KEY `IDX_TYPE_SUBTYPE_locate` (`NewsType`,`NewsSubType`,`LocationCode`,`isValid`),
+  KEY `IDX_TYPE_LOCATION` (`NewsType`,`LocationCode`,`isValid`),
   CONSTRAINT `FK_PublishID` FOREIGN KEY (`publisherId`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='News info'

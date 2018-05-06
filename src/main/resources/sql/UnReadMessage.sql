@@ -1,0 +1,9 @@
+
+CREATE TABLE `UnReadMessage` (
+  `ID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userID` int(11) unsigned NOT NULL,
+  `unReadCount` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `userID_UNIQUE` (`userID`),
+  CONSTRAINT `FK_USERID` FOREIGN KEY (`userID`) REFERENCES `User` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
