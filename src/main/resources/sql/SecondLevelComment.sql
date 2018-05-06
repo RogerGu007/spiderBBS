@@ -18,5 +18,6 @@ CREATE TABLE `SecondLevelComment` (
   `createAt` datetime DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `ID_FLC` (`flID`),
+  KEY `IDX_TOUSERID` (`toUserID`),
   CONSTRAINT `FK_FLID` FOREIGN KEY (`flID`) REFERENCES `FirstLevelComment` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
