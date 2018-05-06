@@ -56,7 +56,7 @@ public class NewsToDBPipeline implements Pipeline {
         try {
             newsService.storeDataToDB(subjectNews, detailNews);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(String.format("news落地失败，url=%s, %s", subjectNews.getLinkUrl(), e.getMessage()));
         }
     }
 
