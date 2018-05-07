@@ -42,18 +42,17 @@ public class NewsToDBPipeline implements Pipeline {
         NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
         if (isDropped(subjectNews))
             return;
-
-        UserDTO userDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
-        if (userDTO != null) {
-            subjectNews.setPublisherId(userDTO.getId());
-        } else {
-            //不存在user为空，但是需要发布内容的
-            logger.error("user为空,nickname=" + resultItems.get(RESULT_PUBLISHER_FIELD));
-            return;
-        }
-
-        NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
         try {
+            UserDTO userDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
+            if (userDTO != null) {
+                subjectNews.setPublisherId(userDTO.getId());
+            } else {
+                //不存在user为空，但是需要发布内容的
+                logger.error("user为空,nickname=" + resultItems.get(RESULT_PUBLISHER_FIELD));
+                return;
+            }
+
+            NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
             newsService.storeDataToDB(subjectNews, detailNews);
         } catch (Exception e) {
             logger.error(String.format("news落地失败，url=%s, %s", subjectNews.getLinkUrl(), e.getMessage()));

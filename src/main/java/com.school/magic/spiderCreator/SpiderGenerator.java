@@ -15,7 +15,6 @@ import java.util.*;
 import static com.school.magic.constants.NJUSiteConstant.JOB_URL;
 import static com.school.magic.constants.PEKINGSiteConstant.JOB_URL_LIST;
 import static com.school.magic.constants.TJSiteConstant.FRIEND_URL;
-import static com.school.magic.constants.TJSiteConstant.LOGIN_URL;
 
 public class SpiderGenerator {
 
@@ -40,7 +39,7 @@ public class SpiderGenerator {
         switch (siteEnum) {
             case TJ_BBS:
                 sqSiteHandler = new TJSiteHandler();
-                sqSiteHandler.setLoginURL(LOGIN_URL);
+                sqSiteHandler.setLoginURL(TJSiteConstant.LOGIN_URL);
                 sqSiteHandler.setUserNamePair("username", "tjshif");
                 sqSiteHandler.setPasswordPair("password", "19801004");
                 if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
@@ -103,6 +102,9 @@ public class SpiderGenerator {
                 break;
             case WHU_BBS:
                 sqSiteHandler = new WHUSiteHandler();
+                sqSiteHandler.setLoginURL(WHUSiteConstant.LOGIN_URL);
+                sqSiteHandler.setUserNamePair("id", "rogergu007");
+                sqSiteHandler.setPasswordPair("passwd", "20180330");
                 if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
                     sqSiteHandler.setNewsURLList(Arrays.asList(WHUSiteConstant.JOB_URL));
                 else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))

@@ -6,7 +6,7 @@ public class WHUSiteConstant {
 
     public static final String FRIEND_URL = "http://bbs.whu.edu.cn/wForum/board.php?name=PieFriends";
 
-    public static final String LOGIN_URL = "http://bbs.whu.edu.cn/wForum/logon.php?inajax=1";
+    public static final String LOGIN_URL = "http://bbs.whu.edu.cn/wForum/logon.php";
 
     public static final String WHU_BBS_DOMAIN = "bbs.whu.edu.cn";
     //列表页是脚本形式的

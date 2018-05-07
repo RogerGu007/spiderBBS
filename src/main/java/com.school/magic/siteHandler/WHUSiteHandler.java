@@ -41,6 +41,12 @@ public class WHUSiteHandler extends SQSiteHandler{
 
     @Override
     public boolean isLoginPage() {
+        if (getmPage() == null)
+            return false;
+
+        if (getmPage().getUrl().toString().equalsIgnoreCase(LOGIN_URL))
+            return true;
+
         return false;
     }
 
@@ -109,14 +115,6 @@ public class WHUSiteHandler extends SQSiteHandler{
                 .setSleepTime(300)
                 .setUserAgent(
                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31")
-//                .addCookie("LOGINTIME", "1524377313")
-                .addCookie("LOGINTIME", loginTime)
-//                .addCookie("PHPSESSID", "cc41894e0257bf951dc1b658ef348996")
-                .addCookie("PHPSESSID", MD5Utils.MD5(loginTime))  //PHPSESSID需要可变，以防止过期
-                .addCookie("UTMPKEY", "4289383")
-                .addCookie("UTMPNUM", "900")
-                .addCookie("UTMPUSERID", "rogergu007")
-                .addCookie("WWWPARAMS", "0")
                 ;
     }
 
