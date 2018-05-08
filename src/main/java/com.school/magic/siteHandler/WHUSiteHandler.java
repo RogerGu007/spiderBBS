@@ -185,7 +185,7 @@ public class WHUSiteHandler extends SQSiteHandler{
             return null;
 
         String postDateStr = contentItem.xpath(getPageSubDetailContentXPath())
-                .regex(getPageDetailPostDateXPath()).toString();
+                .regex(getPageDetailPostDateXPath()).toString().replaceAll("&nbsp;", " ");
         Date postDate = formatPostDate(postDateStr);
         if (isDroppedItem(postDate))
             return null;
