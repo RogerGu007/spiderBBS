@@ -8,6 +8,7 @@ import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
 import com.school.utils.DateUtils;
 import com.school.utils.HtmlUtils;
+import com.school.utils.TextareaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.CORBA.CODESET_INCOMPATIBLE;
 import us.codecraft.webmagic.Page;
@@ -210,6 +211,7 @@ public class TSINGSiteHandler extends SQSiteHandler {
             String[] secondSeperate = temp.split(getPageDetailContentEndRegex());
             content = secondSeperate[0];
         }
+        content = TextareaUtils.convertTextareToHtml(content);
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 

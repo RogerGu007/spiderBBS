@@ -227,6 +227,8 @@ public class WHUSiteHandler extends SQSiteHandler{
             String[] secondSeperate = temp.split(getPageDetailContentEndRegex());
             content = secondSeperate[0];
         }
+
+        content = TextareaUtils.convertTextareToHtml(content);
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 }
