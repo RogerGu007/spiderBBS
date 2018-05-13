@@ -19,6 +19,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Table structure for `news`
 -- ----------------------------
 DROP TABLE IF EXISTS `News`;
+
 CREATE TABLE `News` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Subject` varchar(512) NOT NULL,
@@ -30,6 +31,8 @@ CREATE TABLE `News` (
   `linkUrl` varchar(512) DEFAULT NULL,
   `CreateAt` datetime NOT NULL,
   `CreateBy` varchar(45) NOT NULL,
+  `UpdateAt` datetime DEFAULT NULL,
+  `UpdateBy` varchar(45) DEFAULT NULL,
   `publisherId` int(10) unsigned NOT NULL,
   `isValid` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`),
