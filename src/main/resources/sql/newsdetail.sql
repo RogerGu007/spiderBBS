@@ -25,11 +25,10 @@ CREATE TABLE `NewsDetail` (
   `newsID` int(10) unsigned NOT NULL,
   `sourceArticleUrl` varchar(512) NOT NULL,
   `detailContent` mediumtext,
+  `UpdateAt` datetime DEFAULT NULL,
+  `UpdateBy` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `newsID_UNIQUE` (`newsID`),
   UNIQUE KEY `LinkUrl_UNIQUE` (`sourceArticleUrl`) USING BTREE,
   CONSTRAINT `FK_NewsID` FOREIGN KEY (`newsID`) REFERENCES `News` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
--- ----------------------------
--- Records of newsdetail
--- ----------------------------
