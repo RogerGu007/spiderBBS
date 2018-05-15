@@ -43,7 +43,7 @@ public class NewsToDBPipeline implements Pipeline {
         if (isDropped(subjectNews))
             return;
         try {
-            UserDTO userDTO = newsService.getPublisherId(resultItems.get(RESULT_PUBLISHER_FIELD));
+            UserDTO userDTO = newsService.getPublisherByNickName(resultItems.get(RESULT_PUBLISHER_FIELD));
             if (userDTO != null) {
                 subjectNews.setPublisherId(userDTO.getId());
             } else {
