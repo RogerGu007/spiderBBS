@@ -330,7 +330,7 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
             if (com.school.entity.Constant.SWITCH_ON.equals(PropertyUtil.getProperty("FIRST_SPIDER_SWITCH")))
                 requestLinks.addAll(getSubList(nextPages, 0, 10));
             else
-                requestLinks.addAll(getSubList(nextPages, 0, 5));
+                requestLinks.addAll(getSubList(nextPages, 0, 3));
         }
         return requestLinks;
     }
