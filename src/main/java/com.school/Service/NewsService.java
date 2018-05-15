@@ -65,7 +65,7 @@ public class NewsService {
         return newsDetailDAO.findByUrl(new HashMap<String, String>() {{ put("sourceArticleUrl", url); }});
     }
 
-    public UserDTO getPublisherId(String nickname) {
+    public UserDTO getPublisherByNickName(String nickname) {
         return userDAO.findByNickname(nickname);
     }
 
