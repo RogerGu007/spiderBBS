@@ -211,7 +211,7 @@ public class TSINGSiteHandler extends SQSiteHandler {
             String[] secondSeperate = temp.split(getPageDetailContentEndRegex());
             content = secondSeperate[0];
         }
-        content = TextareaUtils.convertTextareToHtml(content);
+        content = TextareaUtils.convertTextareToHtml(content, page.getUrl().toString());
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 

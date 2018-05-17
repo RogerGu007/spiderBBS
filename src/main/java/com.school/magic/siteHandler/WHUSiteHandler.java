@@ -228,7 +228,7 @@ public class WHUSiteHandler extends SQSiteHandler{
             content = secondSeperate[0];
         }
 
-        content = TextareaUtils.convertTextareToHtml(content);
+        content = TextareaUtils.convertTextareToHtml(content, page.getUrl().toString());
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 }

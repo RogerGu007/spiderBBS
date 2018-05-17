@@ -254,7 +254,7 @@ public class NJUSiteHandler extends SQSiteHandler{
             htmlStr += contentArr[ii] + "\n";
         }
 
-        String content = TextareaUtils.convertTextareToHtml(htmlStr);
+        String content = TextareaUtils.convertTextareToHtml(htmlStr, page.getUrl().toString());
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
     }
 

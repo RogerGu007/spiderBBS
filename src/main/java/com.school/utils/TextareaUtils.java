@@ -4,13 +4,14 @@ import org.apache.http.util.TextUtils;
 import sun.font.FontDesignMetrics;
 
 import java.awt.*;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextareaUtils {
 	private static final String ReturnRow = "\n";
 
-	public static String convertTextareToHtml(String sourceTxt)
+	public static String convertTextareToHtml(String sourceTxt, String pageUrl)
 	{
 		if (TextUtils.isEmpty(sourceTxt))
 			return sourceTxt;
@@ -50,7 +51,7 @@ public class TextareaUtils {
 					isNeedAddBR = true;
 			}
 
-			line = addImageTag(line);
+			line = addImageTag(line, pageUrl);
 
 			if (isNeedAddBR)
 				result += (line + "<br>");
@@ -70,7 +71,7 @@ public class TextareaUtils {
 		return matcher.find();
 	}
 
-	private static String addImageTag(String sourceTxt)
+	private static String addImageTag(String sourceTxt, String pageUrl)
 	{
 		if (TextUtils.isEmpty(sourceTxt))
 			return sourceTxt;
@@ -88,7 +89,24 @@ public class TextareaUtils {
 			preStartPos = matcher.end();
 		}
 		sbTest.append(sourceTxt.substring(preStartPos));
-		return sbTest.toString();
+
+		//<img src="/file/xxx/xxx.jpg">格式，补全url
+		String imgContent = sbTest.toString();
+		String regex2 = "\"/.*(.png|.jpg|.jpeg)\"";
+		Pattern pattern2 =  Pattern.compile(regex2);
+		Matcher matcher2 = pattern2.matcher(imgContent);
+		if (matcher2.find()) {
+			String temp = matcher2.group();
+			temp = temp.substring(1, temp.length()-1);
+			try {
+				String domain = new URL(pageUrl).getHost();
+				String imgUrl = String.format("\"http://%s%s\"", domain, temp);
+				imgContent = imgContent.replaceAll(regex2, imgUrl);
+			} catch (Exception e) {
+//				return imgContent;
+			}
+		}
+		return imgContent;
 	}
 
 	private static Boolean isEndChar(String line)
