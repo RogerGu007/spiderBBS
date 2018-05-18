@@ -1,9 +1,13 @@
 package com.school.magic.storePipeline;
 
-import com.school.Service.NewsService;
+import com.school.Constants.RetCode;
+import com.school.Gson.PostMsgGson;
+import com.school.Gson.RetIDResultGson;
+import com.school.Gson.RetResultGson;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.entity.UserDTO;
+import com.school.remote.NewsRemoteCaller;
 import com.school.utils.GsonUtils;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -21,7 +25,7 @@ public class NewsToDBPipeline implements Pipeline {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private NewsService newsService;
+    private NewsRemoteCaller newsRemoteCaller;
 
     @Override
     public void process(ResultItems resultItems, Task task) {
@@ -43,17 +47,31 @@ public class NewsToDBPipeline implements Pipeline {
         if (isDropped(subjectNews))
             return;
         try {
-            UserDTO userDTO = newsService.getPublisherByNickName(resultItems.get(RESULT_PUBLISHER_FIELD));
-            if (userDTO != null) {
-                subjectNews.setPublisherId(userDTO.getId());
-            } else {
+            RetIDResultGson resultIdGson = newsRemoteCaller.getUserID(resultItems.get(RESULT_PUBLISHER_FIELD));
+            if (resultIdGson.getID() == null)
+            {
                 //不存在user为空，但是需要发布内容的
                 logger.error("user为空,nickname=" + resultItems.get(RESULT_PUBLISHER_FIELD));
                 return;
             }
-
+            subjectNews.setPublisherId(resultIdGson.getID().toString());
             NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
-            newsService.storeDataToDB(subjectNews, detailNews);
+
+            PostMsgGson postMsgGson = new PostMsgGson();
+            postMsgGson.setContent(subjectNews.getmSubject());
+            postMsgGson.setNewsType(subjectNews.getNewsType());
+            postMsgGson.setNewsSubType(subjectNews.getNewsSubType());
+            postMsgGson.setLocationCode(subjectNews.getLocationCode());
+            postMsgGson.setPostDate(subjectNews.getPostDate());
+			postMsgGson.setDetailContent(detailNews.getDetailContent());
+			postMsgGson.setSourceArticleUrl(detailNews.getSourceArticleUrl());
+
+            RetResultGson resultGson = newsRemoteCaller.postNews(subjectNews.getPublisherId(), postMsgGson);
+            if (resultGson.getRetCode() == RetCode.RET_CODE_OK)
+                logger.info("postNews Successful: " + detailNews.getSourceArticleUrl());
+            else
+                logger.error("postNews failed: " + detailNews.getSourceArticleUrl());
+
         } catch (Exception e) {
             logger.error(String.format("news落地失败，url=%s, %s", subjectNews.getLinkUrl(), e.getMessage()));
         }

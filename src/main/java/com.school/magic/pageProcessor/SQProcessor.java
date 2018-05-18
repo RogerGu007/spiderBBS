@@ -1,15 +1,18 @@
 package com.school.magic.pageProcessor;
 
-import com.school.Service.NewsService;
+import com.school.Constants.RetCode;
+import com.school.Gson.RetIDResultGson;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.ExtractMode;
 import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.storePipeline.NewsToDBPipeline;
+import com.school.remote.NewsRemoteCaller;
 import com.school.utils.ApplicationContextUtils;
 import com.school.utils.GsonUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.util.TextUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
@@ -24,7 +27,9 @@ import static com.school.magic.constants.Constant.*;
 public class SQProcessor implements PageProcessor {
     private SQSiteHandler mSqSiteHandler;
 
-    private NewsService newsService = ApplicationContextUtils.getBean(NewsService.class);
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private NewsRemoteCaller newsRemoteCaller = ApplicationContextUtils.getBean(NewsRemoteCaller.class);
 
     private SQProcessor(SQSiteHandler sqSiteHandler) {
         this.mSqSiteHandler = sqSiteHandler;
@@ -77,8 +82,14 @@ public class SQProcessor implements PageProcessor {
     {
         if (TextUtils.isEmpty(siteUrl))
             return true;
-        NewsDetailDTO newsDetailDTO = newsService.getNewsDetailByUrl(siteUrl);
-        if (newsDetailDTO != null) {
+        RetIDResultGson resultGson = newsRemoteCaller.getHasNewsDetail(siteUrl);
+        if (resultGson.getRetCode() == RetCode.RET_CODE_SYSTEMERROR)
+        {
+            logger.error("failed to get news info: " + siteUrl);
+            return true;
+        }
+
+        if (resultGson.getID() != null) {
             return true;
         }
         return false;

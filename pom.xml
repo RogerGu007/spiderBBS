@@ -209,6 +209,11 @@
       <artifactId>webmagic-extension</artifactId>
       <version>0.7.2</version>
     </dependency>
+    <dependency>
+      <groupId>com.arronlong</groupId>
+      <artifactId>httpclientutil</artifactId>
+      <version>1.0</version>
+    </dependency>
 
   </dependencies>
   <build>
