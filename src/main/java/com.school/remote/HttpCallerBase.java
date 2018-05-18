@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HttpCallerBase {
-	private static final String HOST_URL = "http://localhost:8080/";
+	private static final String HOST_URL = "http://localhost:8080/news/";
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

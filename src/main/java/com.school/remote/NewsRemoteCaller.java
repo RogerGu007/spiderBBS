@@ -43,7 +43,7 @@ public class NewsRemoteCaller extends HttpCallerBase {
 				.inenc("UTF-8")
 				.client(getClient())
 				.map(map);//其他需要提交的参数
-
+		logger.info(url);
 		RetResultGson retResultGson = new RetResultGson(RetCode.RET_CODE_OK, RetMsg.RET_MSG_OK);
 		try {
 			String response = HttpClientUtil.upload(config);
@@ -66,7 +66,7 @@ public class NewsRemoteCaller extends HttpCallerBase {
 			HttpConfig config = HttpConfig.custom();
 			config.url(url)
 					.client(getClient());
-
+			logger.info(url);
 			String response = HttpClientUtil.get(config);
 			retResultGson = GsonUtils.fromGsonString(response, RetIDResultGson.class);
 		}
@@ -84,6 +84,7 @@ public class NewsRemoteCaller extends HttpCallerBase {
 		try {
 			String url = getHostUrl(GET_USERID);
 			url = String.format("%s?nickname=%s", url, URLEncoder.encode(nickName, "utf-8"));
+			logger.info(url);
 			HttpConfig config = HttpConfig.custom();
 			config.url(url)
 					.client(getClient());
