@@ -1,0 +1,149 @@
+package com.school.remote;
+
+import com.school.Gson.CascadeParam;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.representation.Form;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+//CascadeParam暂时用不到
+public class HttpCaller {
+	private final static int connectTimeout = 3 * 1000;
+	private final static int socketTimeout = 4 * 60 * 1000;
+	private final static int maxConnTotalInt = 100;
+	private final static int maxConnPerRouteInt = 40;
+	private final static int connectionRequestTimeoutInt = 3 * 1000;
+
+	private static Logger logger = LoggerFactory.getLogger(HttpCaller.class);
+
+	private static CloseableHttpClient client;
+	private static Object lock = new Object();
+
+	public static CloseableHttpClient getClient() {
+		if (client == null) {
+			synchronized (lock) {
+				if (client == null) {
+					init();
+				}
+			}
+		}
+		return client;
+	}
+
+	private static void init() {
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setConnectTimeout(connectTimeout)
+				.setSocketTimeout(socketTimeout)
+				.setConnectionRequestTimeout(connectionRequestTimeoutInt)
+				.build();
+
+		PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
+		poolingHttpClientConnectionManager.setMaxTotal(maxConnTotalInt);
+		poolingHttpClientConnectionManager.setDefaultMaxPerRoute(maxConnTotalInt);
+
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		client = builder
+				.setMaxConnTotal(maxConnTotalInt)
+				.setMaxConnPerRoute(maxConnPerRouteInt)
+				.setDefaultRequestConfig(requestConfig)
+				.setConnectionManager(poolingHttpClientConnectionManager)
+				.setRetryHandler(new HttpRequestRetryHandler() {
+					public boolean retryRequest(IOException exception, int executionCount, org.apache.http.protocol.HttpContext context) {
+						if (executionCount >= 3)
+							return false;
+
+						if (exception instanceof NoHttpResponseException)
+						{
+							return true;
+						}
+						return false;
+					}
+				})
+				.build();
+	}
+
+	private static CloseableHttpResponse httpGet(String url, Map<String, String> params) {
+		CloseableHttpResponse response = null;
+		try {
+			if (params != null) {
+				url += "?";
+				for (Map.Entry<String, String> kv : params.entrySet()) {
+					url += String.format("%s=%s", kv.getKey(), kv.getValue());
+				}
+			}
+			response = getClient().execute(new HttpGet(url));
+		} catch (Exception ex) {
+			Throwable ee = ExceptionUtils.getRootCause(ex);
+			String msg = String.format("request to [URL: %s ] failed. [%s]", url, ex);
+			logger.error(msg, ee);
+		}
+		return response;
+	}
+
+	public static String get(String url, Map<String, String> params) {
+		CloseableHttpResponse result = httpGet(url, params);
+		if (result == null || ClientResponse.Status.OK.getStatusCode() != result.getStatusLine().getStatusCode()) {
+			throw new RuntimeException("invalid http response detected. ClientResponse info: " + result);
+		}
+		try {
+			return EntityUtils.toString(result.getEntity());
+		} catch (Exception ex) {
+			logger.error(String.format("url=%s failed, params", url, params == null ? "" : params.toString()));
+			return null;
+		}
+	}
+
+	private static CloseableHttpResponse httpPost(String url, Map<String, String> params) {
+		CloseableHttpResponse response = null;
+		HttpPost httppost = new HttpPost(url);
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		if (params != null) {
+			for (Map.Entry<String, String> kv : params.entrySet()) {
+				formparams.add(new BasicNameValuePair(kv.getKey(), kv.getValue()));
+			}
+		}
+		try {
+			UrlEncodedFormEntity uefEntity = new UrlEncodedFormEntity(formparams, "UTF-8");
+			httppost.setEntity(uefEntity);
+			response = getClient().execute(httppost);
+		} catch (Exception ex) {
+			Throwable ee = ExceptionUtils.getRootCause(ex);
+			String msg = String.format("request to [URL: %s ] failed. [%s]", url, ex);
+			logger.error(msg, ee);
+			return null;
+		}
+		return response;
+	}
+
+	public static String post(String url, Map<String, String> params) {
+		CloseableHttpResponse result = httpPost(url, params);
+		if (result == null || ClientResponse.Status.OK.getStatusCode() != result.getStatusLine().getStatusCode()) {
+			throw new RuntimeException("invalid http response detected. ClientResponse info: " + result);
+		}
+		try {
+			return EntityUtils.toString(result.getEntity());
+		} catch (Exception ex) {
+			logger.error(String.format("url=%s failed, params=%s", url, params == null ? "" : params.toString()));
+			return null;
+		}
+	}
+}
