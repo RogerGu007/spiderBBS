@@ -2,6 +2,8 @@ package com.school.remote;
 
 //import com.arronlong.httpclientutil.HttpClientUtil;
 //import com.arronlong.httpclientutil.common.HttpConfig;
+import com.arronlong.httpclientutil.HttpClientUtil;
+import com.arronlong.httpclientutil.common.HttpConfig;
 import com.google.gson.Gson;
 import com.school.Constants.RetCode;
 import com.school.Constants.RetMsg;
@@ -19,30 +21,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class NewsRemoteCaller {
+public class NewsRemoteCaller extends HttpCallerBase {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static final String HOST_URL = PropertyUtil.getProperty("REMOTE_PATH");
-
 	//POST
-	private static final String  POST_NEWS = "/postmsg/%s/postmessage";
+	private static final String  POST_NEWS = "rest/postmsg/%s/postmessage";
 
 	//GET
-	private static final String GET_HASNEWSDETAIL = "/news/hasnewsdetail";
-	private static final String GET_USERID = "/user/getuserid";
+	private static final String GET_HASNEWSDETAIL = "rest/news/hasnewsdetail";
+	private static final String GET_USERID = "rest/user/getuserid";
 
-	public RetResultGson postNews(String userID, PostMsgGson postMsgGson) {
+	public RetResultGson postNews(String userID, PostMsgGson postMsgGson)
+	{
 		String[] filePaths = {};//待上传的文件路径
 
 		String url = getHostUrl(POST_NEWS);
 		url = String.format(url, userID);
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dto", GsonUtils.toGsonString(postMsgGson));
+		HttpConfig config = HttpConfig.custom();
+		config.url(url) //设定上传地址
+				.files(filePaths)
+				.inenc("UTF-8")
+				.client(getClient())
+				.map(map);//其他需要提交的参数
 		logger.info(url);
 		RetResultGson retResultGson = new RetResultGson(RetCode.RET_CODE_OK, RetMsg.RET_MSG_OK);
 		try {
-			String response = HttpCaller.post(url, map);
+			String response = HttpClientUtil.upload(config);
 			retResultGson = GsonUtils.fromGsonString(response, RetResultGson.class);
 		}
 		catch (Exception ex)
@@ -59,8 +66,11 @@ public class NewsRemoteCaller {
 		try {
 			String url = getHostUrl(GET_HASNEWSDETAIL);
 			url = String.format("%s?linkurl=%s", url, URLEncoder.encode(linkUrl, "utf-8"));
+			HttpConfig config = HttpConfig.custom();
+			config.url(url)
+					.client(getClient());
 			logger.info(url);
-			String response = HttpCaller.get(url, null);
+			String response = HttpClientUtil.get(config);
 			retResultGson = GsonUtils.fromGsonString(response, RetIDResultGson.class);
 		}
 		catch (Exception ex)
@@ -78,7 +88,11 @@ public class NewsRemoteCaller {
 			String url = getHostUrl(GET_USERID);
 			url = String.format("%s?nickname=%s", url, URLEncoder.encode(nickName, "utf-8"));
 			logger.info(url);
-			String response = HttpCaller.get(url, null);
+			HttpConfig config = HttpConfig.custom();
+			config.url(url)
+					.client(getClient());
+
+			String response = HttpClientUtil.get(config);
 			retResultGson = GsonUtils.fromGsonString(response, RetIDResultGson.class);
 		}
 		catch (Exception ex)
@@ -90,7 +104,5 @@ public class NewsRemoteCaller {
 		return retResultGson;
 	}
 
-	private String getHostUrl(String uri) {
-		return HOST_URL + uri;
-	}
 }
+
