@@ -7,7 +7,7 @@ import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.ExtractMode;
 import com.school.magic.siteHandler.SQSiteHandler;
 import com.school.magic.storePipeline.NewsToDBPipeline;
-import com.school.remote.NewsRemoteCaller;
+import com.school.remote.NewsRomoteCaller;
 import com.school.utils.ApplicationContextUtils;
 import com.school.utils.GsonUtils;
 import org.apache.http.util.TextUtils;
@@ -29,7 +29,7 @@ public class SQProcessor implements PageProcessor {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private NewsRemoteCaller newsRemoteCaller = ApplicationContextUtils.getBean(NewsRemoteCaller.class);
+    private NewsRomoteCaller newsRemoteCaller = ApplicationContextUtils.getBean(NewsRomoteCaller.class);
 
     private SQProcessor(SQSiteHandler sqSiteHandler) {
         this.mSqSiteHandler = sqSiteHandler;

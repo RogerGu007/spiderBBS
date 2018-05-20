@@ -1,28 +1,32 @@
 package com.school.remote;
 
-import com.school.Gson.CascadeParam;
+import com.school.Gson.PostMsgGson;
+import com.school.utils.GsonUtils;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.representation.Form;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.NameValuePair;
+import org.apache.http.HttpEntity;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 //CascadeParam暂时用不到
@@ -32,6 +36,7 @@ public class HttpCaller {
 	private final static int maxConnTotalInt = 100;
 	private final static int maxConnPerRouteInt = 40;
 	private final static int connectionRequestTimeoutInt = 3 * 1000;
+	private final static String DEFAULT_CHARSET = "UTF-8";
 
 	private static Logger logger = LoggerFactory.getLogger(HttpCaller.class);
 
@@ -115,15 +120,19 @@ public class HttpCaller {
 	private static CloseableHttpResponse httpPost(String url, Map<String, String> params) {
 		CloseableHttpResponse response = null;
 		HttpPost httppost = new HttpPost(url);
-		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, DEFAULT_CHARSET);
+		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+		entityBuilder.setCharset(Charset.forName(DEFAULT_CHARSET));
+		entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);//设置浏览器兼容模式
 		if (params != null) {
 			for (Map.Entry<String, String> kv : params.entrySet()) {
-				formparams.add(new BasicNameValuePair(kv.getKey(), kv.getValue()));
+//				entityBuilder.addTextBody(kv.getKey(), kv.getValue());
+				entityBuilder.addPart(kv.getKey(), new StringBody(kv.getValue(), contentType));
 			}
 		}
 		try {
-			UrlEncodedFormEntity uefEntity = new UrlEncodedFormEntity(formparams, "UTF-8");
-			httppost.setEntity(uefEntity);
+			HttpEntity entity = entityBuilder.build();
+			httppost.setEntity(entity);
 			response = getClient().execute(httppost);
 		} catch (Exception ex) {
 			Throwable ee = ExceptionUtils.getRootCause(ex);
@@ -145,5 +154,21 @@ public class HttpCaller {
 			logger.error(String.format("url=%s failed, params=%s", url, params == null ? "" : params.toString()));
 			return null;
 		}
+	}
+
+	public static void main(String[] args) {  //测试方法
+		String url = "http://47.100.197.44/news/rest/postmsg/9/postmessage";
+		Map<String, String> map = new HashMap<String, String>();
+		PostMsgGson postMsgGson = new PostMsgGson();
+		postMsgGson.setPostDate(new Date());
+		postMsgGson.setContent("test");
+		postMsgGson.setDetailContent("testdetail");
+		postMsgGson.setLocationCode(21);
+		postMsgGson.setNewsSubType(1);
+		postMsgGson.setNewsType(3);
+		postMsgGson.setSourceArticleUrl("http://www.newsmth.net/nForum/article/Career_Upgrade/625337");
+		map.put("dto", GsonUtils.toGsonString(postMsgGson));
+		String resp = post(url, map);
+		System.out.println(resp);
 	}
 }

@@ -6,8 +6,6 @@ import com.school.Gson.RetIDResultGson;
 import com.school.Gson.RetResultGson;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
-import com.school.entity.UserDTO;
-import com.school.remote.NewsRemoteCaller;
 import com.school.utils.GsonUtils;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
+import com.school.remote.NewsRomoteCaller;
 
 import static com.school.magic.constants.Constant.*;
 
@@ -25,7 +24,7 @@ public class NewsToDBPipeline implements Pipeline {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private NewsRemoteCaller newsRemoteCaller;
+    private NewsRomoteCaller newsRemoteCaller;
 
     @Override
     public void process(ResultItems resultItems, Task task) {
