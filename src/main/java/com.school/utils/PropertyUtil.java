@@ -1,11 +1,10 @@
 package com.school.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 public class PropertyUtil {
@@ -43,6 +42,7 @@ public class PropertyUtil {
         if(null == props) {
             loadProps();
         }
+
         return props.getProperty(key);
     }
 
@@ -50,6 +50,7 @@ public class PropertyUtil {
         if(null == props) {
             loadProps();
         }
-        return props.getProperty(key, defaultValue);
+
+        return StringUtils.isNotEmpty(props.getProperty(key)) ? props.getProperty(key) : defaultValue;
     }
 }

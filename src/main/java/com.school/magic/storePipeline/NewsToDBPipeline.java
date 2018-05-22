@@ -7,6 +7,8 @@ import com.school.Gson.RetResultGson;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.utils.GsonUtils;
+import com.school.utils.PropertyUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,10 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 import com.school.remote.NewsRomoteCaller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.school.magic.constants.Constant.*;
 
 @Component
@@ -25,6 +31,16 @@ public class NewsToDBPipeline implements Pipeline {
 
     @Autowired
     private NewsRomoteCaller newsRemoteCaller;
+
+    private static List<String> filterPrefixKeywordList =
+            StringUtils.isNotEmpty(PropertyUtil.getProperty("FILTER_PREFIX_KEYWORD")) ?
+                    Arrays.asList(PropertyUtil.getProperty("FILTER_PREFIX_KEYWORD").split(",")) : new ArrayList<>();
+    private static List<String> filterSuffixKeywordList =
+            StringUtils.isNotEmpty(PropertyUtil.getProperty("FILTER_SUFFIX_KEYWORD")) ?
+                    Arrays.asList(PropertyUtil.getProperty("FILTER_SUFFIX_KEYWORD").split(",")) : new ArrayList<>();
+    private static List<String> filterContainKeywordList =
+            StringUtils.isNotEmpty(PropertyUtil.getProperty("FILTER_CONTAIN_KEYWORD")) ?
+                    Arrays.asList(PropertyUtil.getProperty("FILTER_CONTAIN_KEYWORD").split(",")) : new ArrayList<>();
 
     @Override
     public void process(ResultItems resultItems, Task task) {
@@ -84,8 +100,19 @@ public class NewsToDBPipeline implements Pipeline {
      */
     private boolean isDropped(NewsDTO newsDTO) {
         String subject = newsDTO.getmSubject().trim();
-        if (subject.startsWith("RE:") || subject.startsWith("Re:") || subject.startsWith("re:"))
+        if (filterContainKeywordList.contains(subject))
             return true;
+
+        for (String prefix : filterPrefixKeywordList) {
+            if (subject.startsWith(prefix))
+                return true;
+        }
+
+        for (String suffix : filterSuffixKeywordList) {
+            if (subject.endsWith(suffix))
+                return true;
+        }
+
         return false;
     }
 }
