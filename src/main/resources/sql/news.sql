@@ -45,3 +45,8 @@ CREATE TABLE `News` (
   KEY `IDX_TYPE_LOCATION` (`NewsType`,`LocationCode`,`isValid`),
   CONSTRAINT `FK_PublishID` FOREIGN KEY (`publisherId`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='News info'
+
+
+
+ALTER TABLE `spider`.`News` 
+ADD COLUMN `source` VARCHAR(45) NULL AFTER `hasDetail`;
