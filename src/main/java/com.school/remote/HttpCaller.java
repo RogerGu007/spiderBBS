@@ -36,7 +36,7 @@ public class HttpCaller {
 	private final static int maxConnTotalInt = 100;
 	private final static int maxConnPerRouteInt = 40;
 	private final static int connectionRequestTimeoutInt = 3 * 1000;
-	private final static String DEFAULT_CHARSET = "UTF-8";
+	public final static String DEFAULT_CHARSET = "UTF-8";
 
 	private static Logger logger = LoggerFactory.getLogger(HttpCaller.class);
 
@@ -110,7 +110,7 @@ public class HttpCaller {
 			throw new RuntimeException("invalid http response detected. ClientResponse info: " + result);
 		}
 		try {
-			return EntityUtils.toString(result.getEntity());
+			return EntityUtils.toString(result.getEntity(), DEFAULT_CHARSET);
 		} catch (Exception ex) {
 			logger.error(String.format("url=%s failed, params", url, params == null ? "" : params.toString()));
 			return null;
