@@ -60,7 +60,8 @@ public class TextareaUtils {
 		}
 		if (lines.length > 0)
 			result += addImageTag(lines[lines.length - 1], pageUrl);
-		result = convertStrongTag(result);
+
+		result = addHead(convertStrongTag(result));
 		return result;
 	}
 
@@ -80,6 +81,9 @@ public class TextareaUtils {
 
 		StringBuffer sbTest = new StringBuffer();
 		Integer preStartPos = 0;
+
+		if (sourceTxt.equals("</head>"))
+			sourceTxt = "<meta name=\"referrer\" content=\"no-referrer\"></head>";
 
 		while (matcher.find())
 		{
@@ -106,6 +110,11 @@ public class TextareaUtils {
 //				return imgContent;
 			}
 		}
+
+		//src="//att.newsmth.net/nForum/att/PieLove/2554468/2944/large"
+		String regex3 = "src=\"//";
+		String replaceRegex3 = "src=\"";
+		imgContent = imgContent.replaceAll(regex3, replaceRegex3);
 		return imgContent;
 	}
 
@@ -121,5 +130,11 @@ public class TextareaUtils {
 		String txt = sourceTxt.replace("[b]", "<b>");
 		txt = txt.replace("[/b]", "</b>");
 		return txt;
+	}
+
+	private static String addHead(String sourceTxt) {
+		if (!sourceTxt.contains("</head>"))
+			sourceTxt = "<head><meta name=\"referrer\" content=\"no-referrer\"></head>" + sourceTxt;
+		return sourceTxt;
 	}
 }
