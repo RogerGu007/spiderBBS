@@ -61,7 +61,7 @@ public class TextareaUtils {
 		if (lines.length > 0)
 			result += addImageTag(lines[lines.length - 1], pageUrl);
 
-		result = addHead(convertStrongTag(result));
+		result = convertStrongTag(result);
 		return result;
 	}
 
@@ -82,9 +82,6 @@ public class TextareaUtils {
 		StringBuffer sbTest = new StringBuffer();
 		Integer preStartPos = 0;
 
-		if (sourceTxt.equals("</head>"))
-			sourceTxt = "<meta name=\"referrer\" content=\"no-referrer\"></head>";
-
 		while (matcher.find())
 		{
 			System.out.println(matcher.group());
@@ -96,7 +93,7 @@ public class TextareaUtils {
 
 		//<img src="/file/xxx/xxx.jpg">格式，补全url
 		String imgContent = sbTest.toString();
-		String regex2 = "\"/.*(.png|.jpg|.jpeg)\"";
+		String regex2 = "\"/.*(.png|.jpg|.jpeg|.gif)\"";
 		Pattern pattern2 =  Pattern.compile(regex2);
 		Matcher matcher2 = pattern2.matcher(imgContent);
 		if (matcher2.find()) {
@@ -132,9 +129,4 @@ public class TextareaUtils {
 		return txt;
 	}
 
-	private static String addHead(String sourceTxt) {
-		if (!sourceTxt.contains("</head>"))
-			sourceTxt = "<head><meta name=\"referrer\" content=\"no-referrer\"></head>" + sourceTxt;
-		return sourceTxt;
-	}
 }
