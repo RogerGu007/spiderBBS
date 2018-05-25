@@ -80,6 +80,7 @@ public class NewsToDBPipeline implements Pipeline {
             postMsgGson.setPostDate(subjectNews.getPostDate());
 			postMsgGson.setDetailContent(detailNews.getDetailContent());
 			postMsgGson.setSourceArticleUrl(detailNews.getSourceArticleUrl());
+			postMsgGson.setSource("spider");
 
             RetResultGson resultGson = newsRemoteCaller.postNews(subjectNews.getPublisherId(), postMsgGson);
             if (resultGson.getRetCode() == RetCode.RET_CODE_OK)

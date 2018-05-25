@@ -59,7 +59,7 @@ public class TextareaUtils {
 				result += line;
 		}
 		if (lines.length > 0)
-			result += lines[lines.length - 1];
+			result += addImageTag(lines[lines.length - 1], pageUrl);
 		result = convertStrongTag(result);
 		return result;
 	}

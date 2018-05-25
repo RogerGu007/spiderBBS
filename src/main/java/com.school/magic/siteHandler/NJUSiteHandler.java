@@ -245,8 +245,15 @@ public class NJUSiteHandler extends SQSiteHandler{
         String[] contentArr = orihtmlStr.split("\n");
         for (int ii=0; ii<contentArr.length; ii++) {
             //从 DETAIL_CONTENT_START_ROWNUM 行开始截取
-            if (ii+1 < DETAIL_CONTENT_START_ROWNUM)
+            if (ii < DETAIL_CONTENT_START_ROWNUM)
                 continue;
+            else if (ii == DETAIL_CONTENT_START_ROWNUM)
+            {
+                while (contentArr[ii].equalsIgnoreCase(""))
+                {
+                    ++ii;
+                }
+            }
             //到倒数 DETAIL_CONTENT_END_ROWNUM 行截取结束
             if (contentArr.length - ii <= DETAIL_CONTENT_END_ROWNUM)
                 break;

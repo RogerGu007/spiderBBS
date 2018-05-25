@@ -1,6 +1,7 @@
 package com.school.magic.pageProcessor;
 
 import com.school.Constants.RetCode;
+import com.school.Gson.NewsDetailResultGson;
 import com.school.Gson.RetIDResultGson;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
@@ -82,14 +83,14 @@ public class SQProcessor implements PageProcessor {
     {
         if (TextUtils.isEmpty(siteUrl))
             return true;
-        RetIDResultGson resultGson = newsRemoteCaller.getHasNewsDetail(siteUrl);
+        NewsDetailResultGson resultGson = newsRemoteCaller.getNewsDetailByUrl(siteUrl);
         if (resultGson.getRetCode() == RetCode.RET_CODE_SYSTEMERROR)
         {
             logger.error("failed to get news info: " + siteUrl);
             return true;
         }
 
-        if (resultGson.getID() != null) {
+        if (resultGson.getNewsDetailDTO() != null) {
             return true;
         }
         return false;

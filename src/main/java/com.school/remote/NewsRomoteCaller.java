@@ -2,6 +2,7 @@ package com.school.remote;
 
 import com.school.Constants.RetCode;
 import com.school.Constants.RetMsg;
+import com.school.Gson.NewsDetailResultGson;
 import com.school.Gson.PostMsgGson;
 import com.school.Gson.RetIDResultGson;
 import com.school.Gson.RetResultGson;
@@ -25,7 +26,7 @@ public class NewsRomoteCaller {
     private static final String  POST_NEWS = "/postmsg/%s/postmessage";
 
     //GET
-    private static final String GET_HASNEWSDETAIL = "/news/hasnewsdetail";
+    private static final String GET_GETNEWSDETAILBYURL = "/news/getnewsdetailbyurl";
     private static final String GET_USERID = "/user/getuserid";
 
     public RetResultGson postNews(String userID, PostMsgGson postMsgGson) {
@@ -48,14 +49,14 @@ public class NewsRomoteCaller {
         return retResultGson;
     }
 
-    public RetIDResultGson getHasNewsDetail(String linkUrl) {
-        RetIDResultGson retResultGson = new RetIDResultGson(RetCode.RET_CODE_OK, RetMsg.RET_MSG_OK);
+    public NewsDetailResultGson getNewsDetailByUrl(String linkUrl) {
+        NewsDetailResultGson retResultGson = new NewsDetailResultGson(RetCode.RET_CODE_OK, RetMsg.RET_MSG_OK);
         try {
-            String url = getHostUrl(GET_HASNEWSDETAIL);
-            url = String.format("%s?linkurl=%s", url, URLEncoder.encode(linkUrl, "utf-8"));
+            String url = getHostUrl(GET_GETNEWSDETAILBYURL);
+            url = String.format("%s?linkurl=%s", url, URLEncoder.encode(linkUrl, HttpCaller.DEFAULT_CHARSET));
             logger.info(url);
             String response = HttpCaller.get(url, null);
-            retResultGson = GsonUtils.fromGsonString(response, RetIDResultGson.class);
+            retResultGson = GsonUtils.fromGsonString(response, NewsDetailResultGson.class);
         } catch (Exception ex) {
             retResultGson.setResult(RetCode.RET_CODE_SYSTEMERROR, RetMsg.RET_MSG_SYSTEMERROR);
             logger.error("fail to invoke getHasNewsDetail: linkUrl:" + linkUrl);

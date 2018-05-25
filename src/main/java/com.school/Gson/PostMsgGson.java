@@ -13,6 +13,7 @@ public class PostMsgGson {
 	private Date 	 postDate;
 	private String		detailContent;
 	private String		sourceArticleUrl;
+	private String 	source;
 
 	public String getContent() {
 		return content;
@@ -68,5 +69,13 @@ public class PostMsgGson {
 
 	public void setSourceArticleUrl(String sourceArticleUrl) {
 		this.sourceArticleUrl = sourceArticleUrl;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 }
