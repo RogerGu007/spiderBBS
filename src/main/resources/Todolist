@@ -4,3 +4,6 @@ todo:
 3.PC:收藏功能——30%
 4.PC：be功能 —— 90%
 5.spider：数据落地的过滤 —— 60%
+6.src="//att.newsmth.net/nForum/att/PieLove/2554468/2944/large"方式的数据去掉开头的"//"符号  ——50%
+7./df/toPost.do?newsid=999640231814627328  图片有防盗链 —— 100%
+8.南大详情页过滤了5行
