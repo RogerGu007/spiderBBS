@@ -76,7 +76,7 @@ public class TextareaUtils {
 	{
 		if (TextUtils.isEmpty(sourceTxt))
 			return sourceTxt;
-		Pattern pattern = Pattern.compile("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|](.png|.jpg|.jpeg)");
+		Pattern pattern = Pattern.compile("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|](.png|.jpg|.jpeg|.gif)");
 		Matcher matcher = pattern.matcher(sourceTxt);
 
 		StringBuffer sbTest = new StringBuffer();
