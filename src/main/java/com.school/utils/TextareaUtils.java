@@ -93,7 +93,7 @@ public class TextareaUtils {
 
 		//<img src="/file/xxx/xxx.jpg">格式，补全url
 		String imgContent = sbTest.toString();
-		String regex2 = "\"/.*(.png|.jpg|.jpeg|.gif)\"";
+		String regex2 = "src=\"/[0-9a-zA-Z].*(.png|.jpg|.jpeg|.gif)\"";
 		Pattern pattern2 =  Pattern.compile(regex2);
 		Matcher matcher2 = pattern2.matcher(imgContent);
 		if (matcher2.find()) {
@@ -109,9 +109,11 @@ public class TextareaUtils {
 		}
 
 		//src="//att.newsmth.net/nForum/att/PieLove/2554468/2944/large"
-		String regex3 = "src=\"//";
+		String regex3 = "(src|href)=\"//";
 		String replaceRegex3 = "src=\"";
-		imgContent = imgContent.replaceAll(regex3, replaceRegex3);
+		if (imgContent.contains("href"))
+			replaceRegex3 = "href=\"";
+		imgContent = imgContent.replace(regex3, replaceRegex3);
 		return imgContent;
 	}
 
