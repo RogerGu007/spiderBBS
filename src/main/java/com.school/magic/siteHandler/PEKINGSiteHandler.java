@@ -84,7 +84,9 @@ public class PEKINGSiteHandler extends SQSiteHandler {
 
     @Override
     public Site getSite() {
-        return Site.me().setDomain(PEKINGBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+        return Site.me().setDomain(PEKINGBBSDOMAIN)
+                .setSleepTime(Constant.SLEEPTIME)
+                .setCharset(Constant.SPIDER_CHARSET);
     }
 
     @Override

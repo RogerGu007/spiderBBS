@@ -95,7 +95,9 @@ public class TJSiteHandler extends SQSiteHandler{
 
     @Override
     public Site getSite() {
-        Site site = Site.me().setDomain(TJBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+        Site site = Site.me().setDomain(TJBBSDOMAIN)
+                .setSleepTime(Constant.SLEEPTIME)
+                .setCharset(Constant.SPIDER_CHARSET);
         return site;
     }
 

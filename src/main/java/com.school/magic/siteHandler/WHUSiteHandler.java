@@ -2,6 +2,7 @@ package com.school.magic.siteHandler;
 
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
+import com.school.magic.constants.Constant;
 import com.school.magic.constants.ExtractMode;
 import com.school.spiderEnums.NewsTypeEnum;
 import com.school.magic.constants.SiteEnum;
@@ -113,8 +114,8 @@ public class WHUSiteHandler extends SQSiteHandler{
         return Site.me().setDomain(WHU_BBS_DOMAIN)
                 //.setDomain("bbs.whu.edu.cn")
                 .setSleepTime(300)
-                .setUserAgent(
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31")
+                .setCharset(Constant.SPIDER_CHARSET)
+                .setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31")
                 ;
     }
 

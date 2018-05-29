@@ -119,7 +119,8 @@ public class SJTUSiteHandler extends SQSiteHandler{
 //                .addHeader("Accept-Encoding", "gzip, deflate, br")
 //                .addHeader("Accept-Language", "zh-CN,zh;q=0.9")
 //                .setCharset("UTF-8")
-                .setSleepTime(Constant.SLEEPTIME);
+                .setSleepTime(Constant.SLEEPTIME)
+                .setCharset(Constant.SPIDER_CHARSET);
     }
 
     @Override

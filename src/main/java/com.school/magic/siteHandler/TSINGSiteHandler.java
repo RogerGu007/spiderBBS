@@ -107,7 +107,9 @@ public class TSINGSiteHandler extends SQSiteHandler {
 
     @Override
     public Site getSite() {
-        return Site.me().setDomain(TSINGBBSDOMAIN).setSleepTime(Constant.SLEEPTIME);
+        return Site.me().setDomain(TSINGBBSDOMAIN)
+                .setSleepTime(Constant.SLEEPTIME)
+                .setCharset(Constant.SPIDER_CHARSET);
     }
 
     @Override

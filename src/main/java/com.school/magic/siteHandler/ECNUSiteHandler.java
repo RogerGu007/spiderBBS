@@ -2,11 +2,11 @@ package com.school.magic.siteHandler;
 
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.SiteEnum;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.selector.Selectable;
 import com.school.utils.MD5Utils;
+import com.school.magic.constants.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,8 @@ public class ECNUSiteHandler extends SQSiteHandler{
 //                .addCookie("nj0v_5a4b_lastact", "1524405713%09plugin.php%09")
                 .addCookie("nj0v_5a4b_ulastactivity", "ebcdhMndoPT%2FZDm8eSHBaqso0eE033AucxpGJyHLEIBijyYsMhKx")
                 .addCookie("nj0v_5a4b_auth", "d4c4yz7DPoZzXM9dgQ75n5bW%2BzYifvnqoUKqsxhl34fsCxdO2OAtaf7iaVzA9%2Bv8VJtVBFlIcwNFlsFsE9wPj%2FjlzVM")
-                .setSleepTime(Constant.SLEEPTIME);
+                .setSleepTime(Constant.SLEEPTIME)
+                .setCharset(Constant.SPIDER_CHARSET);
         return site;
     }
 

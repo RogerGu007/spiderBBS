@@ -16,4 +16,6 @@ public class Constant {
 
     public static final String CAMPUS= "校招";
     public static final String UPGRADE = "社招";
+
+    public static final String SPIDER_CHARSET = "GBK";
 }

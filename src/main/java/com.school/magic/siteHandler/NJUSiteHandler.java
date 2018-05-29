@@ -105,7 +105,7 @@ public class NJUSiteHandler extends SQSiteHandler{
     public Site getSite() {
         return Site.me().setDomain(NJUBBSDOMAIN)
                 .setSleepTime(Constant.SLEEPTIME)
-                .setCharset("GBK");
+                .setCharset(Constant.SPIDER_CHARSET);
     }
 
     @Override

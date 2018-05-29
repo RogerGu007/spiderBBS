@@ -93,7 +93,9 @@ public class FUDANSiteHandler extends SQSiteHandler {
 
     @Override
     public Site getSite() {
-        return Site.me().setDomain(FUDAN_BBS_JOB_DOMAIN).setSleepTime(Constant.SLEEPTIME);
+        return Site.me().setDomain(FUDAN_BBS_JOB_DOMAIN)
+                .setSleepTime(Constant.SLEEPTIME)
+                .setCharset(Constant.SPIDER_CHARSET);
     }
 
     private Logger logger = LoggerFactory.getLogger(getClass());
