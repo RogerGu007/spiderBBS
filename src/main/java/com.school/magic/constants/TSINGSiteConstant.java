@@ -37,7 +37,7 @@ public class TSINGSiteConstant {
     //详情页中抽取主题的关键词
     public static final String DETAIL_SUBJECT_REGEX_START = "标题:";
     public static final String DETAIL_SUBJECT_REGEX_END = "发信站:";
-    public static final String DETAIL_CONTENT_START_REGEX = "发信站: .*站内";
+    public static final String DETAIL_CONTENT_START_REGEX = "发信站: .*?站内";
     public static final String DETAIL_CONTENT_END_REGEX = "※ 来源:.*";
     //详情页中抽取发帖时间的关键词  Tue Mar 13 00:12:46 2018
     public static final String DETAIL_POSTDATE_REGEX =

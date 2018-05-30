@@ -1,5 +1,5 @@
 todo:
-1.spider:清华鹊桥的内容截断错误  例如：http://www.newsmth.net/nForum/#!article/PieLove/2552434
+1.spider:清华鹊桥的内容截断错误  例如：http://www.newsmth.net/nForum/#!article/PieLove/2552434  —— 100%
 2.PC:跳到别人的主页 —— 100%  5.29搞定
 3.spider：数据落地的过滤 —— 80%  casebycase排查
 4.添加二级评论的弹窗（可参考列表页做收藏的操作） —— 100%
@@ -7,3 +7,4 @@ todo:
 6.搜索框怎么做 ——50%  （先隐藏掉）
 7.删帖功能 ——100%
 8.切换频道后，翻页的页码不变 —— 100%
+

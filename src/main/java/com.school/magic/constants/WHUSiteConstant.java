@@ -24,6 +24,6 @@ public class WHUSiteConstant {
     public static final String DETAIL_SUBJECT_REGEX = "标.*题:";
     public static final String DETAIL_POSTDATE_REGEX =
             "\\([A-Za-z]{3}\\s+[A-Za-z]{3}.*\\d+\\s+\\d+:\\d+:\\d+\\s+\\d+\\)";
-    public static final String DETAIL_CONTENT_START_REGEX = "发信站: .*站内";
+    public static final String DETAIL_CONTENT_START_REGEX = "发信站: .*?站内";
     public static final String DETAIL_CONTENT_END_REGEX = "※ 来源:.*";
 }
