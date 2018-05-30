@@ -90,8 +90,7 @@ public class ECUSTSiteHandler extends SQSiteHandler{
     @Override
     public Site getSite() {
         Site site = Site.me().setDomain(ECUST_BBS_DOMAIN)
-                .setSleepTime(Constant.SLEEPTIME)
-                .setCharset(Constant.SPIDER_CHARSET);
+                .setSleepTime(Constant.SLEEPTIME);
         return site;
     }
 

@@ -81,8 +81,7 @@ public class ZJUSiteHandler extends SQSiteHandler{
     public Site getSite() {
         Site site = Site.me().setDomain(ZJU_BBS_DOMAIN)
                 .setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
-                .setSleepTime(Constant.SLEEPTIME)
-                .setCharset(Constant.SPIDER_CHARSET);
+                .setSleepTime(Constant.SLEEPTIME);
         return site;
     }
 

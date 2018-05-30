@@ -98,8 +98,7 @@ public class ECNUSiteHandler extends SQSiteHandler{
 //                .addCookie("nj0v_5a4b_lastact", "1524405713%09plugin.php%09")
                 .addCookie("nj0v_5a4b_ulastactivity", "ebcdhMndoPT%2FZDm8eSHBaqso0eE033AucxpGJyHLEIBijyYsMhKx")
                 .addCookie("nj0v_5a4b_auth", "d4c4yz7DPoZzXM9dgQ75n5bW%2BzYifvnqoUKqsxhl34fsCxdO2OAtaf7iaVzA9%2Bv8VJtVBFlIcwNFlsFsE9wPj%2FjlzVM")
-                .setSleepTime(Constant.SLEEPTIME)
-                .setCharset(Constant.SPIDER_CHARSET);
+                .setSleepTime(Constant.SLEEPTIME);
         return site;
     }
 
