@@ -24,6 +24,8 @@ public class FUDANNewSiteConstant {
 
     public static final String FORMITEMLINK = "//a[1]";
 
+    public static final String COOKIEPATH = "//body/text()";
+
     //发帖时间：2010-05-25 18:06:18
     public static final String FORMITEMMODIFYTIME = "//time/@title";
     //for example: tdoc?bid=70&start=2072

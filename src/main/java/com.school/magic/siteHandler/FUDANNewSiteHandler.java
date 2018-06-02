@@ -1,11 +1,16 @@
 package com.school.magic.siteHandler;
 
+import com.school.Gson.FudanCookieGson;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
+import com.school.utils.GsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.selector.Html;
+import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +18,7 @@ import java.util.List;
 import static com.school.magic.constants.FUDANNewSiteConstant.*;
 
 public class FUDANNewSiteHandler extends SQSiteHandler {
+    private FudanCookieGson mFudanCookieGson = null;
 
     @Override
     public int getSiteLocationCode() {
@@ -33,6 +39,25 @@ public class FUDANNewSiteHandler extends SQSiteHandler {
             return true;
 
         return false;
+    }
+
+    @Override
+    public void extractCookie(Page page)
+    {
+        if (page == null)
+            return;
+
+        Selectable cookiePath = page.getHtml().xpath(COOKIEPATH);
+        if (cookiePath == null)
+            return;
+        String cookieGson = cookiePath.toString();
+        try {
+            mFudanCookieGson = GsonUtils.fromGsonString(cookieGson, FudanCookieGson.class);
+        }
+        catch (Exception ex)
+        {
+            logger.error("", "failed to convert Gson:" + cookieGson + ex);
+        }
     }
 
     @Override
@@ -87,11 +112,19 @@ public class FUDANNewSiteHandler extends SQSiteHandler {
 
     @Override
     public Site getSite() {
-        return Site.me().setDomain(FUDAN_BBS_DOMAIN)
+        if (mFudanCookieGson == null)
+            return Site.me().setDomain(FUDAN_BBS_DOMAIN)
                 .setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
                 .setSleepTime(Constant.SLEEPTIME);
+        else
+        {
+            String headerCookie = String.format("utmpkey=%s; utmpuser=%s", mFudanCookieGson.getSession_key(), mFudanCookieGson.getUser_name());
+            return Site.me().setDomain(FUDAN_BBS_DOMAIN)
+                    .setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
+                    .setSleepTime(Constant.SLEEPTIME)
+                    .addHeader("cookie", headerCookie);
+        }
     }
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 //    protected Selectable getChildPage(Selectable item) {

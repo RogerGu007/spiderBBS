@@ -44,6 +44,7 @@ public class SQProcessor implements PageProcessor {
         mSqSiteHandler.setmPage(page);
         //Step1：登录页过滤
         if (mSqSiteHandler.isLoginPage()) {
+            mSqSiteHandler.extractCookie(page);
             page.setSkip(true);
             return;
         }
@@ -105,7 +106,12 @@ public class SQProcessor implements PageProcessor {
 
         Request loginRequest = sqSiteHandler.getLoginRequest();
         if (loginRequest != null)
-            spider.addRequest(loginRequest).addUrl(sqSiteHandler.getNewsURL());
+        {
+            if (sqSiteHandler.getNewsURL() != null)
+                spider.addRequest(loginRequest).addUrl(sqSiteHandler.getNewsURL());
+            else
+                spider.addRequest(loginRequest);
+        }
         else
             spider.addUrl(sqSiteHandler.getNewsURL());
 

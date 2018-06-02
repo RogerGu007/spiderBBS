@@ -255,6 +255,12 @@ public abstract class SQSiteHandler implements BaseSiteHandler {
         return true;
     }
 
+    @Override
+    public void extractCookie(Page page)
+    {
+
+    }
+
     protected Date getPostDate(Html pageHtml, String dateXPath) {
         if(pageHtml == null || TextUtils.isEmpty(dateXPath))
             return null;

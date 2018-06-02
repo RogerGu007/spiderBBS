@@ -17,6 +17,8 @@ public interface BaseSiteHandler {
 
     boolean isLoginPage();
 
+    void extractCookie(Page page);
+
     int getSiteLocationCode();
 
     NewsDetailDTO extractNewsDetailsFromText(Page page);

@@ -73,6 +73,12 @@ public class SpiderGenerator {
                 sqSiteHandler.setLoginURL(FUDANNewSiteConstant.LOGIN_URL);
                 sqSiteHandler.setUserNamePair("user_name", FUDANNewSiteConstant.USERNAME);
                 sqSiteHandler.setPasswordPair("password", FUDANNewSiteConstant.PASSWORD);
+                spider = SQProcessor.getSpider(sqSiteHandler).thread(1);
+                spider.run();
+
+                //dont need login again.
+                sqSiteHandler.setUserNamePair("user_name", "");
+
                 if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
                     sqSiteHandler.setNewsURLList(Arrays.asList(FUDANNewSiteConstant.FRIEND_URL));
                 else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
