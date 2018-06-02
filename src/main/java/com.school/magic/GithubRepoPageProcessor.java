@@ -45,8 +45,8 @@ public class GithubRepoPageProcessor implements PageProcessor {
 //        Spider.create(new GithubRepoPageProcessor()).addUrl("https://github.com/code4craft").thread(1).run();
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
-        Date startDate = DateUtils.getDateFromString("2018-03-01", DateUtils.DEFAULT_DATE_FORMAT3);
-        Date endDate = DateUtils.getDateFromString("2018-04-23", DateUtils.DEFAULT_DATE_FORMAT3);
+        Date startDate = DateUtils.getDateFromString("2018-05-25", DateUtils.DEFAULT_DATE_FORMAT3);
+        Date endDate = DateUtils.getDateFromString("2018-06-02", DateUtils.DEFAULT_DATE_FORMAT3);
         //todo
 //        Spider spider = SpiderGenerator.createSpider(SiteEnum.ECUST_BBS);
         //tj done
@@ -63,7 +63,7 @@ public class GithubRepoPageProcessor implements PageProcessor {
         //fudan
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
         //todo
-//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
         //sjtu  done
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
@@ -73,7 +73,7 @@ public class GithubRepoPageProcessor implements PageProcessor {
         //zju  www.zju1.com没有找到交友的入口，注册也是需要按月收费的
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.ZJU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
         //whu  done
-        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.WHU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
         for (Spider spider : spiderList)
             spider.run();

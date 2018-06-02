@@ -94,6 +94,7 @@ public class FUDANSiteHandler extends SQSiteHandler {
     @Override
     public Site getSite() {
         return Site.me().setDomain(FUDAN_BBS_JOB_DOMAIN)
+                .setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
                 .setSleepTime(Constant.SLEEPTIME);
     }
 

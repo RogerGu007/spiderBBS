@@ -72,8 +72,10 @@ public class SpiderGenerator {
                 sqSiteHandler = new FUDANSiteHandler();
                 if (newsTypeEnum.equals(NewsTypeEnum.NEWS_FRIENDS))
                     sqSiteHandler.setNewsURLList(Arrays.asList(FUDANSiteConstant.FRIEND_URL));
-                else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB))
+                else if (newsTypeEnum.equals(NewsTypeEnum.NEWS_JOB)) {
+                    sqSiteHandler = new FUDANSiteJobHandler();
                     sqSiteHandler.setNewsURLList(Arrays.asList(FUDANSiteConstant.JOB_URL));
+                }
                 break;
             case SJTU_BBS:
                 sqSiteHandler = new SJTUSiteHandler();
