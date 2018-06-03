@@ -18,27 +18,34 @@ public class FUDANNewSiteConstant {
 
     public static final String FUDAN_BBS_DOMAIN = "bbs.fudan.edu.cn";
 
-    public static final String FORMNODE = "//*[@id=\"b-p\"]/li";
-    //用于判断是否有详情页
-    public static final String FORMITEMCHILD = "//a[1]";
-
-    public static final String FORMITEMLINK = "//a[1]";
-
+    //获取登陆的cookie
     public static final String COOKIEPATH = "//body/text()";
 
-    //发帖时间：2010-05-25 18:06:18
-    public static final String FORMITEMMODIFYTIME = "//time/@title";
-    //for example: tdoc?bid=70&start=2072
-    public static final String FORMITEMNEXTPAGE = "//div[@class='bdr-t']";
+    public static final String FORMNODE = "//body/bbsdoc/po";
+    //用于判断是否有详情页
+    public static final String FORMITEMCHILD = "//po";
+
+    public static final String FORMITEMLINK = "//po/@id";
+    public static final String LINKSPLITER = "board=";
+    public static final String LINKTEMPLATE = "https://bbs.fudan.edu.cn/v18/tcon?new=1&board=BOARD_PLACEHOLDER&f=ID_PLACEHOLDER";
+
+    //发帖时间：2018-03-01T21:42:32
+    public static final String FORMITEMMODIFYTIME = "//po/@time";
+    //for example: tdoc?board=Job_Intern&start=2072
+    public static final String FORMITEMNEXTPAGE = "//body/bbsdoc/brd/@start";
+    public static final String NEXTPAGETEMPLATE = "https://bbs.fudan.edu.cn/v18/tdoc?board=BOARD_PLACEHOLDER&start=ID_PLACEHOLDER";
+    public static final String NEXTPAGESEPERATE = "start=";
     //主题
-    public static final String FORMITEMTITEL = "//a[1]/text()";
+    public static final String FORMITEMTITEL = "//po/text()";
+
+    public static final String FORMITEMFILTER = "//@sticky";
 
     //一行一个p标签，组合起来即可
-    public static final String DETAIL_CONTENT = "//article/p";
+    public static final String DETAIL_CONTENT = "//pa";
 
     //详情页标题
-    public static final String DETAIL_SUBJECT = "//article/header/h1/text()";
+    public static final String DETAIL_SUBJECT = "//title[1]/text()";
 
-    //详情页中的发帖时间  2018年06月01日09:14:32 星期五
-    public static final String DETAIL_POSTDATE = "//article/header/a/time/@title";
+    //详情页中的发帖时间
+    public static final String DETAIL_POSTDATE = "//date[1]/text()";
 }

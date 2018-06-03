@@ -61,9 +61,8 @@ public class GithubRepoPageProcessor implements PageProcessor {
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.NJU_BBS, NewsTypeEnum.NEWS_JOB, new Date());
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.NJU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
         //fudan
-//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
-        //todo
-        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
+        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
+//        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.FUDAN_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
         //sjtu  done
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS, NewsTypeEnum.NEWS_JOB, startDate, endDate);
 //        List<Spider> spiderList = SpiderGenerator.createSpider(SiteEnum.SJTU_BBS, NewsTypeEnum.NEWS_FRIENDS, startDate, endDate);
