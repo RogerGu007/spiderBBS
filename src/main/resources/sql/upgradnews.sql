@@ -17,3 +17,10 @@ ADD CONSTRAINT `FK_NEWSID`
   REFERENCES `spider`.`News` (`ID`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
+
+  
+  //add tag
+  ALTER TABLE `spider`.`News` 
+ADD COLUMN `tag` VARCHAR(64) NULL AFTER `source`;
+
+  
