@@ -76,7 +76,7 @@ public class TextareaUtils {
 	{
 		if (TextUtils.isEmpty(sourceTxt))
 			return sourceTxt;
-		Pattern pattern = Pattern.compile("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|](.png|.jpg|.jpeg|.gif)");
+		Pattern pattern = Pattern.compile("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]?(.png|.jpg|.jpeg|.gif)");
 		Matcher matcher = pattern.matcher(sourceTxt);
 
 		StringBuffer sbTest = new StringBuffer();
@@ -93,27 +93,28 @@ public class TextareaUtils {
 
 		//<img src="/file/xxx/xxx.jpg">格式，补全url
 		String imgContent = sbTest.toString();
-		String regex2 = "src=\"/[0-9a-zA-Z].*(.png|.jpg|.jpeg|.gif)\"";
+		String regex2 = "src=\"/[0-9a-zA-Z].*?(.png|.jpg|.jpeg|.gif)\"";
 		Pattern pattern2 =  Pattern.compile(regex2);
 		Matcher matcher2 = pattern2.matcher(imgContent);
-		if (matcher2.find()) {
+		while (matcher2.find()) {
 			String temp = matcher2.group();
-			temp = temp.substring(1, temp.length()-1);
+			temp = temp.substring(5, temp.length()-1);
 			try {
 				String domain = new URL(pageUrl).getHost();
-				String imgUrl = String.format("\"http://%s%s\"", domain, temp);
-				imgContent = imgContent.replaceAll(regex2, imgUrl);
+				String imgUrl = String.format("http://%s%s", domain, temp);
+				imgContent = imgContent.replace(temp, imgUrl);
 			} catch (Exception e) {
-//				return imgContent;
+
 			}
 		}
 
 		//src="//att.newsmth.net/nForum/att/PieLove/2554468/2944/large"
-		String regex3 = "(src|href)=\"//";
+		String regex3 = "(src|href)=\"//?";
 		String replaceRegex3 = "src=\"";
 		if (imgContent.contains("href"))
 			replaceRegex3 = "href=\"";
 		imgContent = imgContent.replace(regex3, replaceRegex3);
+
 		return imgContent;
 	}
 

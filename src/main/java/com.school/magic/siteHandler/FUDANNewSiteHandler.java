@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.school.magic.constants.FUDANNewSiteConstant.*;
-import static com.school.magic.constants.FUDANSiteConstant.FRIEND_LINKTEMPLATE;
 
 public class FUDANNewSiteHandler extends SQSiteHandler {
     private FudanCookieGson mFudanCookieGson = null;
