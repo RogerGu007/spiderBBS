@@ -108,12 +108,14 @@ public class TextareaUtils {
 			}
 		}
 
-		//src="//att.newsmth.net/nForum/att/PieLove/2554468/2944/large"
-		String regex3 = "(src|href)=\"//?";
-		String replaceRegex3 = "src=\"";
-		if (imgContent.contains("href"))
-			replaceRegex3 = "href=\"";
-		imgContent = imgContent.replace(regex3, replaceRegex3);
+		//src="//att.newsmth.net/nForum/att/PieLove/2554468/2944/large" =>
+		// src="http://att.newsmth.net/nForum/att/PieLove/2554468/2944/large"
+		String regex3 = "href=\"//?";
+		String replaceRegex3 = "href=\"http://";
+		imgContent = imgContent.replaceAll(regex3, replaceRegex3);
+		regex3 = "src=\"//?";
+		replaceRegex3 = "src=\"http://";
+		imgContent = imgContent.replaceAll(regex3, replaceRegex3);
 
 		return imgContent;
 	}

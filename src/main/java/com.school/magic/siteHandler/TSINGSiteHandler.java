@@ -101,8 +101,8 @@ public class TSINGSiteHandler extends SQSiteHandler {
         return DETAIL_CONTENT_START_REGEX;
     }
 
-    protected String getPageDetailContentEndRegex() {
-        return DETAIL_CONTENT_END_REGEX;
+    protected List<String> getPageDetailContentEndRegex() {
+        return DETAIL_CONTENT_END_SPLIT_LIST;
     }
 
     @Override
@@ -208,9 +208,10 @@ public class TSINGSiteHandler extends SQSiteHandler {
         if (firstSeperate.length < 2)
             content = contentOri;
         else {
-            String temp = firstSeperate[1];
-            String[] secondSeperate = temp.split(getPageDetailContentEndRegex());
-            content = secondSeperate[0];
+            content = firstSeperate[1];
+            for (String endSplit : getPageDetailContentEndRegex()) {
+                content = content.replaceFirst(endSplit, "");
+            }
         }
         content = TextareaUtils.convertTextareToHtml(content, page.getUrl().toString());
         return NewsDetailDTO.generateNewsDetail(content, page.getUrl().toString());
