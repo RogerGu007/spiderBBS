@@ -1,10 +1,13 @@
 package com.school.entity;
 
-public class NewsDetailDTO {
+import java.sql.Timestamp;
+
+public class NewsDetailDTO extends BaseDTO {
 
     private String detailContent;
     private String sourceArticleUrl;
     private String newsID;
+    private Timestamp postDate;	//post的时间
 
     public String getDetailContent() {
         return detailContent;
@@ -28,6 +31,14 @@ public class NewsDetailDTO {
 
     public void setNewsID(String newsID) {
         this.newsID = newsID;
+    }
+
+    public Timestamp getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(Timestamp postDate) {
+        this.postDate = postDate;
     }
 
     public static NewsDetailDTO generateNewsDetail(String detailContent, String sourceArticleUrl) {

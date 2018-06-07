@@ -10,6 +10,8 @@ public class Constant {
 
     public static final String RESULT_PUBLISHER_FIELD = "publisher";
 
+    public static final String RESULT_NEWSID_FIELD = "newsId";
+
     //关键词
     public static final String PARTTIME= "兼职";
     public static final String INTERN = "实习";

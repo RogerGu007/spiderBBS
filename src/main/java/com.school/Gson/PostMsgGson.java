@@ -6,6 +6,7 @@ import org.apache.http.util.TextUtils;
 import java.util.Date;
 
 public class PostMsgGson {
+	private String ID;
 	private String content;
 	private Integer NewsType;
 	private Integer NewsSubType;
@@ -14,6 +15,14 @@ public class PostMsgGson {
 	private String		detailContent;
 	private String		sourceArticleUrl;
 	private String 	source;
+
+	public String getID() {
+		return ID;
+	}
+
+	public void setID(String ID) {
+		this.ID = ID;
+	}
 
 	public String getContent() {
 		return content;

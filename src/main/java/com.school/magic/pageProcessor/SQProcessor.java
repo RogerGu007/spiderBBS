@@ -2,7 +2,6 @@ package com.school.magic.pageProcessor;
 
 import com.school.Constants.RetCode;
 import com.school.Gson.NewsDetailResultGson;
-import com.school.Gson.RetIDResultGson;
 import com.school.entity.NewsDTO;
 import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.ExtractMode;
@@ -11,6 +10,8 @@ import com.school.magic.storePipeline.NewsToDBPipeline;
 import com.school.remote.NewsRomoteCaller;
 import com.school.utils.ApplicationContextUtils;
 import com.school.utils.GsonUtils;
+import com.school.utils.PropertyUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,9 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.school.magic.constants.Constant.*;
@@ -31,6 +34,9 @@ public class SQProcessor implements PageProcessor {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private NewsRomoteCaller newsRemoteCaller = ApplicationContextUtils.getBean(NewsRomoteCaller.class);
+
+    private static Long REPEAT_SPIDER_TIME = StringUtils.isEmpty(PropertyUtil.getProperty("REPEAT_SPIDER_TIME"))
+            ? 21600 : Long.valueOf(PropertyUtil.getProperty("REPEAT_SPIDER_TIME"));
 
     private SQProcessor(SQSiteHandler sqSiteHandler) {
         this.mSqSiteHandler = sqSiteHandler;
@@ -51,7 +57,7 @@ public class SQProcessor implements PageProcessor {
 
         final String siteUrl = page.getUrl().toString();
         //重复的页面不再抓取
-        if (isSkipUrl(siteUrl)) {
+        if (isSkipUrl(siteUrl, page)) {
             page.setSkip(true);
             return;
         }
@@ -63,7 +69,7 @@ public class SQProcessor implements PageProcessor {
 
             for (String url : requestURLs)
             {
-                if (isSkipUrl(url))
+                if (isSkipUrl(url, page))
                     continue;
                 filterURLs.add(url);
             }
@@ -80,7 +86,7 @@ public class SQProcessor implements PageProcessor {
         extractDetailField(page);
     }
 
-    private Boolean isSkipUrl(String siteUrl)
+    private Boolean isSkipUrl(String siteUrl, Page page)
     {
         if (TextUtils.isEmpty(siteUrl))
             return true;
@@ -92,6 +98,14 @@ public class SQProcessor implements PageProcessor {
         }
 
         if (resultGson.getNewsDetailDTO() != null) {
+            NewsDetailDTO detailDTO = resultGson.getNewsDetailDTO();
+            //6小时以内的帖子不过滤
+            if (detailDTO.getPostDate() != null
+                    && (detailDTO.getPostDate().getTime() + REPEAT_SPIDER_TIME * 1000 >= new Date().getTime())) {
+                page.putField(RESULT_NEWSID_FIELD, detailDTO.getNewsID());
+                return false;
+            }
+
             return true;
         }
         return false;
