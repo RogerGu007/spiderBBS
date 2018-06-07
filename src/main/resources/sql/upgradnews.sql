@@ -23,4 +23,5 @@ ADD CONSTRAINT `FK_NEWSID`
   ALTER TABLE `spider`.`News` 
 ADD COLUMN `tag` VARCHAR(64) NULL AFTER `source`;
 
-  
+  ALTER TABLE `spider`.`News` 
+ADD INDEX `IDX_tag` (`tag` ASC, `isValid` ASC);

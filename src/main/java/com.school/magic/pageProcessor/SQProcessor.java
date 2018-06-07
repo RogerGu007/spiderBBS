@@ -175,7 +175,7 @@ public class SQProcessor implements PageProcessor {
         else if (mSqSiteHandler.getExtractMode().equals(ExtractMode.EXTRACT_TEXT))
             details = mSqSiteHandler.extractNewsDetailsFromText(page);
 
-        if (details == null) {
+        if (details == null || TextUtils.isEmpty(details.getSourceArticleUrl())) {
             page.setSkip(true);
             return false;
         } else {
