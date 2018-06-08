@@ -2,6 +2,7 @@ package com.school.magic.siteHandler;
 
 import com.school.Gson.FudanCookieGson;
 import com.school.entity.NewsDTO;
+import com.school.entity.NewsDetailDTO;
 import com.school.magic.constants.Constant;
 import com.school.magic.constants.SiteEnum;
 import com.school.spiderEnums.LocationEnum;
@@ -227,6 +228,32 @@ public class FUDANNewSiteHandler extends SQSiteHandler {
         subjectNews.setLinkUrl(genSiteUrl(page.getUrl().toString()));
 
         return subjectNews;
+    }
+
+    @Override
+    public NewsDetailDTO extractNewsDetails(Page page) {
+        if (page == null)
+            return null;
+
+        Selectable contentsAndComments = page.getHtml().xpath(getPageDetailContentXPath());
+
+        if (contentsAndComments == null || contentsAndComments.nodes().size() == 0)
+            return null;
+
+        Selectable detailContent = contentsAndComments.nodes().get(0);
+        if (detailContent == null)
+            return null;
+
+        List<Selectable> selectableList = page.getHtml().regex("http://.*?.jpg").nodes();
+        for (Selectable selectable : selectableList) {
+            String imageSource = selectable.toString();
+            String oriHtml = String.format("<a i=\"i\" href=\"%s\"></a>", imageSource);
+            String expectedHtml = String.format("<a i=\"i\" href=\"%s\"><img src=\"%s\"></a>", imageSource, imageSource);
+            detailContent = detailContent.replace(oriHtml, expectedHtml);
+        }
+
+        String link = page.getUrl().toString();
+        return NewsDetailDTO.generateNewsDetail(detailContent.toString(), link);
     }
 
     /**
