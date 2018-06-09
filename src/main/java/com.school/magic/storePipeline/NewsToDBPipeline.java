@@ -106,8 +106,13 @@ public class NewsToDBPipeline implements Pipeline {
      */
     private boolean isDroppedByNews(NewsDTO newsDTO) {
         String subject = newsDTO.getmSubject().trim();
-        if (filterContainKeywordList.contains(subject))
+        if (StringUtils.isEmpty(subject))
             return true;
+
+        for (String containKeyword : filterContainKeywordList) {
+            if (subject.contains(containKeyword))
+                return true;
+        }
 
         for (String prefix : filterPrefixKeywordList) {
             if (subject.startsWith(prefix))
