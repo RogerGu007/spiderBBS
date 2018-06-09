@@ -59,7 +59,7 @@ public class NewsToDBPipeline implements Pipeline {
         logger.info(String.format("SubjectGson:{%s}", subjectGson));
         logger.info(String.format("DetailNewsGson: {%s}", detailGson));
         NewsDTO subjectNews = GsonUtils.fromGsonString(subjectGson, NewsDTO.class);
-        if (isDropped(subjectNews))
+        if (isDroppedByNews(subjectNews))
             return;
         try {
             RetIDResultGson resultIdGson = newsRemoteCaller.getUserID(resultItems.get(RESULT_PUBLISHER_FIELD));
@@ -71,6 +71,8 @@ public class NewsToDBPipeline implements Pipeline {
             }
             subjectNews.setPublisherId(resultIdGson.getID().toString());
             NewsDetailDTO detailNews = GsonUtils.fromGsonString(detailGson, NewsDetailDTO.class);
+            if (isDroppedByDetail(detailNews, resultItems.get(EXISTED_DETAIL_FIELD)))
+                return;
 
             PostMsgGson postMsgGson = new PostMsgGson();
             postMsgGson.setContent(subjectNews.getmSubject());
@@ -102,7 +104,7 @@ public class NewsToDBPipeline implements Pipeline {
      * @param newsDTO
      * @return
      */
-    private boolean isDropped(NewsDTO newsDTO) {
+    private boolean isDroppedByNews(NewsDTO newsDTO) {
         String subject = newsDTO.getmSubject().trim();
         if (filterContainKeywordList.contains(subject))
             return true;
@@ -118,5 +120,13 @@ public class NewsToDBPipeline implements Pipeline {
         }
 
         return false;
+    }
+
+    private boolean isDroppedByDetail(NewsDetailDTO newsDetailDTO, String expectedDetailContent) {
+        if (StringUtils.isEmpty(expectedDetailContent)) //新帖子
+            return false;
+
+        //详情不变的老帖子，过滤
+        return expectedDetailContent.equals(newsDetailDTO.getDetailContent());
     }
 }

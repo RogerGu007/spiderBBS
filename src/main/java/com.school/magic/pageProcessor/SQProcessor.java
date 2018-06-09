@@ -103,6 +103,7 @@ public class SQProcessor implements PageProcessor {
             if (detailDTO.getPostDate() != null
                     && (detailDTO.getPostDate().getTime() + REPEAT_SPIDER_TIME * 1000 >= new Date().getTime())) {
                 page.putField(RESULT_NEWSID_FIELD, detailDTO.getNewsID());
+                page.putField(EXISTED_DETAIL_FIELD, detailDTO.getDetailContent()); //detailContent透传下去，不变就不做更新了
                 return false;
             }
 

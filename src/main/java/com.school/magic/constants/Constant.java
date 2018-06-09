@@ -12,6 +12,10 @@ public class Constant {
 
     public static final String RESULT_NEWSID_FIELD = "newsId";
 
+    public static final String EXISTED_SUBJECT_FIELD = "existedNewsSubject";
+
+    public static final String EXISTED_DETAIL_FIELD = "existedNewsDetailContent";
+
     //关键词
     public static final String PARTTIME= "兼职";
     public static final String INTERN = "实习";
